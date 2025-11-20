@@ -1,6 +1,6 @@
 import { supabase } from '@/app/lib/supabase'
 import Link from 'next/link'
-import { Calendar, BookOpen } from 'lucide-react'
+import { Calendar, BookOpen, Archive } from 'lucide-react'
 import DailyDiscussion from '@/app/components/DailyDiscussion'
 
 export const revalidate = 0
@@ -101,7 +101,7 @@ export default async function DailyDafPage() {
                             Open in Sefaria
                         </a>
                         <a
-                            href="[https://www.dafyomi.co.il/](https://www.dafyomi.co.il/)"
+                            href="https://www.dafyomi.co.il/"
                             target="_blank"
                             rel="noreferrer"
                             className="block w-full text-center py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition text-sm"
@@ -110,7 +110,17 @@ export default async function DailyDafPage() {
                         </a>
                     </div>
                 </div>
+            </div>
 
+            {/* Archive Link Footer */}
+            <div className="mt-16 text-center border-t border-slate-200 pt-8">
+                <Link
+                    href="/daily/archive"
+                    className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 font-medium transition"
+                >
+                    <Archive className="w-5 h-5" />
+                    View Past Daily Discussions
+                </Link>
             </div>
         </div>
     )

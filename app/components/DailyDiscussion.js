@@ -39,6 +39,7 @@ export default function DailyDiscussion({ dailyId }) {
         setLoading(false)
     }
 
+    // --- ADMIN DELETE LOGIC ---
     const handleDelete = async (id) => {
         const code = prompt("Enter Admin Access Code to delete:")
         const adminCode = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '1234'
@@ -50,6 +51,7 @@ export default function DailyDiscussion({ dailyId }) {
             alert("❌ Wrong Code")
         }
     }
+    // --------------------------
 
     return (
         <div className="bg-white p-6 rounded-xl shadow-sm border border-blue-100">
@@ -58,31 +60,33 @@ export default function DailyDiscussion({ dailyId }) {
                 Community Discussion
             </h3>
 
-            {/* List */}
             <div className="space-y-6 mb-8 max-h-[400px] overflow-y-auto pr-2">
                 {comments.length === 0 && <p className="text-slate-400 text-sm italic">No comments yet today. Start the discussion!</p>}
+
                 {comments.map((c) => (
                     <div key={c.id} className="group flex gap-3 bg-slate-50 p-3 rounded-lg">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 text-xs font-bold">
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 text-xs font-bold flex-shrink-0">
                             {c.author_name.charAt(0)}
                         </div>
                         <div className="flex-grow">
                             <div className="flex justify-between items-start">
                                 <span className="text-sm font-bold text-slate-900">{c.author_name}</span>
+
+                                {/* DELETE BUTTON (Hidden until hover) */}
                                 <button
                                     onClick={() => handleDelete(c.id)}
-                                    className="text-red-300 opacity-0 group-hover:opacity-100 hover:text-red-600 transition"
+                                    className="text-slate-300 opacity-0 group-hover:opacity-100 hover:text-red-600 transition"
+                                    title="Admin Delete"
                                 >
                                     <Trash2 className="w-3 h-3" />
                                 </button>
                             </div>
-                            <p className="text-sm text-slate-700 mt-1">{c.content}</p>
+                            <p className="text-sm text-slate-700 mt-1 whitespace-pre-wrap">{c.content}</p>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-3 border-t border-slate-100 pt-4">
                 <input
                     type="text"
