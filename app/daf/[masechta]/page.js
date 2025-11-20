@@ -10,8 +10,8 @@ export async function generateMetadata({ params }) {
     const formattedName = masechta.charAt(0).toUpperCase() + masechta.slice(1)
 
     return {
-        title: `${formattedName} Articles | Daf Yomi Insights`,
-        description: `Halachic insights and articles on Maseches ${formattedName}.`,
+        title: `${formattedName} Daf Yomi Articles | Daf Yomi Insights`,
+        description: `Halachic insights and Daf Yomi articles on Maseches ${formattedName}.`,
     }
 }
 

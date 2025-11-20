@@ -7,7 +7,7 @@ export const revalidate = 0
 export async function generateMetadata({ params }) {
     const { tag } = await params
     const decodedTag = decodeURIComponent(tag)
-    return { title: `${decodedTag} Articles | Daf Yomi Insights` }
+    return { title: `${decodedTag} Daf Yomi Articles & Insights` }
 }
 
 export default async function SingleTopicPage({ params }) {

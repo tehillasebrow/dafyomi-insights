@@ -4,8 +4,8 @@ import { BookOpen } from 'lucide-react'
 import Search from './components/Search'
 
 export const metadata = {
-    title: 'Daf Yomi Insights | Rabbi Avrohom Sebrow',
-    description: 'Deep insights into the daily Daf.',
+    title: 'Daf Yomi Articles & Insights | Rabbi Avrohom Sebrow | Delving into the Daf',
+    description: 'Daf Yomi articles and deep insights the daily Daf.',
     verification: {
         google: 'TGCY40qeKGYZRzWKmdNNppBGhRa8qHlCIGzmzMMFvbY',
     },

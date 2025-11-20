@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
     if (!article) return {}
 
     return {
-        title: `Daf Yomi ${masechta} ${daf}: ${article.title}`,
+        title: `Daf Yomi Article: ${masechta} ${daf} - ${article.title}`,
         description: article.summary,
     }
 }

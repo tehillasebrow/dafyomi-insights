@@ -6,8 +6,8 @@ import DailyDiscussion from '@/app/components/DailyDiscussion'
 export const revalidate = 0
 
 export const metadata = {
-    title: 'Today\'s Daily Daf Yomi | Insights & Discussion',
-    description: 'Join the conversation on today\'s Daf. Read interesting articles and insights for the Daily Daf Yomi cycle.',
+    title: 'Today\'s Daily Daf Yomi Discussion & Articles | Daf Yomi Insights',
+    description: 'Join the conversation on today\'s Daf and find related Daf Yomi articles and interesting insights about the Daily Daf Yomi cycle.',
 }
 
 export default async function DailyDafPage() {

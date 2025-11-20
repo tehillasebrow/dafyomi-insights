@@ -5,8 +5,8 @@ import { Tag, Hash } from 'lucide-react'
 export const revalidate = 0
 
 export const metadata = {
-    title: 'All Topics | Daf Yomi Insights',
-    description: 'Browse articles by topic.',
+    title: 'Topics & Categories for Daf Yomi Articles | Daf Yomi Insights',
+    description: 'Browse Daf Yomi articles sorted by topic.',
 }
 
 export default async function TopicsPage() {
