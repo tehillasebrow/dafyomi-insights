@@ -27,7 +27,7 @@ export default function AdminPage() {
 
         // 1. Security Check
         const envPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD
-        if (accessCode !== (envPassword || '1234')) {
+        if (accessCode !== (envPassword)) {
             setMessage('❌ Wrong Access Code')
             setLoading(false)
             return
