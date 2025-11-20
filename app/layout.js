@@ -1,13 +1,14 @@
 import './globals.css'
 import Link from 'next/link'
 import { BookOpen } from 'lucide-react'
-import Search from './components/Search' // Import the new Search component
+import Search from './components/Search'
 
 export const metadata = {
     title: 'Daf Yomi Insights | Rabbi Avrohom Sebrow',
     description: 'Deep insights into the daily Daf.',
     verification: {
-        google: 'TGCY40qeKGYZRzWKmdNNppBGhRa8qHlCIGzmzMMFvbY', // Your code
+        // Keeping your verification code safe here
+        google: 'TGCY40qeKGYZRzWKmdNNppBGhRa8qHlCIGzmzMMFvbY',
     },
 }
 
@@ -30,11 +31,17 @@ export default function RootLayout({ children }) {
                     <Link href="/masechtos" className="text-slate-600 hover:text-blue-600 transition">
                         Masechtos
                     </Link>
+
+                    {/* NEW LINK ADDED HERE */}
+                    <Link href="/topics" className="text-slate-600 hover:text-blue-600 transition">
+                        Topics
+                    </Link>
+
                     <Link href="/contact" className="text-slate-600 hover:text-blue-600 transition">
                         Contact
                     </Link>
 
-                    {/* The Working Search Bar */}
+                    {/* Search Bar */}
                     <Search />
                 </div>
             </div>
