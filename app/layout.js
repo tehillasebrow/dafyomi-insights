@@ -7,7 +7,6 @@ export const metadata = {
     title: 'Daf Yomi Insights | Rabbi Avrohom Sebrow',
     description: 'Deep insights into the daily Daf.',
     verification: {
-        // Keeping your verification code safe here
         google: 'TGCY40qeKGYZRzWKmdNNppBGhRa8qHlCIGzmzMMFvbY',
     },
 }
@@ -28,11 +27,15 @@ export default function RootLayout({ children }) {
 
                 {/* Nav Links */}
                 <div className="flex items-center gap-4 md:gap-8 text-sm font-sans font-medium">
+                    {/* NEW LINK: DAILY DAF */}
+                    <Link href="/daily" className="text-blue-600 font-bold hover:text-blue-800 transition">
+                        Daily Daf
+                    </Link>
+
                     <Link href="/masechtos" className="text-slate-600 hover:text-blue-600 transition">
                         Masechtos
                     </Link>
 
-                    {/* NEW LINK ADDED HERE */}
                     <Link href="/topics" className="text-slate-600 hover:text-blue-600 transition">
                         Topics
                     </Link>
