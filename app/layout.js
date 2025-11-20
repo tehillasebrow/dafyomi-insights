@@ -4,8 +4,9 @@ import { BookOpen } from 'lucide-react'
 import Search from './components/Search'
 
 export const metadata = {
-    title: 'Daf Yomi Insights | Rabbi Avrohom Sebrow',
-    description: 'Deep insights into the daily Daf.',
+    title: 'Daf Yomi Insights | Daily Gemara Articles by Rabbi Avrohom Sebrow',
+    description: 'A searchable archive of interesting Daf Yomi articles, daily summaries, and deep Halachic insights. Explore the Daily Daf with clear explanations.',
+    keywords: ['Daf Yomi', 'Daily Daf', 'Gemara', 'Talmud', 'Rabbi Avrohom Sebrow', 'Halacha', 'Jewish Learning'], // Add this line!
     verification: {
         google: 'TGCY40qeKGYZRzWKmdNNppBGhRa8qHlCIGzmzMMFvbY',
     },
@@ -57,6 +58,9 @@ export default function RootLayout({ children }) {
         <footer className="bg-slate-900 text-slate-400 py-12 text-center">
             <div className="max-w-4xl mx-auto px-4">
                 <p className="mb-4 font-serif text-lg text-slate-300">Daf Yomi Insights</p>
+                <p className="text-sm mb-4">
+                    Dedicated to providing interesting Daf Yomi articles and daily inspiration for the global community of learners.
+                </p>
                 <p className="text-sm">© {new Date().getFullYear()} Rabbi Avrohom Sebrow. All rights reserved.</p>
             </div>
         </footer>
