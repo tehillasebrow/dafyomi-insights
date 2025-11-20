@@ -6,7 +6,9 @@ import { Search, BookOpen } from 'lucide-react'
 export const metadata = {
     title: 'Daf Yomi Insights | Rabbi Avrohom Sebrow',
     description: 'Deep insights into the daily Daf.',
-verification: { google: 'TGCY40qeKGYZRzWKmdNNppBGhRa8qHlCIGzmzMMFvbY' },
+    verification: {
+        google: 'TGCY40qeKGYZRzWKmdNNppBGhRa8qHlCIGzmzMMFvbY',
+    },
 }
 
 export default function RootLayout({ children }) {
