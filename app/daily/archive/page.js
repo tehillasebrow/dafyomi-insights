@@ -4,6 +4,13 @@ import { Calendar, ArrowRight } from 'lucide-react'
 
 export const revalidate = 0
 
+// ADDED METADATA FOR SEO
+export const metadata = {
+    title: 'Archive of Daily Daf Yomi Discussions & Pages | Daf Yomi Insights',
+    description: 'Browse the complete history and archive of daily Daf Yomi discussion pages and associated articles.',
+}
+// END ADDED METADATA
+
 export default async function DailyArchive() {
     const { data: discussions } = await supabase
         .from('daily_discussions')

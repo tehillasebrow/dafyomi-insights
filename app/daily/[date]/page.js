@@ -6,9 +6,24 @@ import { notFound } from 'next/navigation'
 
 export const revalidate = 0
 
+// File: app/daily/[date]/page.js (Update lines 10-21)
+
 export async function generateMetadata({ params }) {
     const { date } = await params
-    return { title: `Daily Daf: ${date} | Daf Yomi Insights` }
+    // Fetch discussion data here to create a rich title
+    const { data: daily } = await supabase
+        .from('daily_discussions')
+        .select('masechta, daf')
+        .eq('date', date)
+        .single()
+
+    const masechtaDaf = daily ? `${daily.masechta} ${daily.daf}` : 'Daf Yomi Page'
+    const formattedDate = new Date(date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+
+    return {
+        title: `Daf Yomi Discussion: ${masechtaDaf} - ${formattedDate}`,
+        description: `Join the daily Daf Yomi discussion and view insights for ${masechtaDaf} on ${formattedDate}.`,
+    }
 }
 
 export default async function SingleDailyPage({ params }) {
