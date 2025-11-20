@@ -25,7 +25,7 @@ export default function AdminPage() {
         setMessage('')
 
         // 1. Simple Security Check (Change '1234' to whatever code you want)
-        if (accessCode !== 'Mommyisthebest') {
+        if (accessCode !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
             setMessage('❌ Wrong Access Code')
             setLoading(false)
             return
