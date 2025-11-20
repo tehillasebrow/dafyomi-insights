@@ -7,7 +7,6 @@ export const revalidate = 0
 
 // SEO Metadata Generator
 export async function generateMetadata({ params }) {
-    // FIX: await params before using it
     const { masechta, daf } = await params
 
     const { data: article } = await supabase
@@ -26,7 +25,6 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ArticlePage({ params }) {
-    // FIX: await params before using it
     const { masechta, daf } = await params
 
     const { data: article } = await supabase
@@ -64,9 +62,9 @@ export default async function ArticlePage({ params }) {
 
             <article>
                 <header className="mb-10 text-center">
-                    <div className="inline-block px-4 py-1.5 bg-blue-50 text-blue-800 font-bold text-sm uppercase tracking-wider rounded-full mb-4">
+                    <Link href={`/daf/${article.masechta.toLowerCase()}`} className="inline-block px-4 py-1.5 bg-blue-50 text-blue-800 font-bold text-sm uppercase tracking-wider rounded-full mb-4 hover:bg-blue-100 transition">
                         {article.masechta} {article.daf}
-                    </div>
+                    </Link>
                     <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
                         {article.title}
                     </h1>
@@ -80,14 +78,19 @@ export default async function ArticlePage({ params }) {
                     {article.content}
                 </div>
 
-                {/* Tags Footer */}
+                {/* Tags Footer (Now Clickable!) */}
                 {article.tags && (
                     <div className="mt-12 pt-8 border-t border-slate-100">
+                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Topics</h3>
                         <div className="flex flex-wrap gap-2">
                             {article.tags.map(tag => (
-                                <span key={tag} className="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-600 text-sm rounded-md">
-                  <Tag className="w-3 h-3 mr-1.5 opacity-50" /> {tag}
-                </span>
+                                <Link
+                                    key={tag}
+                                    href={`/topics/${tag.trim()}`}
+                                    className="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-600 text-sm rounded-md hover:bg-blue-600 hover:text-white transition duration-200"
+                                >
+                                    <Tag className="w-3 h-3 mr-1.5 opacity-50" /> {tag}
+                                </Link>
                             ))}
                         </div>
                     </div>
