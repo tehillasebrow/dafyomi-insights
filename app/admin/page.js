@@ -25,7 +25,7 @@ export default function AdminPage() {
         setMessage('')
 
         // 1. Simple Security Check (Change '1234' to whatever code you want)
-        if (accessCode !== '1234') {
+        if (accessCode !== 'Mommyisthebest') {
             setMessage('❌ Wrong Access Code')
             setLoading(false)
             return
