@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { supabase } from '@/app/lib/supabase'
-import { Save, Lock } from 'lucide-react'
+import { Save, Lock, Upload, Image as ImageIcon } from 'lucide-react'
 
 export default function AdminPage() {
     const [loading, setLoading] = useState(false)
@@ -10,6 +10,7 @@ export default function AdminPage() {
 
     // Form Data
     const [accessCode, setAccessCode] = useState('')
+    const [imageFile, setImageFile] = useState(null) // New State for Image
     const [formData, setFormData] = useState({
         title: '',
         masechta: '',
@@ -24,17 +25,37 @@ export default function AdminPage() {
         setLoading(true)
         setMessage('')
 
-        // 1. Simple Security Check (Change '1234' to whatever code you want)
-        if (accessCode !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+        // 1. Security Check
+        const envPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+        if (accessCode !== (envPassword || '1234')) {
             setMessage('❌ Wrong Access Code')
             setLoading(false)
             return
         }
 
-        // 2. Create the Slug automatically (e.g., "yoma-21-title")
+        // 2. Image Upload Logic
+        let publicImageUrl = null
+        if (imageFile) {
+            const fileName = `${Date.now()}-${imageFile.name}`
+            const { data, error: uploadError } = await supabase.storage
+                .from('images')
+                .upload(fileName, imageFile)
+
+            if (uploadError) {
+                setMessage(`❌ Image Upload Failed: ${uploadError.message}`)
+                setLoading(false)
+                return
+            }
+
+            // Get Public URL
+            const { data: urlData } = supabase.storage.from('images').getPublicUrl(fileName)
+            publicImageUrl = urlData.publicUrl
+        }
+
+        // 3. Create Slug
         const slug = `${formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${formData.masechta.toLowerCase()}-${formData.daf}`
 
-        // 3. Upload to Supabase
+        // 4. Upload Article to DB
         const { error } = await supabase
             .from('articles')
             .insert([{
@@ -44,15 +65,16 @@ export default function AdminPage() {
                 summary: formData.summary,
                 content: formData.content,
                 slug: slug,
-                tags: formData.tags.split(',').map(t => t.trim()) // Converts "tag1, tag2" to array
+                tags: formData.tags.split(',').map(t => t.trim()),
+                image_url: publicImageUrl // Save the image URL
             }])
 
         if (error) {
-            setMessage(`❌ Error: ${error.message}`)
+            setMessage(`❌ Database Error: ${error.message}`)
         } else {
-            setMessage('✅ Article Published Successfully!')
-            // Clear form
+            setMessage('✅ Article & Image Published Successfully!')
             setFormData({ title: '', masechta: '', daf: '', summary: '', content: '', tags: '' })
+            setImageFile(null)
         }
         setLoading(false)
     }
@@ -76,6 +98,19 @@ export default function AdminPage() {
                         className="w-full p-3 border rounded-lg bg-slate-50"
                         placeholder="Enter secret code"
                         required
+                    />
+                </div>
+
+                {/* Image Upload Field */}
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <label className="block text-sm font-bold mb-2 text-blue-900 flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" /> Article Image (Optional)
+                    </label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setImageFile(e.target.files[0])}
+                        className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 transition"
                     />
                 </div>
 

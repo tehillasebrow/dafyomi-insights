@@ -2,16 +2,15 @@ import { supabase } from '@/app/lib/supabase'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Tag } from 'lucide-react'
+import Comments from '@/app/components/Comments' // Import Comments
 
 export const revalidate = 0
 
-// SEO Metadata Generator
 export async function generateMetadata({ params }) {
     const { masechta, daf } = await params
-
     const { data: article } = await supabase
         .from('articles')
-        .select('title, summary, masechta, daf')
+        .select('title, summary')
         .ilike('masechta', masechta)
         .eq('daf', daf)
         .single()
@@ -19,7 +18,7 @@ export async function generateMetadata({ params }) {
     if (!article) return {}
 
     return {
-        title: `Daf Yomi ${article.masechta} ${article.daf}: ${article.title}`,
+        title: `Daf Yomi ${masechta} ${daf}: ${article.title}`,
         description: article.summary,
     }
 }
@@ -36,11 +35,12 @@ export default async function ArticlePage({ params }) {
 
     if (!article) return notFound()
 
-    // Google Schema for SEO
+    // Google Schema
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Article',
         headline: article.title,
+        image: article.image_url ? [article.image_url] : [], // Add image to SEO
         author: {
             '@type': 'Person',
             name: 'Rabbi Avrohom Sebrow',
@@ -73,14 +73,23 @@ export default async function ArticlePage({ params }) {
                     </div>
                 </header>
 
-                {/* The Article Content */}
+                {/* IMAGE DISPLAY (Only if exists) */}
+                {article.image_url && (
+                    <div className="mb-10 rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+                        <img
+                            src={article.image_url}
+                            alt={article.title}
+                            className="w-full h-auto object-cover max-h-[500px]"
+                        />
+                    </div>
+                )}
+
                 <div className="prose prose-lg prose-slate max-w-none font-serif leading-loose whitespace-pre-line">
                     {article.content}
                 </div>
 
-                {/* Tags Footer (Now Clickable!) */}
                 {article.tags && (
-                    <div className="mt-12 pt-8 border-t border-slate-100">
+                    <div className="mt-12 pt-8 border-t border-slate-100 mb-12">
                         <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Topics</h3>
                         <div className="flex flex-wrap gap-2">
                             {article.tags.map(tag => (
@@ -96,6 +105,8 @@ export default async function ArticlePage({ params }) {
                     </div>
                 )}
             </article>
+
+            {/* COMMENTS SECTION */}
+            <Comments articleId={article.id} />
         </div>
-    )
-}
+    )}
