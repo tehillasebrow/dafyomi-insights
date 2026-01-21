@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Daf Yomi Insights
 
-## Getting Started
+DafYomiInsights.com
 
-First, run the development server:
+A modern, high-performance web application designed to provide daily insights, summaries, and educational resources for the global Daf Yomi community. Built with a focus on speed, accessibility, and clean typography to facilitate focused study.
 
-```bash
+🚀 Overview
+
+Daf Yomi is the practice of studying one page of the Talmud every day. This platform serves as a digital companion to that journey, offering a streamlined interface for students to access daily content, search through archives, and stay on track with the global cycle.
+
+For Recruiters
+
+This project demonstrates proficiency in:
+
+Frameworks: Next.js (App Router) for Server-Side Rendering (SSR) and optimized routing.
+
+Styling: Tailwind CSS for a responsive, mobile-first UI with a focus on readability.
+
+State Management: React hooks and URL-based state for shareable search results.
+
+DevOps: CI/CD integration with Vercel and secure environment variable management.
+
+Security: Implementation of a lightweight, environment-protected Admin Panel for content management.
+
+🛠 Tech Stack
+
+Core: Next.js 14+ (App Router)
+
+Language: JavaScript (ES6+)
+
+Styling: Tailwind CSS
+
+Deployment: Vercel
+
+Icons: Lucide React / Heroicons
+
+✨ Key Features
+
+Daily Dashboard: Automatically surfaces the current day's Daf and relevant insights.
+
+Smart Search: Real-time filtering of historical insights to help users find specific topics across the Talmud.
+
+Responsive Design: Optimized for mobile "on-the-go" learning and desktop deep-study sessions.
+
+Admin CMS: A custom-built, password-protected interface for creators to upload and manage content without needing to touch the database directly.
+
+Performance Optimized: Achieves high Core Web Vitals scores through Next.js Image optimization and static generation where applicable.
+
+📂 Project Structure
+
+├── app/               # Next.js App Router (Pages, Layouts, API)
+│   ├── admin/         # Protected content management interface
+│   ├── insights/      # Dynamic routes for daily content
+│   └── layout.js      # Global providers and metadata
+├── components/        # Reusable UI components (Buttons, Cards, Search)
+├── lib/               # Utility functions and data fetching logic
+├── public/            # Static assets (Logos, Favicons)
+└── styles/            # Global CSS and Tailwind configurations
+
+
+⚙️ Installation & Setup (Local Development)
+
+Note: This repository is intended for showcase purposes. 
+
+Clone the repository:
+
+git clone [https://github.com/your-username/dafyomi-insights.git](https://github.com/your-username/dafyomi-insights.git)
+cd dafyomi-insights
+
+
+Install dependencies:
+
+npm install
+
+
+Configure Environment Variables:
+Create a .env.local file in the root directory and add the following:
+
+NEXT_PUBLIC_ADMIN_PASSWORD=your_secure_password
+
+
+Run the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+🛑 Contributions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This is a personal project and is not open for public contributions. Pull requests and issues will not be reviewed or merged. I am maintaining this code exclusively for the operation of DafYomiInsights.com.
