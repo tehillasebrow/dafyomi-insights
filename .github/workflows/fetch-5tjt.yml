@@ -1,8 +1,9 @@
-# One-time: download Rabbi Sebrow's old 5 Towns Jewish Times columns from the
-# Internet Archive (some home networks block archive.org, GitHub's don't).
+# One-time: download Rabbi Sebrow's old 5 Towns Jewish Times columns (2005–2021) from the
+# Internet Archive (some home networks block archive.org; GitHub's don't).
 # Runs when the import-5tjt branch is pushed, or from the Actions tab.
-# The results are attached to the run as "5tjt-raw"; scripts/import/fivetowns.mjs
-# turns them into articles for review.
+# Step 1 finds candidate pages; step 2 downloads them in 4 parallel parts.
+# Results are attached to the run ("5tjt-inventory", "5tjt-raw-0".."5tjt-raw-3");
+# scripts/import/fivetowns.mjs turns them into articles for review.
 name: Fetch 5TJT archive
 
 on:
@@ -14,18 +15,45 @@ permissions:
   contents: read
 
 jobs:
-  fetch:
+  inventory:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: node scripts/import/fivetowns-fetch.mjs
+      - run: node scripts/import/fivetowns-fetch.mjs --inventory
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: 5tjt-raw
+          name: 5tjt-inventory
           path: data/import/5tjt/raw/
+          retention-days: 30
+
+  fetch:
+    needs: inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: 5tjt-inventory
+          path: data/import/5tjt/raw/
+      - run: node scripts/import/fivetowns-fetch.mjs --fetch ${{ matrix.shard }}/4
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 5tjt-raw-${{ matrix.shard }}
+          path: |
+            data/import/5tjt/raw/*
+            !data/import/5tjt/raw/all-urls.txt
           retention-days: 30
