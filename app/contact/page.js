@@ -1,60 +1,46 @@
-import { Mail, MapPin, User } from 'lucide-react'
+import { buildMetadata } from '@/app/lib/seo'
+import { AUTHOR } from '@/app/lib/site'
+import { AuthorPlate } from '@/app/components/Author'
+import CopyText from '@/app/components/CopyText'
 
-export const metadata = {
-    title: 'Contact Rabbi Sebrow | Daf Yomi Insights',
-}
+export const metadata = buildMetadata({
+    title: 'About & Contact Rabbi Avrohom Sebrow',
+    description: 'About Rabbi Avrohom Sebrow, maggid shiur and author of Delving into the Daf, and how to reach him or join his Daf Yomi chaburah in West Hempstead.',
+    path: '/contact',
+})
 
 export default function ContactPage() {
     return (
-        <div className="max-w-3xl mx-auto px-4 py-16">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center">
-                <h1 className="text-4xl font-bold text-slate-900 mb-8">Contact Rabbi Sebrow</h1>
-
-                {/* Bio Section */}
-                <div className="mb-10 text-left bg-slate-50 p-6 rounded-xl border border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <User className="w-5 h-5 text-blue-600" />
-                        About Rabbi Avrohom Sebrow
-                    </h2>
-                    <div className="space-y-4 text-slate-700 leading-relaxed">
-                        <p>
-                            Rabbi Avrohom Sebrow is a  Maggid Shiur and writer for The Jewish Home where he writes a weekly article <bold>Delving into the Daf</bold>.
-                        </p>
-                        <p>
-                            He currently serves as a Rebbe at <span className="font-semibold text-slate-900">Yeshiva Ateres Shimon</span> in Far Rockaway, where he inspires students through his engaging shiurim.
-                        </p>
-                        <p>
-                            In addition to his role at the Yeshiva, Rabbi Sebrow leads a vibrant <span className="font-semibold text-slate-900">Daf Yomi Chaburah</span> at Eitz Chayim of Dogwood Park in West Hempstead, NY. His articles, known for blending practical Halacha with historical context and Mussar, are widely read and appreciated by the Torah community.
-                        </p>
+        <div className="folio py-8 md:py-12">
+            <div className="grid gap-7 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-x-10">
+                <AuthorPlate size="lg" />
+                <div className="grid gap-5 content-start">
+                    <div>
+                        <p className="sc">About the author</p>
+                        <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.4rem)] leading-none tracking-[-0.02em]">{AUTHOR.name}</h1>
                     </div>
-                </div>
-
-                <p className="text-slate-600 mb-8 leading-relaxed font-medium">
-                    Have a question about the Daf? Interested in joining the Chaburah?
-                    <br/>Feel free to reach out directly.
-                </p>
-
-                <div className="space-y-6">
-                    <a
-                        href="mailto:asebrow@gmail.com"
-                        className="flex items-center justify-center gap-3 p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition group border border-blue-100"
-                    >
-                        <div className="bg-blue-600 text-white p-2 rounded-full group-hover:scale-110 transition shadow-sm">
-                            <Mail className="w-5 h-5" />
-                        </div>
-                        <span className="text-lg font-bold text-blue-900">ASebrow@gmail.com</span>
-                    </a>
-
-                    <div className="border-t border-slate-100 pt-8 mt-8">
-                        <div className="flex items-center justify-center gap-2 text-slate-500 mb-3">
-                            <MapPin className="w-4 h-4" />
-                            <span className="text-xs font-bold uppercase tracking-wider">Chaburah Location</span>
-                        </div>
-                        <p className="text-slate-800 font-medium text-lg">
-                            Eitz Chayim of Dogwood Park<br/>
-                            <span className="text-slate-500 text-base font-normal">West Hempstead, NY</span>
-                        </p>
+                    <div className="grid gap-3.5 text-read max-w-[58ch]">
+                        <p>Rabbi Avrohom Sebrow is a maggid shiur and writes <i>{AUTHOR.column}</i> each week for The Jewish Home.</p>
+                        <p>He is a Rebbe at Yeshiva Ateres Shimon in Far Rockaway, and leads a Daf Yomi chaburah at Eitz Chayim of Dogwood Park in West Hempstead, NY. His articles bring together practical halacha, history and mussar.</p>
+                        <p>Have a question on the Daf, or interested in joining the chaburah? Write to him directly.</p>
                     </div>
+                    <dl className="grid border-t border-rule-hard">
+                        <div className="grid gap-1 py-3 border-b border-rule sm:grid-cols-[9rem_1fr] sm:items-center sm:gap-3">
+                            <dt className="sc">Write to him</dt>
+                            <dd className="flex flex-wrap items-center gap-2 text-[1.12rem]">
+                                <a href={`mailto:${AUTHOR.email}`}>ASebrow@gmail.com</a>
+                                <CopyText text={AUTHOR.email} label="Copy address" />
+                            </dd>
+                        </div>
+                        <div className="grid gap-1 py-3 border-b border-rule sm:grid-cols-[9rem_1fr] sm:items-center sm:gap-3">
+                            <dt className="sc">Chaburah</dt>
+                            <dd className="text-[1.12rem]">Eitz Chayim of Dogwood Park, West Hempstead, NY</dd>
+                        </div>
+                        <div className="grid gap-1 py-3 border-b border-rule sm:grid-cols-[9rem_1fr] sm:items-center sm:gap-3">
+                            <dt className="sc">Column</dt>
+                            <dd className="text-[1.12rem]">{AUTHOR.column}, The Jewish Home</dd>
+                        </div>
+                    </dl>
                 </div>
             </div>
         </div>

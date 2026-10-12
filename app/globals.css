@@ -1,26 +1,441 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/*
+ * Daf Yomi Insights: the Vilna Shas as an object, with a shul luach's clarity.
+ * Paper and ink inside, black binding and gold foil outside.
+ * Every colour, size and face on the site is defined here.
+ *
+ * Accessibility notes: ink/paper 16:1, soft/paper 11:1, faint/paper 8:1,
+ * foil-ink/paper 5.8:1, foil/binding 6.9:1, binding-soft/binding 9:1, field borders 4.5:1.
+ * Gold (--foil) is never used for text on paper, and never as the only signal of meaning.
+ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    color-scheme: light dark;
+
+    --paper: #f5f5f2;
+    --paper-sunk: #e8e7e1;
+    --ink: #121317;
+    --ink-soft: #313339;
+    --ink-faint: #45474e;
+    --rule: #bfbeb6;
+    --rule-hard: #121317;
+    --field: #6a6963;
+    --binding: #1c1e23;
+    --binding-ink: #f1eee5;
+    --binding-soft: #c9c6bc;
+    --binding-line: #6b6d73;
+    --foil: #c8a24a;
+    --foil-ink: #7a5b12;
+    --mark: rgb(200 162 74 / 0.6);
+    --focus: #7a5b12;
+
+    &:has(> head > meta[name="color-scheme"][content="light"]) { color-scheme: light; }
+    &:has(> head > meta[name="color-scheme"][content="dark"]) { color-scheme: dark; }
+}
+
+/* Night reading, designed on its own: lamp-black paper, softened ink to cut glare,
+   warmer gold so it carries without glowing. */
+@media (prefers-color-scheme: dark) {
+    :root:not(:has(> head > meta[name="color-scheme"][content="light"])) {
+        --paper: #18191c;
+        --paper-sunk: #202125;
+        --ink: #ece8de;
+        --ink-soft: #d3d0c7;
+        --ink-faint: #b3b0a7;
+        --rule: #3b3c42;
+        --rule-hard: #8c8d93;
+        --field: #75767c;
+        --binding: #0b0c0e;
+        --binding-ink: #ebe8de;
+        --binding-soft: #bdbab1;
+        --foil: #d6b463;
+        --foil-ink: #d6b463;
+        --mark: rgb(214 180 99 / 0.3);
+        --focus: #d6b463;
+    }
+}
+:root:has(> head > meta[name="color-scheme"][content="dark"]) {
+    --paper: #18191c;
+    --paper-sunk: #202125;
+    --ink: #ece8de;
+    --ink-soft: #d3d0c7;
+    --ink-faint: #b3b0a7;
+    --rule: #3b3c42;
+    --rule-hard: #8c8d93;
+    --field: #75767c;
+    --binding: #0b0c0e;
+    --binding-ink: #ebe8de;
+    --binding-soft: #bdbab1;
+    --foil: #d6b463;
+    --foil-ink: #d6b463;
+    --mark: rgb(214 180 99 / 0.3);
+    --focus: #d6b463;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-paper: var(--paper);
+    --color-paper-sunk: var(--paper-sunk);
+    --color-ink: var(--ink);
+    --color-ink-soft: var(--ink-soft);
+    --color-ink-faint: var(--ink-faint);
+    --color-rule: var(--rule);
+    --color-rule-hard: var(--rule-hard);
+    --color-field: var(--field);
+    --color-binding: var(--binding);
+    --color-binding-ink: var(--binding-ink);
+    --color-binding-soft: var(--binding-soft);
+    --color-foil: var(--foil);
+    --color-foil-ink: var(--foil-ink);
+
+    /* Latin from Newsreader; Hebrew falls through to Frank Ruhl Libre. */
+    --font-serif: var(--font-newsreader), var(--font-frank-ruhl), Georgia, serif;
+    --font-hebrew: var(--font-frank-ruhl), Georgia, serif;
+    --font-rashi: var(--font-rashi), var(--font-frank-ruhl), serif;
+    /* The printer's notes: running heads, dates, labels and buttons. */
+    --font-mono: var(--font-plex-mono), ui-monospace, "Cascadia Mono", monospace;
 }
 
+/* Type scale: perfect fourth from an 18px reading size. Nothing on the site is under 14px. */
+@theme {
+    --text-small: 0.9375rem;
+    --text-small--line-height: 1.45;
+    --text-meta: 0.9375rem;
+    --text-meta--line-height: 1.5;
+    --text-ui: 1rem;
+    --text-ui--line-height: 1.5;
+    --text-body: 1.125rem;
+    --text-body--line-height: 1.65;
+    --text-read: 1.1875rem;
+    --text-read--line-height: 1.75;
+    --text-lede: 1.3125rem;
+    --text-lede--line-height: 1.5;
+    --text-h3: 1.3125rem;
+    --text-h3--line-height: 1.2;
+    --text-h2: 1.625rem;
+    --text-h2--line-height: 1.12;
+    --text-h1: 3.553rem;
+    --text-h1--line-height: 1.02;
+
+    --radius-control: 2px;
+}
+
+@utility folio {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    @media (width >= 48rem) { padding-inline: 2rem; }
+}
+
+@layer base {
+    html { -webkit-text-size-adjust: 100%; }
+
+    /* A grid with no column template gets one column that can shrink, so wide content
+       (a select, a luach) never pushes the page wider than a phone. grid-cols-* overrides it. */
+    .grid { grid-template-columns: minmax(0, 1fr); }
+
+    body {
+        background-color: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-serif);
+        font-size: var(--text-body);
+        line-height: 1.6;
+        font-optical-sizing: auto;
+        font-variant-numeric: oldstyle-nums proportional-nums;
+    }
+
+    :lang(he) {
+        font-family: var(--font-hebrew);
+        font-variant-numeric: normal;
+    }
+    /* Hebrew inside an English line keeps its own right-to-left order */
+    [lang="he"] { unicode-bidi: isolate; }
+    :is(p, li, h1, h2, h3) > [lang="he"]:not(.numeral) { font-size: 1.12em; }
+
+    h1, h2, h3, h4 { text-wrap: balance; }
+    p { text-wrap: pretty; }
+
+    a { color: inherit; text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+    a:hover { text-decoration-thickness: 2px; }
+
+    ::selection { background: var(--foil); color: #1c1e23; }
+
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    mark { background: var(--mark); color: inherit; padding-inline: 1px; }
+
+    /* The search sheet has its own Close button */
+    input[type="search"]::-webkit-search-cancel-button { appearance: none; }
+}
+
+@layer components {
+    /* On the black binding, focus and links use the binding's own colours. */
+    .on-binding {
+        background: var(--binding);
+        color: var(--binding-ink);
+        --focus: var(--foil);
+    }
+
+    /* Labels and notes are set in mono, like the printer's marks on a daf. */
+    .sc {
+        font-family: var(--font-mono);
+        font-size: var(--text-small);
+        line-height: 1.5;
+        color: var(--ink-soft);
+    }
+    .on-binding .sc { color: var(--binding-soft); font-weight: 500; }
+
+    .meta { font-family: var(--font-mono); font-size: var(--text-small); line-height: 1.6; color: var(--ink-soft); }
+    .on-binding .meta { color: var(--binding-soft); font-weight: 500; }
+
+    /* A sentence of supporting text: serif, never mono */
+    .note { font-size: var(--text-ui); line-height: 1.5; color: var(--ink-soft); }
+    .on-binding .note { color: var(--binding-soft); }
+
+    /* Running head above a page: English left, Hebrew right */
+    .runhead {
+        display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; column-gap: 1rem;
+        padding-bottom: 0.375rem; border-bottom: 1px solid var(--rule-hard);
+        font-family: var(--font-mono); font-size: var(--text-small); color: var(--ink-soft);
+    }
+    .runhead [lang="he"] { font-family: var(--font-hebrew); font-size: 1.25rem; font-weight: 500; color: var(--ink); }
+
+    /* An article's picture, or when it has none, its daf stamped in gold on the binding */
+    .plate {
+        position: relative; display: grid; place-content: center; justify-items: center; gap: 0.25em;
+        aspect-ratio: 3 / 2; width: 100%; overflow: hidden;
+        background: var(--binding); color: var(--foil);
+        container-type: inline-size;
+    }
+    .plate-num { font-family: var(--font-hebrew); font-weight: 500; line-height: 0.9; font-size: clamp(1.75rem, 34cqi, 7rem); }
+    .plate-name { font-family: var(--font-hebrew); font-size: clamp(0.95rem, 9cqi, 1.375rem); color: var(--binding-ink); }
+    @container (width < 7rem) { .plate-name { display: none; } }
+    .plate:not(:has(img))::after { content: ""; position: absolute; inset: 5cqi; border: 1px solid rgb(200 162 74 / 0.45); pointer-events: none; }
+    @media (prefers-reduced-motion: no-preference) {
+        .plate img { transition: transform 0.4s ease; }
+        a:hover .plate img, .card:hover .plate img { transform: scale(1.025); }
+    }
+
+    .plain { text-decoration: none; }
+    .plain:hover { text-decoration: none; }
+
+    .tap { display: inline-flex; align-items: center; min-height: 44px; }
+
+    /* Primary action: a solid ink block. */
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        min-height: 48px; padding: 0 1.25rem;
+        background: var(--ink); color: var(--paper);
+        font-family: var(--font-mono); font-weight: 500; font-size: 0.9375rem;
+        border-radius: var(--radius-control); text-decoration: none;
+        transition: background-color 0.15s;
+    }
+    .btn:hover { background: var(--ink-soft); text-decoration: none; }
+    .btn:disabled, .btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+
+    /* Secondary action: outlined; fills on hover. */
+    .btn-quiet {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        min-height: 44px; padding: 0 0.875rem;
+        border: 1px solid var(--field); border-radius: var(--radius-control);
+        background: var(--paper); color: var(--ink);
+        font-family: var(--font-mono); font-size: 0.9375rem; text-decoration: none; cursor: pointer;
+        transition: background-color 0.15s;
+    }
+    .btn-quiet:hover { background: var(--paper-sunk); text-decoration: none; }
+    .on-binding .btn-quiet { background: transparent; color: var(--binding-ink); border-color: var(--binding-line); }
+    .on-binding .btn-quiet:hover { background: #2a2c32; }
+    .on-binding nav a { color: var(--binding-ink); }
+
+    .chip {
+        display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.875rem;
+        border: 1px solid var(--field); border-radius: var(--radius-control);
+        font-size: var(--text-ui); text-decoration: none;
+    }
+    .chip:hover { background: var(--paper-sunk); text-decoration: none; }
+
+    .field {
+        width: 100%; min-height: 48px; padding: 0.6875rem 0.75rem;
+        background: var(--paper); color: var(--ink);
+        border: 1px solid var(--field); border-radius: var(--radius-control);
+        font: inherit; font-size: 1.0625rem;
+    }
+    .field::placeholder { color: var(--ink-faint); }
+    .field:focus-visible { outline-offset: 0; }
+    .field[aria-invalid="true"] { border: 2px solid var(--ink); }
+    textarea.field { min-height: 7rem; resize: vertical; }
+
+    select.field {
+        appearance: none; padding-right: 2.25rem;
+        background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+        background-position: right 1.1rem center, right 0.75rem center;
+        background-size: 0.35rem 0.35rem; background-repeat: no-repeat;
+    }
+
+    /* Hebrew numerals used as folio marks. */
+    .numeral { font-family: var(--font-hebrew); font-weight: 500; line-height: 1; font-variant-numeric: normal; }
+
+    .rule-double { border-top: 3px double var(--rule); }
+
+    /* A list row: one pattern for articles and stories everywhere. */
+    .row {
+        display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); column-gap: 0.875rem; row-gap: 0.25rem;
+        padding-block: 1rem; border-bottom: 1px solid var(--rule); align-items: baseline;
+    }
+    .row-num { font-size: 1.875rem; grid-row: span 3; }
+    .row-title { font-weight: 600; font-size: var(--text-h3); line-height: 1.2; }
+    .row-title a { text-decoration: none; }
+    .row-title a:hover { text-decoration: underline; }
+    .row-title a::after { content: ""; position: absolute; inset: 0; } /* whole row is the link target */
+    .row { position: relative; }
+    .row a:not(.row-title a) { position: relative; z-index: 1; }
+    .row > :not(.row-num) { grid-column: 2; }
+    @media (width < 48rem) {
+        .row-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+    }
+    .row-text { color: var(--ink); font-size: 1.125rem; line-height: 1.55; max-width: 68ch; }
+    @media (width >= 48rem) {
+        .row-wide { grid-template-columns: 4.5rem minmax(0, 1fr) 12rem; }
+        .row-wide .row-num { grid-row: span 2; }
+        .row-wide .row-side { grid-column: 3; grid-row: 1 / span 2; text-align: right; }
+    }
+
+    /* An article row led by its picture (or plate) instead of a numeral */
+    .row-pic { grid-template-columns: 7.5rem minmax(0, 1fr); align-items: start; column-gap: 1rem; }
+    .row-pic .row-num { grid-row: span 3; align-self: start; }
+    @media (width >= 48rem) {
+        .row-pic { grid-template-columns: 11rem minmax(0, 1fr); column-gap: 1.5rem; padding-block: 1.25rem; }
+    }
+
+    /* The home page's featured article, laid out as a daf: margin | Gemara | Tosafos */
+    .tzurah { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+    .tzurah-margin { display: flex; align-items: flex-end; gap: 1rem; }
+    .tzurah-gemara { border-top: 3px double var(--rule-hard); padding-top: 1rem; }
+    @media (width >= 64rem) { .tzurah-gemara { border-top: 0; padding-top: 0; } }
+    @media (width >= 64rem) {
+        .tzurah { grid-template-columns: 9rem minmax(0, 1fr) 17.5rem; gap: 0; }
+        .tzurah > * { padding-inline: 1.75rem; }
+        .tzurah > * + * { border-left: 1px solid var(--rule); }
+        .tzurah > :first-child { padding-left: 0; }
+        .tzurah > :last-child { padding-right: 0; }
+        .tzurah-margin { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    }
+
+    /* More articles: one lead picture, the rest smaller around it */
+    /* On phones the first card leads and the rest pair up. On desktop the first three sit in the
+       Tosafos margin above, so the fourth leads, two sit beside it, and the rest run as rows. */
+    .mosaic { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 1rem; }
+    @media (width < 64rem) {
+        .mosaic > .lead-sm { grid-column: span 2; }
+    }
+    @media (width >= 64rem) {
+        .mosaic { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.25rem 1.75rem; }
+        .mosaic > .lead-lg { grid-column: span 2; grid-row: span 2; }
+        .mosaic > .as-row { grid-column: 1 / -1; grid-template-columns: 11rem minmax(0, 1fr); column-gap: 1.5rem; row-gap: 0.25rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+        .mosaic > .as-row > :first-child { grid-row: span 3; }
+        .mosaic > .as-row > :not(:first-child) { grid-column: 2; }
+    }
+
+    /* Picture-led article card for the home page */
+    .card { position: relative; display: grid; gap: 0.5rem; align-content: start; }
+    .card-title { font-weight: 600; font-size: var(--text-h3); line-height: 1.18; letter-spacing: -0.01em; }
+    .card-title a { text-decoration: none; }
+    .card-title a::after { content: ""; position: absolute; inset: 0; }
+    .card:hover .card-title a { text-decoration: underline; }
+    .card-text { color: var(--ink); font-size: 1.125rem; line-height: 1.55; max-width: 62ch; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+
+    /* Luach week strip */
+    .luach { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-block: 1px solid var(--rule-hard); }
+    .luach-day {
+        display: grid; align-content: start; text-align: center; gap: 0;
+        min-height: 84px; padding: 0.375rem 0.125rem 0.25rem;
+        border-right: 1px solid var(--rule); text-decoration: none;
+    }
+    .luach-day:hover { background: var(--paper-sunk); text-decoration: none; }
+    .luach-day:nth-child(6) { border-right: 3px double var(--rule-hard); }
+    .luach-day:nth-child(7) { border-right: 0; }
+    .luach-day[aria-current="date"] { background: var(--foil); color: #1c1e23; --focus: var(--ink); }
+    .luach-day[aria-current="date"] :is(.luach-daf, .luach-sub, .luach-wd, .luach-label) { color: #1c1e23; }
+    .luach-wd { font-size: 1rem; color: var(--ink-soft); }
+    .luach-daf { font-family: var(--font-hebrew); font-weight: 500; font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.15; }
+    .luach-sub { font-size: 1rem; color: var(--ink-soft); line-height: 1.3; }
+    .luach-label { font-size: 0.9375rem; font-weight: 600; line-height: 1.3; }
+    .luach-span {
+        grid-row: 2; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+        min-height: 32px; margin: 0; padding: 0.25rem 0.625rem;
+        background: var(--foil); color: #1c1e23; font-size: 1rem; font-weight: 600; text-decoration: none;
+    }
+    .luach-span:hover { text-decoration: underline; }
+
+    /* The luach set into the black binding band */
+    .on-binding .luach { border-block-color: var(--binding-line); }
+    .on-binding .luach-day { border-right-color: #34363c; color: var(--binding-ink); }
+    .on-binding .luach-day:nth-child(6) { border-right-color: var(--binding-line); }
+    .on-binding .luach-day:hover { background: #2a2c32; }
+    .on-binding .luach-wd, .on-binding .luach-sub { color: var(--binding-soft); }
+    .on-binding .luach-day[aria-current="date"] { background: var(--foil); }
+    .on-binding .luach-span { background: transparent; color: var(--binding-ink); border-top: 2px solid var(--foil); }
+
+    /* Article text, set like the centre column of a daf. */
+
+    .crumbs { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.5rem; font-family: var(--font-mono); font-size: var(--text-small); color: var(--ink-soft); }
+    .crumbs a { min-height: 44px; display: inline-flex; align-items: center; }
+}
+
+/* The logo assembles once, on the home page. */
+@media (prefers-reduced-motion: no-preference) {
+    :root:has([data-home]) header[data-site] .logo-g { animation: logo-gemara 0.5s ease-out both; transform-origin: 16px 16px; }
+    :root:has([data-home]) header[data-site] .logo-r { animation: logo-rashi 0.45s 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+    :root:has([data-home]) header[data-site] .logo-t { animation: logo-tosafos 0.45s 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+}
+@keyframes logo-gemara { from { opacity: 0; transform: scale(0.6); } }
+@keyframes logo-rashi { from { opacity: 0; transform: translateX(-5px); } }
+@keyframes logo-tosafos { from { opacity: 0; transform: translateX(5px); } }
+
+/* Theme toggle: both labels are in the markup; CSS shows the one that applies. */
+.scheme-dark-only { display: none; }
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    :root:not(:has(> head > meta[name="color-scheme"][content="light"])) .scheme-light-only { display: none; }
+    :root:not(:has(> head > meta[name="color-scheme"][content="light"])) .scheme-dark-only { display: inline; }
+}
+:root:has(> head > meta[name="color-scheme"][content="dark"]) .scheme-light-only { display: none; }
+:root:has(> head > meta[name="color-scheme"][content="dark"]) .scheme-dark-only { display: inline; }
+
+@media print {
+    header[data-site], footer[data-site], nav[aria-label="Breadcrumb"], [data-no-print] { display: none !important; }
+    body { background: #fff; color: #000; font-size: 12pt; }
+    .prose.daf-text { max-width: none; }
+    main::after { content: "Contains divrei Torah. Please treat with respect."; display: block; margin-top: 2em; font-size: 10pt; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Article text. Unlayered on purpose: the typography plugin's .prose lives in the utilities
+   layer, and only unlayered rules sit above it. */
+.prose.daf-text {
+    --tw-prose-body: var(--ink);
+    --tw-prose-headings: var(--ink);
+    --tw-prose-links: var(--ink);
+    --tw-prose-bold: var(--ink);
+    --tw-prose-quotes: var(--ink-soft);
+    --tw-prose-quote-borders: var(--rule);
+    --tw-prose-hr: var(--rule);
+    font-size: var(--text-read);
+    line-height: 1.75;
+    max-width: 58ch;
 }
+.prose.daf-text > p { margin-block: 0 1em; white-space: pre-line; }
+.prose.daf-text > p:first-child:not([lang="he"])::first-line {
+    font-variant-caps: small-caps; letter-spacing: 0.02em;
+}
+.prose.daf-text > p[lang="he"] {
+    font-size: 1.22em; line-height: 1.85; font-weight: 450;
+    padding-block: 0.75rem; border-block: 1px solid var(--rule);
+}
+.daf-text :target { background: var(--mark); }
+/* Subheadings from the newspaper column */
+.prose.daf-text > h2 {
+    font-size: 1.45em; line-height: 1.2; font-weight: 600; letter-spacing: -0.015em;
+    margin: 1.9em 0 0.6em; padding-top: 0.7em; border-top: 1px solid var(--rule);
+}
+.prose.daf-text > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }

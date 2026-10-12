@@ -6,7 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "stories:export": "node --env-file-if-exists=.env.local scripts/export-articles.mjs",
+    "stories:publish": "node --env-file-if-exists=.env.local scripts/backfill-stories.mjs",
+    "stories:pipeline": "node --env-file-if-exists=.env.local scripts/story-pipeline.mjs",
+    "stories:schedule": "powershell -ExecutionPolicy Bypass -File scripts/register-schedule.ps1",
+    "import:jh": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/jewishhome.mjs",
+    "import:publish": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/publish.mjs",
+    "import:weekly": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/weekly.mjs",
+    "import:preview": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/preview.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.83.0",
@@ -17,11 +25,13 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

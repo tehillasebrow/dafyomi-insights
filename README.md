@@ -76,7 +76,16 @@ npm install
 Configure Environment Variables:
 Create a .env.local file in the root directory and add the following:
 
-NEXT_PUBLIC_ADMIN_PASSWORD=your_secure_password
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key   # server-only, never prefix with NEXT_PUBLIC_
+ADMIN_PASSWORD=your_secure_password               # server-only
+ADMIN_SESSION_SECRET=long_random_string           # optional, signs the admin cookie (defaults to ADMIN_PASSWORD)
+
+
+Apply database migrations (Supabase CLI, or paste into the SQL editor):
+
+supabase db push
 
 
 Run the development server:

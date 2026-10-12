@@ -1,112 +1,81 @@
-import { supabase } from '@/app/lib/supabase'
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Tag } from 'lucide-react'
-import Comments from '@/app/components/Comments' // Import Comments
+import { notFound, redirect } from 'next/navigation'
+import { supabase } from '@/app/lib/supabase'
+import { getArticlesForDaf, articlePath, dafLabel, decodeParam, ARTICLE_LIST_COLUMNS } from '@/app/lib/articles'
+import { findMasechta, titleCase, masechtaHref, hebrewNumeral } from '@/app/lib/shas'
+import { buildMetadata } from '@/app/lib/seo'
+import ArticleRow from '@/app/components/ArticleRow'
+import EmptyDaf from '@/app/components/EmptyDaf'
 
-export const revalidate = 0
+export const revalidate = 300
 
 export async function generateMetadata({ params }) {
     const { masechta, daf } = await params
-    const { data: article } = await supabase
-        .from('articles')
-        .select('title, summary')
-        .ilike('masechta', masechta)
-        .eq('daf', daf)
-        .single()
-
-    if (!article) return {}
+    const name = findMasechta(decodeParam(masechta))?.name ?? titleCase(decodeParam(masechta))
+    const articles = Number.isInteger(Number(daf)) ? await getArticlesForDaf(decodeParam(masechta), Number(daf), 'id') : []
 
     return {
-        title: `Daf Yomi Article: ${masechta} ${daf} - ${article.title}`,
-        description: article.summary,
+        ...buildMetadata({
+            title: `${name} ${daf} Daf Yomi Articles`,
+            description: `Daf Yomi articles and insights on ${name} daf ${daf}, by Rabbi Avrohom Sebrow.`,
+            path: `${masechtaHref(name)}/${daf}`,
+        }),
+        // A daf with no article yet isn't worth a search result
+        ...(articles.length === 0 && { robots: { index: false, follow: true } }),
     }
 }
 
-export default async function ArticlePage({ params }) {
-    const { masechta, daf } = await params
+// The nearest article in the masechta, for a daf that has none yet
+async function nearestArticle(masechta, daf) {
+    const pick = (op, ascending) => supabase
+        .from('articles').select(ARTICLE_LIST_COLUMNS).ilike('masechta', masechta)[op]('daf', daf)
+        .order('daf', { ascending }).limit(1).maybeSingle()
+    const [{ data: before }, { data: after }] = await Promise.all([pick('lt', false), pick('gt', true)])
+    if (!before) return after
+    if (!after) return before
+    return daf - (before.daf_end ?? before.daf) <= after.daf - daf ? before : after
+}
 
-    const { data: article } = await supabase
-        .from('articles')
-        .select('*')
-        .ilike('masechta', masechta)
-        .eq('daf', daf)
-        .single()
+// Lists every article on a daf. With a single article this redirects to it,
+// which also keeps the old /daf/{masechta}/{daf} article URLs working.
+export default async function DafPage({ params }) {
+    const { masechta: rawMasechta, daf: rawDaf } = await params
+    const masechta = decodeParam(rawMasechta)
+    const daf = Number(rawDaf)
+    if (!Number.isInteger(daf)) return notFound()
 
-    if (!article) return notFound()
+    const known = findMasechta(masechta)
+    if (known && (daf < known.first || daf > known.last)) return notFound()
 
-    // Google Schema
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: article.title,
-        image: article.image_url ? [article.image_url] : [], // Add image to SEO
-        author: {
-            '@type': 'Person',
-            name: 'Rabbi Avrohom Sebrow',
-        },
-        datePublished: article.created_at,
-        articleBody: article.content,
+    const articles = await getArticlesForDaf(masechta, daf, ARTICLE_LIST_COLUMNS)
+    // Temporary redirect: a second article may be added to this daf later
+    if (articles.length === 1) redirect(articlePath(articles[0]))
+
+    const name = known?.name ?? titleCase(masechta)
+
+    if (articles.length === 0) {
+        if (!known) return notFound()
+        return <EmptyDaf masechta={known} daf={daf} nearest={await nearestArticle(masechta, daf)} />
     }
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-12">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-
-            <Link href="/" className="inline-flex items-center text-slate-500 hover:text-blue-600 mb-8 font-sans text-sm font-medium transition">
-                <ArrowLeft className="w-4 h-4 mr-1" /> Back to Articles
-            </Link>
-
-            <article>
-                <header className="mb-10 text-center">
-                    <Link href={`/daf/${article.masechta.toLowerCase()}`} className="inline-block px-4 py-1.5 bg-blue-50 text-blue-800 font-bold text-sm uppercase tracking-wider rounded-full mb-4 hover:bg-blue-100 transition">
-                        {article.masechta} {article.daf}
-                    </Link>
-                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
-                        {article.title}
-                    </h1>
-                    <div className="text-slate-500 font-sans text-sm border-y border-slate-100 py-4">
-                        By Rabbi Avrohom Sebrow • {new Date(article.created_at).toLocaleDateString()}
-                    </div>
-                </header>
-
-                {/* IMAGE DISPLAY (Only if exists) */}
-                {article.image_url && (
-                    <div className="mb-10 rounded-2xl overflow-hidden shadow-sm border border-slate-100">
-                        <img
-                            src={article.image_url}
-                            alt={article.title}
-                            className="w-full h-auto object-cover max-h-[500px]"
-                        />
-                    </div>
-                )}
-
-                <div className="prose prose-lg prose-slate max-w-none font-serif leading-loose whitespace-pre-line">
-                    {article.content}
+        <div className="folio py-6 md:py-8">
+            <nav aria-label="Breadcrumb" className="crumbs">
+                <Link href="/masechtos">Masechtos</Link>
+                <span aria-hidden="true">›</span>
+                <Link href={masechtaHref(name)}>{name}</Link>
+            </nav>
+            <header className="grid gap-1.5 pb-4 border-b border-rule-hard md:grid-cols-[auto_1fr] md:gap-x-7 md:items-end">
+                <span lang="he" className="numeral text-[clamp(3.75rem,9vw,6rem)]">{hebrewNumeral(daf)}</span>
+                <div>
+                    <h1 className="font-semibold text-[clamp(2rem,4.5vw,3rem)] leading-none tracking-[-0.02em]">{name} {daf}</h1>
+                    <p className="meta mt-1">{articles.length} articles cover this daf</p>
                 </div>
-
-                {article.tags && (
-                    <div className="mt-12 pt-8 border-t border-slate-100 mb-12">
-                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Topics</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {article.tags.map(tag => (
-                                <Link
-                                    key={tag}
-                                    href={`/topics/${tag.trim()}`}
-                                    className="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-600 text-sm rounded-md hover:bg-blue-600 hover:text-white transition duration-200"
-                                >
-                                    <Tag className="w-3 h-3 mr-1.5 opacity-50" /> {tag}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </article>
-
-            {/* COMMENTS SECTION */}
-            <Comments articleId={article.id} />
+            </header>
+            <div>
+                {articles.map(a => <ArticleRow key={a.id} article={a} showMasechta={false} headingLevel={2} />)}
+            </div>
+            <p className="meta pt-4">Articles that cover a range of dafim show the first daf: {articles.map(a => dafLabel(a)).join(', ')}.</p>
         </div>
-    )}
+    )
+}

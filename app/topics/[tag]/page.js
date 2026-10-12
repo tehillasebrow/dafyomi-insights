@@ -1,61 +1,64 @@
-import { supabase } from '@/app/lib/supabase'
 import Link from 'next/link'
-import { ArrowRight, Tag } from 'lucide-react'
+import { supabase } from '@/app/lib/supabase'
+import { ARTICLE_LIST_COLUMNS, orderByPublished, decodeParam } from '@/app/lib/articles'
+import { findMasechta, masechtaHref } from '@/app/lib/shas'
+import { buildMetadata, breadcrumbJsonLd } from '@/app/lib/seo'
+import { getStoriesWithTag } from '@/app/lib/stories'
+import JsonLd from '@/app/components/JsonLd'
+import ArticleRow from '@/app/components/ArticleRow'
+import StoryRow from '@/app/components/StoryRow'
 
-export const revalidate = 0
+export const revalidate = 3600
 
 export async function generateMetadata({ params }) {
     const { tag } = await params
-    const decodedTag = decodeURIComponent(tag)
-    return { title: `${decodedTag} Daf Yomi Articles & Insights` }
+    const decodedTag = decodeParam(tag)
+    return buildMetadata({
+        title: `${decodedTag} in the Gemara – Daf Yomi Articles & Stories`,
+        description: `Daf Yomi articles, Gemara stories and insights on ${decodedTag}, by Rabbi Avrohom Sebrow.`,
+        path: `/topics/${encodeURIComponent(decodedTag)}`,
+        keywords: [`${decodedTag} Gemara`, `${decodedTag} Talmud`, `${decodedTag} Daf Yomi`],
+    })
 }
 
 export default async function SingleTopicPage({ params }) {
     const { tag } = await params
-    const decodedTag = decodeURIComponent(tag)
+    const decodedTag = decodeParam(tag)
 
-    // Fetch articles that contain this specific tag
-    const { data: articles } = await supabase
-        .from('articles')
-        .select('*')
-        .contains('tags', [decodedTag]) // Postgres magic to look inside the array
-        .order('created_at', { ascending: false })
+    const [{ data }, stories] = await Promise.all([
+        orderByPublished(supabase.from('articles').select(ARTICLE_LIST_COLUMNS).contains('tags', [decodedTag])),
+        getStoriesWithTag(decodedTag),
+    ])
+    const articles = data ?? []
+    const masechtos = [...new Set([...articles, ...stories].map(x => findMasechta(x.masechta)?.name).filter(Boolean))]
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-12">
-            <div className="mb-12 border-b border-slate-200 pb-8">
-                <div className="flex items-center gap-2 mb-2 text-blue-600 font-bold uppercase tracking-wider text-sm">
-                    <Tag className="w-5 h-5" /> Topic
-                </div>
-                <h1 className="text-5xl font-bold text-slate-900">{decodedTag}</h1>
-                <p className="text-slate-500 mt-2 text-lg">{articles?.length || 0} Articles Found</p>
-            </div>
+        <div className="folio py-6 md:py-8">
+            <JsonLd data={breadcrumbJsonLd([{ name: 'Topics', path: '/topics' }, { name: decodedTag, path: `/topics/${encodeURIComponent(decodedTag)}` }])} />
+            <nav aria-label="Breadcrumb" className="crumbs"><Link href="/topics">Topics</Link></nav>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {articles?.map((article) => (
-                    <Link href={`/daf/${article.masechta.toLowerCase()}/${article.daf}`} key={article.id} className="group block h-full">
-                        <article className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:border-blue-100 transition-all duration-300 h-full flex flex-col">
-                            <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-full">
-                  {article.masechta} {article.daf}
-                </span>
-                                <span className="text-slate-400 text-xs font-sans">
-                  {new Date(article.created_at).toLocaleDateString()}
-                </span>
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-700 transition-colors">
-                                {article.title}
-                            </h3>
-                            <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 mb-6 flex-grow font-sans">
-                                {article.summary}
-                            </p>
-                            <div className="flex items-center text-blue-600 font-bold text-sm mt-auto group-hover:translate-x-1 transition-transform">
-                                Read <ArrowRight className="w-4 h-4 ml-1" />
-                            </div>
-                        </article>
-                    </Link>
-                ))}
-            </div>
+            <header className="grid gap-1.5 pb-4 border-b border-rule-hard">
+                <p className="sc">Topic</p>
+                <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.25rem)] leading-[1.02] tracking-[-0.02em]">{decodedTag}</h1>
+                <p className="meta">
+                    {articles.length} {articles.length === 1 ? 'article' : 'articles'}
+                    {stories.length > 0 && `, ${stories.length} ${stories.length === 1 ? 'story' : 'stories'}`}
+                    {masechtos.length > 0 && <>, in {masechtos.map((m, i) => <span key={m}>{i > 0 && (i === masechtos.length - 1 ? ' and ' : ', ')}<Link href={masechtaHref(m)}>{m}</Link></span>)}</>}
+                </p>
+            </header>
+
+            {articles.length === 0 && stories.length === 0 && (
+                <p className="text-ink-soft py-4">Nothing is filed under “{decodedTag}” yet. <Link href="/topics">See all topics</Link>.</p>
+            )}
+
+            {articles.map(a => <ArticleRow key={a.id} article={a} />)}
+
+            {stories.length > 0 && (
+                <section aria-labelledby="stories-h" className="pt-8">
+                    <h2 id="stories-h" className="font-semibold text-h2 tracking-[-0.02em] border-b border-rule-hard pb-2">Gemara stories on {decodedTag}</h2>
+                    {stories.map(s => <StoryRow key={s.id} story={s} />)}
+                </section>
+            )}
         </div>
     )
 }
