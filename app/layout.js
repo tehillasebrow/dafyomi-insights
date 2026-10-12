@@ -3,6 +3,7 @@ import { Newsreader, Frank_Ruhl_Libre, Noto_Rashi_Hebrew, IBM_Plex_Mono } from '
 import SiteHeader from './components/SiteHeader'
 import SiteFooter from './components/SiteFooter'
 import Analytics from './components/Analytics'
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next'
 import JsonLd from './components/JsonLd'
 import { SITE_URL, SITE_NAME, DEFAULT_TITLE, DEFAULT_DESCRIPTION, KEYWORDS, AUTHOR } from './lib/site'
 import { websiteJsonLd } from './lib/seo'
@@ -78,6 +79,7 @@ export default function RootLayout({ children }) {
             {children}
         </main>
         <SiteFooter />
+        <VercelAnalytics />
         </body>
         </html>
     )
