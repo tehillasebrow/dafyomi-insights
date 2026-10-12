@@ -2,6 +2,7 @@ import './globals.css'
 import Link from 'next/link'
 import { BookOpen } from 'lucide-react'
 import Search from './components/Search'
+import { Analytics } from '@vercel/analytics/next'
 
 export const metadata = {
     title: 'Daf Yomi Articles & Insights | Rabbi Avrohom Sebrow | Delving into the Daf',
@@ -72,6 +73,7 @@ export default function RootLayout({ children }) {
                 <p className="text-sm">© {new Date().getFullYear()} Rabbi Avrohom Sebrow. All rights reserved.</p>
             </div>
         </footer>
+        <Analytics />
         </body>
         </html>
     )
