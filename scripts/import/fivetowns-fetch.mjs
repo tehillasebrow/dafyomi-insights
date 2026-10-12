@@ -35,8 +35,9 @@ async function get(url, { binary = false, tries = 4 } = {}) {
 }
 
 // Wayback CDX: [{ original, timestamp }] for successful HTML captures
-async function cdx(params) {
+async function cdx({ filter, ...params }) {
     const qs = new URLSearchParams({ output: 'json', fl: 'original,timestamp,statuscode,mimetype', collapse: 'urlkey', limit: '20000', ...params })
+    for (const f of [filter].flat().filter(Boolean)) qs.append('filter', f) // each filter is its own parameter
     const text = await get(`https://web.archive.org/cdx/search/cdx?${qs}`)
     if (!text) return []
     const rows = JSON.parse(text || '[]')
@@ -81,17 +82,20 @@ async function main() {
         for (const r of rows) add(r.original, r.timestamp)
     }
 
-    // 2. Any URL on the site mentioning Sebrow, and his author pages: their links find columns with other titles
+    // 2. Any URL on the site mentioning Sebrow, plus listing pages (his author page, the Daf
+    //    Yomi / Torah categories). Every saved copy of a listing page shows the ~10 newest
+    //    articles at that moment, so all copies are read and their article links collected.
     const listings = []
     for (const params of [
         { url: '5tjt.com/', matchType: 'prefix', filter: 'original:.*[Ss]ebrow.*' },
         { url: '5tjt.com/author/', matchType: 'prefix', filter: 'original:.*sebrow.*' },
+        { url: '5tjt.com/category/', matchType: 'prefix', filter: 'original:.*(daf|torah|judaism).*' },
     ]) {
         try {
-            const rows = await cdx(params)
-            console.log(`${params.url} ~sebrow: ${rows.length} URLs`)
+            const rows = await cdx({ ...params, filter: [params.filter, 'statuscode:200'] })
+            console.log(`${params.url} ${params.filter}: ${rows.length} URLs`)
             for (const r of rows) {
-                if (/\/(author|category|tag)\//.test(r.original)) listings.push(r)
+                if (/\/(author|category|tag)\//.test(r.original)) listings.push(r.original)
                 else add(r.original, r.timestamp)
             }
         } catch (err) {
@@ -99,9 +103,28 @@ async function main() {
         }
     }
     for (const listing of listings) {
-        const html = await get(`https://web.archive.org/web/${listing.timestamp}id_/${listing.original}`)
-        if (!html) continue
-        for (const [, href] of html.matchAll(/href="(https?:\/\/(?:www\.)?5tjt\.com\/[^"#?]+)"/gi)) add(href)
+        // collapse=digest: one capture per distinct version of the page
+        const qs = new URLSearchParams({ url: listing, output: 'json', fl: 'timestamp', filter: 'statuscode:200', collapse: 'digest' })
+        let stamps = []
+        try {
+            stamps = JSON.parse((await get(`https://web.archive.org/cdx/search/cdx?${qs}`)) || '[]').slice(1).map(r => r[0])
+        } catch (err) {
+            console.log(`  (listing ${listing} skipped: ${err.message})`)
+        }
+        const before = candidates.size
+        for (const ts of stamps) {
+            const html = await get(`https://web.archive.org/web/${ts}id_/${listing}`).catch(() => null)
+            if (!html) continue
+            // On a category page only links near his name count; on his author page, all of them
+            const isAuthorPage = /\/author\//.test(listing)
+            for (const [, href] of html.matchAll(/href="(https?:\/\/(?:www\.)?5tjt\.com\/[^"#?]+)"/gi)) {
+                if (isAuthorPage) add(href)
+            }
+            if (!isAuthorPage) {
+                for (const m of html.matchAll(/href="(https?:\/\/(?:www\.)?5tjt\.com\/[^"#?]+)"[\s\S]{0,1500}?Sebrow/gi)) add(m[1])
+            }
+        }
+        console.log(`  ${listing}: ${stamps.length} saved copies, +${candidates.size - before} candidates`)
     }
     console.log(`Candidates: ${candidates.size}`)
     save('candidates.json', JSON.stringify([...candidates], null, 2))
