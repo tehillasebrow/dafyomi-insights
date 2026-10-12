@@ -8,6 +8,7 @@ name: Fetch 5TJT archive
 
 on:
   push:
+    paths: [.github/workflows/fetch-5tjt.yml]
     branches: [import-5tjt]
   workflow_dispatch: {}
 

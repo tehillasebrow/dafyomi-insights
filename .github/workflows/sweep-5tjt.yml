@@ -1,0 +1,35 @@
+# One-time, second pass: check every other archived 5tjt.com article page (2005–2022) for
+# Rabbi Avrohom Sebrow's byline, and retry the pages the first pass couldn't load.
+# The list (scripts/import/5tjt-sweep.json) is built from the first pass's results.
+# Results: artifacts "5tjt-sweep-0".."5tjt-sweep-11".
+name: Sweep 5TJT archive
+
+on:
+  push:
+    branches: [import-5tjt]
+    paths: [scripts/import/5tjt-sweep.json, .github/workflows/sweep-5tjt.yml]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/import/fivetowns-fetch.mjs --sweep ${{ matrix.shard }}/12
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 5tjt-sweep-${{ matrix.shard }}
+          path: data/import/5tjt/raw/
+          retention-days: 30

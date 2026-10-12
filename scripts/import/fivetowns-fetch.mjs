@@ -36,7 +36,7 @@ async function get(url, { binary = false, tries = 5 } = {}) {
         } catch (err) {
             if (attempt >= tries) throw new Error(`${url}: ${err.message}`)
         }
-        await sleep(4000 * attempt)
+        await sleep(8000 * attempt)
     }
 }
 
@@ -155,8 +155,11 @@ function classify(html) {
     return { kind: 'none' }
 }
 
-async function fetchShard(shard, of) {
-    const all = load('candidates.json', [])
+// --sweep: every other archived article page (the first pass only looked at likely ones).
+// The list is built locally from the first pass (scripts/import/5tjt-sweep.json): pages with a
+// known capture are fetched straight away (one request each); the rest go through the index.
+async function fetchShard(shard, of, sweep = false) {
+    const all = sweep ? JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '5tjt-sweep.json'), 'utf8')) : load('candidates.json', [])
     const mine = all.filter((_, i) => i % of === shard)
     const index = []
     console.log(`Shard ${shard + 1}/${of}: ${mine.length} pages`)
@@ -164,7 +167,7 @@ async function fetchShard(shard, of) {
         const name = fileNameOf(c.key)
         try {
             // Newest capture first; if it's an error or empty page, try a few older ones
-            const caps = (await captures(c.url.replace(/^https?:\/\//, ''))).slice(0, 4)
+            const caps = sweep && c.timestamp ? [{ original: c.url, timestamp: c.timestamp }] : (await captures(c.url.replace(/^https?:\/\//, ''))).slice(0, 4)
             if (!caps.length && c.timestamp) caps.push({ original: c.url, timestamp: c.timestamp })
             let entry = { name, url: c.url, via: c.via, kind: 'missing' }
             for (const cap of caps) {
@@ -205,4 +208,7 @@ if (arg('--inventory')) await inventory()
 else if (arg('--fetch')) {
     const [shard, of] = String(arg('--fetch')).split('/').map(Number)
     await fetchShard(shard, of)
-} else console.log('Usage: --inventory | --fetch <shard>/<of>')
+} else if (arg('--sweep')) {
+    const [shard, of] = String(arg('--sweep')).split('/').map(Number)
+    await fetchShard(shard, of, true)
+} else console.log('Usage: --inventory | --fetch <shard>/<of> | --sweep <shard>/<of>')
