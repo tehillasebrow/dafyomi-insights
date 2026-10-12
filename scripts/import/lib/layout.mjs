@@ -111,11 +111,9 @@ export function extractArticle(page, extraPages = []) {
     if (!byline) return { error: 'No "By Rabbi Avrohom Sebrow" byline on this page' }
 
     const bodySize = mode(lines.filter(l => l.text.trim().length > 25).map(l => Math.round(l.size * 200) / 200))
-    // The article's body fonts (regular, italic, bold): ads at the same size use other fonts
-    const fontCounts = new Map()
-    for (const l of lines) if (near(l.size, bodySize, bodySize * 0.06) && l.y > byline.y) fontCounts.set(l.font, (fontCounts.get(l.font) || 0) + 1)
-    const bodyFonts = new Set([...fontCounts].filter(([, n]) => n >= 2).map(([f]) => f))
-    const isBody = l => near(l.size, bodySize, bodySize * 0.06) && bodyFonts.has(l.font)
+    // Body text is recognised by size only. (Issuu's font numbers can't be used to filter out
+    // ads: a paragraph's short last line often gets a font number of its own.)
+    const isBody = l => near(l.size, bodySize, bodySize * 0.06)
 
     // Title: the large lines just above the byline, below the "Delving into the Daf" heading
     const titleLines = lines

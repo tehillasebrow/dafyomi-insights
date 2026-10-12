@@ -114,7 +114,6 @@ export default function CommentThread({ kind, parentId, isAdmin = false, title, 
                     <label htmlFor={`${formId}-text`} className="text-ui font-semibold mt-1.5">{prompt}</label>
                     <textarea id={`${formId}-text`} className="field" value={content} onChange={e => setContent(e.target.value)} maxLength={5000} aria-invalid={error && !error.startsWith('Please add') ? true : undefined} aria-describedby={error ? `${formId}-err` : undefined} />
                     {error && <p id={`${formId}-err`} role="alert" className="font-semibold text-[0.97rem]">Error: {error}</p>}
-                    <p className="note">Shown with your name. Posting is closed on Shabbos and Yom Tov.</p>
                     <div className="flex items-center gap-3 mt-2">
                         <button type="submit" className="btn" disabled={sending}>{sending ? 'Posting…' : 'Post'}</button>
                         <span role="status" className="note">{notice}</span>

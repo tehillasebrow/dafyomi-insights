@@ -101,7 +101,7 @@ export function findColumnInContents(pages) {
     const found = new Set()
     for (const page of pages.slice(0, 12)) {
         page.lines.forEach((line, i) => {
-            if (!/sebrow/i.test(line.text)) return
+            if (!/avrohom\s+sebrow/i.test(line.text)) return // not Goldie Sebrow's baking column etc.
             // The number is either inside the same entry ("...Sebrow\n74") or on a line next to it
             const candidates = [line.text.match(/sebrow\s*\n\s*(\d{1,3})\s*$/i)?.[1]]
             for (const l of page.lines.slice(Math.max(0, i - 2), i + 3)) candidates.push(l.text.trim().match(/^(\d{1,3})$/)?.[1])
