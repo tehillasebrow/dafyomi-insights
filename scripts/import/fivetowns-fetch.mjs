@@ -54,24 +54,28 @@ const load = (name, fallback) => {
 
 // --- Wayback index (CDX) -----------------------------------------------------------------
 
-// Rows of [original, timestamp, mimetype] for a query; pages through big results
+// Rows of [original, timestamp, mimetype] for a query. Big results come in chunks: each
+// chunk ends with a "resume key" for the next one (this works with collapse, paging doesn't).
 async function cdxAll(params) {
-    const base = new URLSearchParams({ output: 'json', fl: 'original,timestamp,mimetype', ...params })
-    base.delete('filter')
-    for (const f of [params.filter].flat().filter(Boolean)) base.append('filter', f)
-    const pagesQs = new URLSearchParams(base)
-    pagesQs.set('showNumPages', 'true')
-    const numPages = Number((await get(`https://web.archive.org/cdx/search/cdx?${pagesQs}`))?.trim() || 1)
     const rows = []
-    for (let page = 0; page < numPages; page++) {
-        const qs = new URLSearchParams(base)
-        qs.set('page', String(page))
-        const text = await get(`https://web.archive.org/cdx/search/cdx?${qs}`)
-        const json = JSON.parse(text || '[]')
-        rows.push(...json.slice(json[0]?.[0] === 'original' ? 1 : 0))
-        if (page % 10 === 0) console.log(`  index page ${page + 1}/${numPages}: ${rows.length} rows`)
+    let resumeKey = null
+    for (let chunk = 1; ; chunk++) {
+        const qs = new URLSearchParams({ fl: 'original,timestamp,mimetype', limit: '25000', showResumeKey: 'true' })
+        for (const [k, v] of Object.entries(params)) for (const x of [v].flat()) qs.append(k, x)
+        if (resumeKey) qs.set('resumeKey', resumeKey)
+        const text = (await get(`https://web.archive.org/cdx/search/cdx?${qs}`)) || ''
+        // Plain-text output: one capture per line; after a blank line, the resume key
+        const [body, key] = text.split(/\n\s*\n/)
+        const lines = body.split('\n').filter(Boolean)
+        if (chunk === 1 && !lines.length) console.log(`  (archive answered: ${JSON.stringify(text.slice(0, 300))})`)
+        for (const line of lines) {
+            const [original, timestamp, mimetype] = line.split(' ')
+            if (original && timestamp) rows.push([original, timestamp, mimetype])
+        }
+        resumeKey = key?.trim() || null
+        console.log(`  chunk ${chunk}: ${rows.length} rows${resumeKey ? '' : ' (done)'}`)
+        if (!resumeKey) return rows
     }
-    return rows
 }
 
 // Distinct captures of one URL (newest first)
