@@ -1,0 +1,31 @@
+# One-time: download Rabbi Sebrow's old 5 Towns Jewish Times columns from the
+# Internet Archive (some home networks block archive.org, GitHub's don't).
+# Runs when the import-5tjt branch is pushed, or from the Actions tab.
+# The results are attached to the run as "5tjt-raw"; scripts/import/fivetowns.mjs
+# turns them into articles for review.
+name: Fetch 5TJT archive
+
+on:
+  push:
+    branches: [import-5tjt]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/import/fivetowns-fetch.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 5tjt-raw
+          path: data/import/5tjt/raw/
+          retention-days: 30
