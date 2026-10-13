@@ -16,6 +16,8 @@
     "import:jh": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/jewishhome.mjs",
     "import:publish": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/publish.mjs",
     "import:weekly": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/weekly.mjs",
+    "import:weekly-pc": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/weekly-pc.mjs",
+    "import:schedule": "powershell -ExecutionPolicy Bypass -File scripts/register-weekly.ps1",
     "import:preview": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/preview.mjs",
     "import:5tjt": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/fivetowns.mjs",
     "import:5tjt-pdf": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/fivetowns-pdf.mjs",

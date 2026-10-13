@@ -29,7 +29,15 @@ An article that's already on the site (one you typed in by hand) is skipped and 
 
 ## Every week: automatic
 
-GitHub runs `.github/workflows/weekly-import.yml` every **Thursday** and, as a second try, every **Friday**. Each run:
+**On your PC (the one in use, since 2026-10-13).** A Windows scheduled task runs `npm run import:weekly-pc` every **Thursday** and **Friday** at 11am (or as soon as the PC is on). It finds the new column, has **Claude Code review it** with `/review-import` exactly like the backfill (text against the page, title, daf, 3–6 topics plus subtopics, other places, stories, photo), adds a title card if there's no usable photo, and publishes it. The site refreshes and the admin gets the mailing-list preview email. New subtopics are added to `data/topics.json`, and that one file is committed and pushed, so Vercel rebuilds the site and their pages appear. Anything Claude isn't sure about is set to `held` and not published, and a GitHub issue emails you what to check. It uses your Claude Code plan, not an API key.
+```
+npm run import:schedule                                   # set up the scheduled task (once)
+npm run import:weekly-pc -- --dry-run                     # check without publishing
+npm run import:weekly-pc -- --only data/import/jewishhome/articles/<folder>   # re-run one column
+```
+The log is in `logs/weekly-import.log`. Keep the GitHub workflow below **disabled** so the column isn't published twice.
+
+**On GitHub (no Claude, so no topics or stories; disabled).** GitHub runs `.github/workflows/weekly-import.yml` every **Thursday** and, as a second try, every **Friday**. Each run:
 1. checks the newest issues of The Jewish Home for his column,
 2. publishes it right away **if nothing looks wrong**,
 3. otherwise holds it back and **opens a GitHub issue, which emails you**. The same happens if:
