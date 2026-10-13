@@ -3,12 +3,17 @@
 // Every query returns [] / null on error, so pages still render before the
 // stories migration has been applied.
 import { supabase } from '@/app/lib/supabase'
-import { slugify } from '@/app/lib/articles'
+import { slugify, BEYOND_THE_DAF } from '@/app/lib/articles'
 
 export const STORY_CARD_COLUMNS = 'id, slug, title, summary, masechta, daf, people, tags'
 
 export function storyPath(story) {
     return `/stories/${encodeURIComponent(story.slug)}`
+}
+
+// Where a story sits: "Berachos 12", or "Beyond the Daf" for a story from a standalone article
+export function storyPlace(story) {
+    return story?.masechta ? `${story.masechta} ${story.daf}` : BEYOND_THE_DAF
 }
 
 export function personSlug(name) {
@@ -46,6 +51,7 @@ export async function getStoriesAbout(person, { excludeIds = [], limit = 6 } = {
 }
 
 export async function getStoriesInMasechta(masechta, { excludeIds = [], limit = 6 } = {}) {
+    if (!masechta) return []
     const { data } = await supabase
         .from('stories')
         .select(STORY_CARD_COLUMNS)

@@ -12,8 +12,8 @@ const AI_CRAWLERS = [
 export default function robots() {
     return {
         rules: [
-            { userAgent: '*', allow: '/', disallow: ['/admin', '/api/'] },
-            { userAgent: AI_CRAWLERS, allow: '/', disallow: ['/admin', '/api/'] },
+            { userAgent: '*', allow: '/', disallow: ['/admin', '/api/', '/unsubscribe'] },
+            { userAgent: AI_CRAWLERS, allow: '/', disallow: ['/admin', '/api/', '/unsubscribe'] },
         ],
         sitemap: `${SITE_URL}/sitemap.xml`,
     }

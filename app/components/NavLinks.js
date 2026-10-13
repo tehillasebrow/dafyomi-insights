@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export const NAV = [
-    { href: '/articles', label: 'Articles', match: ['/articles', '/daf/'] },
+    { href: '/articles', label: 'Articles', match: ['/articles', '/daf/', '/beyond-the-daf'] },
     { href: '/stories', label: 'Stories', match: ['/stories', '/people'] },
     { href: '/masechtos', label: 'Masechtos', match: ['/masechtos'] },
     { href: '/topics', label: 'Topics', match: ['/topics'] },

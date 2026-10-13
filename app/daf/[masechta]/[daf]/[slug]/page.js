@@ -5,6 +5,7 @@ import { articlePath, articleDate, formatArticleDate, dafLabel, dafPath, decodeP
 import { masechtaHref, findMasechta, hebrewNumeral } from '@/app/lib/shas'
 import { buildMetadata, clip, absoluteUrl, authorJsonLd, breadcrumbJsonLd, talmudSourceJsonLd, WEBSITE_ID } from '@/app/lib/seo'
 import { getStoriesForArticle, storyPath } from '@/app/lib/stories'
+import { topicsFor, topicPath } from '@/app/lib/topics'
 import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import Comments from '@/app/components/Comments'
@@ -54,7 +55,7 @@ export async function generateMetadata({ params }) {
     if (!article) return {}
 
     const stories = await getStoriesForArticle(article.id, 'title, people')
-    const tags = [...new Set([...(article.tags ?? []), ...stories.flatMap(s => s.people ?? [])])]
+    const tags = [...new Set([...topicsFor(article.tags).map(t => t.name), ...stories.flatMap(s => s.people ?? [])])]
 
     return buildMetadata({
         title: `${article.masechta} ${dafLabel(article)}: ${article.title}`,
@@ -122,7 +123,7 @@ export default async function ArticlePage({ params }) {
         ...(article.updated_at && { dateModified: article.updated_at }),
         inLanguage: 'en',
         about: talmudSourceJsonLd(article.masechta, dafLabel(article)),
-        keywords: (article.tags ?? []).join(', '),
+        keywords: topicsFor(article.tags).map(t => t.name).join(", "),
         articleBody: article.content,
         ...(stories.length && {
             hasPart: stories.map(s => ({
@@ -143,7 +144,7 @@ export default async function ArticlePage({ params }) {
     const known = findMasechta(article.masechta)
     const end = article.daf_end ?? article.daf
     const range = end !== article.daf
-    const printedIn = { jewishhome: 'The Jewish Home', '5tjt': 'the Five Towns Jewish Times' }[article.source]
+    const printedIn = { jewishhome: 'The Jewish Home', '5tjt': 'the Five Towns Jewish Times', mishpacha: 'Mishpacha' }[article.source]
     const date = new Date(articleDate(article))
 
     return (
@@ -199,11 +200,21 @@ export default async function ArticlePage({ params }) {
                 </div>
 
                 <div className="grid gap-8 md:col-start-2 pt-2">
-                    {article.tags?.length > 0 && (
+                    {topicsFor(article.tags).length > 0 && (
                         <div className="flex flex-wrap items-center gap-2">
                             <span className="sc">Topics</span>
-                            {article.tags.map(tag => (
-                                <Link key={tag} href={`/topics/${encodeURIComponent(tag.trim())}`} className="chip">{tag}</Link>
+                            {topicsFor(article.tags).map(t => (
+                                <Link key={t.slug} href={topicPath(t)} className="chip">{t.name}</Link>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Other places on the daf this article discusses (articles.refs) */}
+                    {article.refs?.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="sc">Also discusses</span>
+                            {article.refs.map(r => (
+                                <Link key={`${r.masechta}-${r.daf}`} href={dafPath(r.masechta, r.daf)} className="chip">{r.masechta} {r.daf}</Link>
                             ))}
                         </div>
                     )}

@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { slugify } from '@/app/lib/articles'
+import { slugify, BEYOND_THE_DAF } from '@/app/lib/articles'
 import { MASECHTOS, findMasechta, todayInNewYork, weekOfDafim } from '@/app/lib/shas'
 import { buildMetadata, collectionJsonLd } from '@/app/lib/seo'
-import { getAllStories, storyPath } from '@/app/lib/stories'
+import { getAllStories, storyPath, storyPlace } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
 import StoryRow from '@/app/components/StoryRow'
 import StoryGroupSwitch from '@/app/components/StoryGroupSwitch'
@@ -17,7 +17,8 @@ export const metadata = buildMetadata({
     path: '/stories',
 })
 
-// Shas order, with any unrecognised masechta names at the end
+// Shas order, with any unrecognised masechta names at the end, then the stories
+// from articles that aren't on a daf (Beyond the Daf, id "beyond-the-daf")
 const ORDER = new Map(MASECHTOS.map((m, i) => [m.name.toLowerCase(), i]))
 
 export default async function StoriesPage() {
@@ -25,11 +26,12 @@ export default async function StoriesPage() {
 
     const groups = new Map()
     for (const s of stories) {
-        if (!groups.has(s.masechta)) groups.set(s.masechta, [])
-        groups.get(s.masechta).push(s)
+        const key = s.masechta || BEYOND_THE_DAF
+        if (!groups.has(key)) groups.set(key, [])
+        groups.get(key).push(s)
     }
-    const masechtos = [...groups.keys()].sort((a, b) =>
-        (ORDER.get(a.toLowerCase()) ?? 999) - (ORDER.get(b.toLowerCase()) ?? 999) || a.localeCompare(b))
+    const rank = m => m === BEYOND_THE_DAF ? 1000 : ORDER.get(m.toLowerCase()) ?? 999
+    const masechtos = [...groups.keys()].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
 
     // Stories on this week's dafim come first. (Hourly cache: close enough for a weekly list.)
     const week = weekOfDafim(todayInNewYork())
@@ -41,7 +43,7 @@ export default async function StoriesPage() {
                 name: 'Gemara Stories',
                 description: DESCRIPTION,
                 path: '/stories',
-                items: stories.map(s => ({ name: `${s.title} (${s.masechta} ${s.daf})`, path: storyPath(s) })),
+                items: stories.map(s => ({ name: `${s.title} (${storyPlace(s)})`, path: storyPath(s) })),
             })} />
 
             <header className="grid gap-2 pb-4 border-b border-rule-hard">

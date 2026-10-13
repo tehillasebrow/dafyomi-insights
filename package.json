@@ -11,10 +11,19 @@
     "stories:publish": "node --env-file-if-exists=.env.local scripts/backfill-stories.mjs",
     "stories:pipeline": "node --env-file-if-exists=.env.local scripts/story-pipeline.mjs",
     "stories:schedule": "powershell -ExecutionPolicy Bypass -File scripts/register-schedule.ps1",
+    "topics:check": "node scripts/topics/check.mjs",
+    "topics:apply": "node --env-file-if-exists=.env.local scripts/topics/apply.mjs",
     "import:jh": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/jewishhome.mjs",
     "import:publish": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/publish.mjs",
     "import:weekly": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/import/weekly.mjs",
-    "import:preview": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/preview.mjs"
+    "import:preview": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/preview.mjs",
+    "import:5tjt": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/fivetowns.mjs",
+    "import:5tjt-pdf": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/fivetowns-pdf.mjs",
+    "import:decisions": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/decisions.mjs",
+    "import:check-seo": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/check-seo.mjs",
+    "import:reprints": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/reprints.mjs",
+    "import:repeats": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/repeats.mjs",
+    "import:cards": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/title-cards.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.83.0",
@@ -25,6 +34,7 @@
     "react-dom": "19.2.0"
   },
   "devDependencies": {
+    "@napi-rs/canvas": "^0.1.65",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^20",
@@ -32,6 +42,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "pdfjs-dist": "^4.10.38",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"

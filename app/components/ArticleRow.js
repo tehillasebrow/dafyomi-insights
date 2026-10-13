@@ -1,12 +1,12 @@
 import Link from 'next/link'
-import { articlePath, articleOpening, dafLabel, formatArticleDate, readingMinutes } from '@/app/lib/articles'
+import { articlePath, articleOpening, articlePlace, dafLabel, formatArticleDate, isStandalone, readingMinutes } from '@/app/lib/articles'
 import { ArticleThumb } from './ArticleImage'
 
 // One article in a list: its picture (or its daf stamped on the binding), title,
 // the article's opening lines, and where/when.
 export default function ArticleRow({ article, showMasechta = true, headingLevel = 3 }) {
     const Heading = `h${headingLevel}`
-    const where = showMasechta ? `${article.masechta} ${dafLabel(article)}` : `Daf ${dafLabel(article)}`
+    const where = showMasechta || isStandalone(article) ? articlePlace(article) : `Daf ${dafLabel(article)}`
     return (
         <article className="row row-pic">
             <ArticleThumb article={article} className="row-num" sizes="(min-width: 768px) 11rem, 6.5rem" />

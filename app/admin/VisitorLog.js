@@ -29,6 +29,11 @@ const TYPE_LABELS = {
     admin_login: 'Admin login',
     admin_login_failed: 'Failed login',
     admin_logout: 'Admin logout',
+    subscribe: 'Subscribed to emails',
+    unsubscribe: 'Unsubscribed',
+    newsletter_approved: 'Approved email',
+    newsletter_sent: 'Sent email',
+    newsletter_skipped: 'Skipped email',
 }
 
 const TYPE_COLORS = {

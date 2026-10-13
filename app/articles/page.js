@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { supabase } from '@/app/lib/supabase'
-import { ARTICLE_LIST_COLUMNS, articleDate, orderByPublished } from '@/app/lib/articles'
+import { ARTICLE_LIST_COLUMNS, articleDate, onDaf, orderByPublished } from '@/app/lib/articles'
 import { MASECHTOS, findMasechta } from '@/app/lib/shas'
 import { buildMetadata } from '@/app/lib/seo'
+import { findTopic, tagVariants, topicsFor } from '@/app/lib/topics'
 import ArticleRow from '@/app/components/ArticleRow'
 
 export const revalidate = 300
@@ -32,9 +33,12 @@ export default async function ArticlesPage({ searchParams }) {
     const page = Math.max(1, Number.parseInt(sp.page, 10) || 1)
     const params = { masechta, topic, sort: sort === 'shas' ? 'shas' : '' }
 
-    let query = supabase.from('articles').select(ARTICLE_LIST_COLUMNS)
+    // Daf articles only; the rest are on /beyond-the-daf
+    let query = onDaf(supabase.from('articles').select(ARTICLE_LIST_COLUMNS))
     if (masechta) query = query.ilike('masechta', masechta)
-    if (topic) query = query.contains('tags', [topic])
+    // ?topic= takes a topic name or slug; old spellings of it are matched too
+    const topicMatch = topic ? findTopic(topic) : null
+    if (topic) query = topicMatch ? query.overlaps('tags', tagVariants(topicMatch)) : query.contains('tags', [topic])
 
     const [{ data, error }, { data: index }] = await Promise.all([
         orderByPublished(query),
@@ -56,9 +60,10 @@ export default async function ArticlesPage({ searchParams }) {
     // Filter choices: only masechtos and topics that have articles
     const masechtos = new Set(), topics = new Set()
     for (const a of index ?? []) {
+        if (!a.masechta) continue
         const m = findMasechta(a.masechta)
         masechtos.add(m?.name ?? a.masechta)
-        for (const t of a.tags ?? []) if (t?.trim()) topics.add(t.trim())
+        for (const t of topicsFor(a.tags)) topics.add(t.name)
     }
     const masechtaOptions = [...masechtos].sort((a, b) => (SHAS_ORDER.get(a) ?? 999) - (SHAS_ORDER.get(b) ?? 999))
     const topicOptions = [...topics].sort((a, b) => a.localeCompare(b))
@@ -81,6 +86,7 @@ export default async function ArticlesPage({ searchParams }) {
             <header className="grid gap-2 pb-4 border-b border-rule-hard">
                 <h1 className="font-semibold text-[clamp(2.25rem,6vw,3.75rem)] leading-none tracking-[-0.02em]">Articles</h1>
                 <p className="text-lede text-ink-soft max-w-[58ch]">Every “Delving into the Daf” article, {sort === 'shas' ? 'in the order of Shas' : 'newest first'}.</p>
+                <p className="meta">Tributes, interviews and other writings are in <Link href="/beyond-the-daf">Beyond the Daf</Link>.</p>
             </header>
 
             <form action="/articles" className="flex flex-wrap items-end gap-2 py-3.5 border-b border-rule">

@@ -11,7 +11,8 @@ import { LogoMark } from './Logo'
 import { dafYomiFor, todayInNewYork, hebrewNumeral, dayLabel } from '@/app/lib/shas'
 
 const LINKS = [
-    NAV[0],
+    { ...NAV[0], match: ['/articles', '/daf/'] },
+    { href: '/beyond-the-daf', label: 'Beyond the Daf', match: ['/beyond-the-daf'] },
     { href: '/stories', label: 'Gemara stories', match: ['/stories'] },
     { href: '/people', label: 'Stories by sage', match: ['/people'] },
     NAV[2],

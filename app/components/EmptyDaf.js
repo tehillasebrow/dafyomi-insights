@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { articlePath, dafLabel } from '@/app/lib/articles'
+import { articlePath, articlePlace } from '@/app/lib/articles'
 import { masechtaHref } from '@/app/lib/shas'
 
 // An empty daf: margins printed, the centre blank. Used for a daf with no article
@@ -23,7 +23,7 @@ export default function EmptyDaf({ masechta, daf, nearest }) {
                 <h1 className="font-semibold text-[clamp(2rem,5vw,3.1rem)] leading-[1.02] tracking-[-0.02em]">There’s no article on {masechta.name} {daf} yet</h1>
                 {nearest ? (
                     <p className="text-lede text-ink-soft max-w-[46ch] mt-2.5 mb-4">
-                        The nearest is “{nearest.title}” on {nearest.masechta} {dafLabel(nearest)}.
+                        The nearest is “{nearest.title}” on {articlePlace(nearest)}.
                     </p>
                 ) : (
                     <p className="text-lede text-ink-soft max-w-[46ch] mt-2.5 mb-4">There are no articles on {masechta.name} yet.</p>

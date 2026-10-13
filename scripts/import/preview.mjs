@@ -6,7 +6,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { parseArgs } from '../lib/stories.mjs'
-import { IMPORT_DIR, listStaged, seriousWarnings } from './lib/staging.mjs'
+import { IMPORT_DIR, listStaged, seriousWarnings, findSimilar, similarWarning } from './lib/staging.mjs'
 
 const OUT = path.join(IMPORT_DIR, 'preview.html')
 const args = parseArgs()
@@ -28,7 +28,9 @@ if (args.check) items = items.filter(({ article }) => (article.warnings || []).l
 
 const list = []
 const articles = []
-items.forEach(({ dir, article: a }, i) => {
+const similar = findSimilar()
+items.forEach(({ dir, article }, i) => {
+    const a = { ...article, warnings: [...(article.warnings || []), ...similarWarning(similar.get(dir) || [])] }
     const serious = seriousWarnings(a)
     const status = a.review?.status || 'pending'
     const flag = serious.length ? 'serious' : (a.warnings || []).length ? 'note' : 'ok'
@@ -40,7 +42,7 @@ items.forEach(({ dir, article: a }, i) => {
   ${a.warnings?.length ? `<ul class="warnings">${a.warnings.map(w => `<li class="${serious.includes(w) ? 'serious' : ''}">${esc(w)}</li>`).join('')}</ul>` : ''}
   <div class="cols">
     <article>
-      <p class="kicker">${esc(a.masechta)} ${esc(a.daf)} · ${esc(formatDate(a.published_at))} · ${esc(a.words)} words</p>
+      <p class="kicker">${a.standalone ? 'Beyond the Daf' : `${esc(a.masechta)} ${esc(a.daf)}`} · ${esc(formatDate(a.published_at))} · ${esc(a.words)} words</p>
       <h1>${esc(a.title)}</h1>
       <p class="byline">By Rabbi Avrohom Sebrow</p>
       ${photo}

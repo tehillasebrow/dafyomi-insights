@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { supabase } from '@/app/lib/supabase'
-import { ARTICLE_LIST_COLUMNS, articlePath, decodeParam } from '@/app/lib/articles'
+import { ARTICLE_LIST_COLUMNS, articlePath, decodeParam, getArticlesReferencing } from '@/app/lib/articles'
 import { findMasechta, titleCase, masechtaHref, todayInNewYork, dafYomiFor, siyumDate, dateOfDaf, formatDate } from '@/app/lib/shas'
 import { buildMetadata, breadcrumbJsonLd, collectionJsonLd } from '@/app/lib/seo'
 import { getStoriesInMasechta } from '@/app/lib/stories'
@@ -33,7 +33,7 @@ export default async function MasechtaPage({ params }) {
     const known = findMasechta(masechta)
     const name = displayName(masechta)
 
-    const [{ data }, stories] = await Promise.all([
+    const [{ data }, stories, referencing] = await Promise.all([
         supabase
             .from('articles')
             .select(ARTICLE_LIST_COLUMNS)
@@ -41,8 +41,19 @@ export default async function MasechtaPage({ params }) {
             .order('daf', { ascending: true })
             .order('published_at', { ascending: false, nullsFirst: false }),
         getStoriesInMasechta(masechta, { limit: 500 }),
+        getArticlesReferencing(known?.name ?? masechta, `${ARTICLE_LIST_COLUMNS}, refs`),
     ])
-    const articles = data ?? []
+    // Articles filed under another masechta that also discuss this one are listed
+    // at the daf they discuss here
+    const own = data ?? []
+    const ownIds = new Set(own.map(a => a.id))
+    const alsoHere = referencing
+        .filter(a => !ownIds.has(a.id))
+        .flatMap(a => (a.refs ?? [])
+            .filter(r => r.masechta === (known?.name ?? masechta))
+            .slice(0, 1)
+            .map(r => ({ ...a, daf: r.daf, daf_end: r.daf_end ?? null, listedVia: r })))
+    const articles = [...own, ...alsoHere].sort((a, b) => a.daf - b.daf)
 
     const today = todayInNewYork()
     const todays = dafYomiFor(today)

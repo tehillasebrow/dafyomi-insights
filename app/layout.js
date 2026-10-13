@@ -2,6 +2,7 @@ import './globals.css'
 import { Newsreader, Frank_Ruhl_Libre, Noto_Rashi_Hebrew, IBM_Plex_Mono } from 'next/font/google'
 import SiteHeader from './components/SiteHeader'
 import SiteFooter from './components/SiteFooter'
+import SubscribePopup from './components/SubscribePopup'
 import Analytics from './components/Analytics'
 import { Analytics as VercelAnalytics } from '@vercel/analytics/next'
 import JsonLd from './components/JsonLd'
@@ -79,6 +80,7 @@ export default function RootLayout({ children }) {
             {children}
         </main>
         <SiteFooter />
+        <SubscribePopup />
         <VercelAnalytics />
         </body>
         </html>

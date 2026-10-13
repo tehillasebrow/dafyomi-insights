@@ -5,8 +5,8 @@ import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/app/lib/supabase'
-import { articlePath, dafLabel, dafPath } from '@/app/lib/articles'
-import { storyPath } from '@/app/lib/stories'
+import { articlePath, articlePlace, dafPath } from '@/app/lib/articles'
+import { storyPath, storyPlace } from '@/app/lib/stories'
 import { parseDafQuery, hebrewNumeral } from '@/app/lib/shas'
 import { trackSearch, trackSearchClick } from '@/app/lib/track'
 
@@ -201,7 +201,7 @@ export default function Search() {
                                                             <>
                                                                 <span className="font-semibold"><Highlight text={r.item.title} query={q} /></span>
                                                                 <span className="meta">
-                                                                    {r.item.masechta} {r.kind === 'article' ? dafLabel(r.item) : r.item.daf}
+                                                                    {r.kind === 'article' ? articlePlace(r.item) : storyPlace(r.item)}
                                                                     {r.kind === 'story' && r.item.people?.length ? ` · ${r.item.people.join(', ')}` : ''}
                                                                 </span>
                                                             </>

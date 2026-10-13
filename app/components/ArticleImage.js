@@ -23,13 +23,17 @@ export default function ArticleImage({ src, alt = '', priority = false, sizes = 
 }
 
 // An article's picture for lists and cards. With no picture, its daf is stamped in gold
-// on the black binding, so every article still has a face.
+// on the black binding, so every article still has a face. An article that isn't on a
+// daf (Beyond the Daf) gets the word כתבים ("writings") instead.
 export function ArticleThumb({ article, sizes = '12rem', priority = false, className = '' }) {
     const masechta = findMasechta(article.masechta)
+    const standalone = !article.masechta
     return (
         <div className={`plate ${className}`} aria-hidden="true">
             {article.image_url ? (
                 <Image src={article.image_url} alt="" fill sizes={sizes} priority={priority} unoptimized={!OPTIMIZABLE.test(article.image_url)} className="object-cover" />
+            ) : standalone ? (
+                <span lang="he" className="plate-num" style={{ fontSize: 'clamp(1.25rem, 22cqi, 4rem)' }}>כתבים</span>
             ) : (
                 <>
                     <span lang="he" className="plate-num">{hebrewNumeral(article.daf)}</span>

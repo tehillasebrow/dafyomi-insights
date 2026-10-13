@@ -4,20 +4,28 @@
 import { supabase } from '@/app/lib/supabase'
 import { SITE_URL, SITE_NAME, AUTHOR, DEFAULT_DESCRIPTION } from '@/app/lib/site'
 import { MASECHTOS, masechtaHref } from '@/app/lib/shas'
-import { articlePath, dafLabel, orderByPublished } from '@/app/lib/articles'
-import { getAllStories, storyPath, personPath, getAllPeople } from '@/app/lib/stories'
+import { articlePath, dafLabel, orderByPublished, BEYOND_THE_DAF, BEYOND_THE_DAF_PATH } from '@/app/lib/articles'
+import { getAllStories, storyPath, storyPlace, personPath, getAllPeople } from '@/app/lib/stories'
+import { topicsFor } from '@/app/lib/topics'
 
 const url = path => `${SITE_URL}${path}`
 const ORDER = new Map(MASECHTOS.map((m, i) => [m.name.toLowerCase(), i]))
+// Shas order; anything not on a daf (Beyond the Daf) goes last, keeping its order
+const shasRank = x => x.masechta ? ORDER.get(x.masechta.toLowerCase()) ?? 999 : 1000
 const byShas = (a, b) =>
-    (ORDER.get(a.masechta.toLowerCase()) ?? 999) - (ORDER.get(b.masechta.toLowerCase()) ?? 999)
-    || a.masechta.localeCompare(b.masechta)
-    || a.daf - b.daf
+    shasRank(a) - shasRank(b)
+    || (a.masechta ?? '').localeCompare(b.masechta ?? '')
+    || (a.daf ?? 0) - (b.daf ?? 0)
 const oneLine = text => String(text ?? '').replace(/\s+/g, ' ').trim()
 
+// Daf articles in Shas order, and the ones that aren't on a daf, newest first
 async function loadArticles(columns) {
     const { data } = await orderByPublished(supabase.from('articles').select(columns))
-    return (data ?? []).sort(byShas)
+    const all = data ?? []
+    return {
+        onDaf: all.filter(a => a.masechta).sort(byShas),
+        standalone: all.filter(a => !a.masechta),
+    }
 }
 
 function header() {
@@ -28,13 +36,13 @@ function header() {
         '',
         `${SITE_NAME} (${SITE_URL}) publishes ${AUTHOR.name}'s Daf Yomi column "${AUTHOR.column}". ${AUTHOR.name} is a ${AUTHOR.bio.charAt(0).toLowerCase()}${AUTHOR.bio.slice(1)}`,
         '',
-        'Each article covers a daf (page) of Talmud Bavli in the Daf Yomi cycle. The Gemara stories (aggadah) inside the articles also have their own pages, listed below with the sages they feature. Please cite the page URL and credit Rabbi Avrohom Sebrow when quoting.',
+        `Each article covers a daf (page) of Talmud Bavli in the Daf Yomi cycle, except the ones under "${BEYOND_THE_DAF}" (tributes, interviews and other writings). The Gemara stories (aggadah) inside the articles also have their own pages, listed below with the sages they feature. Please cite the page URL and credit Rabbi Avrohom Sebrow when quoting.`,
         '',
     ]
 }
 
 export async function buildLlmsTxt() {
-    const [articles, stories, people] = await Promise.all([
+    const [{ onDaf: articles, standalone }, stories, people] = await Promise.all([
         loadArticles('id, slug, title, summary, masechta, daf, daf_end'),
         getAllStories('slug, title, summary, masechta, daf, people'),
         getAllPeople(),
@@ -45,7 +53,7 @@ export async function buildLlmsTxt() {
     lines.push('## Gemara stories', '')
     for (const s of [...stories].sort(byShas)) {
         const who = s.people?.length ? ` (${s.people.join(', ')})` : ''
-        lines.push(`- [${s.title} – ${s.masechta} ${s.daf}](${url(storyPath(s))})${who}: ${oneLine(s.summary)}`)
+        lines.push(`- [${s.title} – ${storyPlace(s)}](${url(storyPath(s))})${who}: ${oneLine(s.summary)}`)
     }
     if (!stories.length) lines.push(`- [All Gemara stories](${url('/stories')})`)
     lines.push('')
@@ -60,6 +68,12 @@ export async function buildLlmsTxt() {
         lines.push(`- [${a.masechta} ${dafLabel(a)}: ${a.title}](${url(articlePath(a))}): ${oneLine(a.summary)}`)
     }
     lines.push('')
+
+    if (standalone.length) {
+        lines.push(`## [${BEYOND_THE_DAF}](${url(BEYOND_THE_DAF_PATH)})`, '', 'Tributes, interviews and other writings, not on a particular daf.', '')
+        for (const a of standalone) lines.push(`- [${a.title}](${url(articlePath(a))}): ${oneLine(a.summary)}`)
+        lines.push('')
+    }
 
     if (people.length) {
         lines.push('## Stories by sage', '')
@@ -80,7 +94,7 @@ export async function buildLlmsTxt() {
 }
 
 export async function buildLlmsFullTxt() {
-    const [articles, stories] = await Promise.all([
+    const [{ onDaf: articles, standalone }, stories] = await Promise.all([
         loadArticles('id, slug, title, summary, content, tags, masechta, daf, daf_end'),
         getAllStories('slug, title, summary, content, masechta, daf, people, tags'),
     ])
@@ -90,10 +104,10 @@ export async function buildLlmsFullTxt() {
     lines.push('## Gemara stories', '')
     for (const s of [...stories].sort(byShas)) {
         lines.push(
-            `### ${s.title} – ${s.masechta} ${s.daf}`, '',
+            `### ${s.title} – ${storyPlace(s)}`, '',
             `URL: ${url(storyPath(s))}`,
             ...(s.people?.length ? [`Sages: ${s.people.join(', ')}`] : []),
-            ...(s.tags?.length ? [`Topics: ${s.tags.join(', ')}`] : []),
+            ...(topicsFor(s.tags).length ? [`Topics: ${topicsFor(s.tags).map(t => t.name).join(", ")}`] : []),
             '', `Summary: ${oneLine(s.summary)}`, '', s.content.trim(), '',
         )
     }
@@ -104,9 +118,22 @@ export async function buildLlmsFullTxt() {
             `### ${a.masechta} ${dafLabel(a)}: ${a.title}`, '',
             `URL: ${url(articlePath(a))}`,
             `Author: ${AUTHOR.name}`,
-            ...(a.tags?.length ? [`Topics: ${a.tags.join(', ')}`] : []),
+            ...(topicsFor(a.tags).length ? [`Topics: ${topicsFor(a.tags).map(t => t.name).join(", ")}`] : []),
             '', `Summary: ${oneLine(a.summary)}`, '', String(a.content ?? '').trim(), '',
         )
+    }
+
+    if (standalone.length) {
+        lines.push(`## ${BEYOND_THE_DAF}`, '')
+        for (const a of standalone) {
+            lines.push(
+                `### ${a.title}`, '',
+                `URL: ${url(articlePath(a))}`,
+                `Author: ${AUTHOR.name}`,
+                ...(topicsFor(a.tags).length ? [`Topics: ${topicsFor(a.tags).map(t => t.name).join(", ")}`] : []),
+                '', `Summary: ${oneLine(a.summary)}`, '', String(a.content ?? '').trim(), '',
+            )
+        }
     }
     return lines.join('\n')
 }

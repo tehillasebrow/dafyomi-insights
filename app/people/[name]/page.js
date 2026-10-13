@@ -37,10 +37,10 @@ export default async function PersonPage({ params }) {
     const person = await findPersonBySlug(decodeParam((await params).name))
     if (!person) return notFound()
 
-    const stories = (await getStoriesAbout(person.name, { limit: 500 })).sort((a, b) => shasOrder(a) - shasOrder(b) || a.daf - b.daf)
+    const stories = (await getStoriesAbout(person.name, { limit: 500 })).sort((a, b) => shasOrder(a) - shasOrder(b) || (a.daf ?? 0) - (b.daf ?? 0))
     const path = personPath(person.name)
 
-    const masechtos = [...new Set(stories.map(s => findMasechta(s.masechta)?.name ?? s.masechta))]
+    const masechtos = [...new Set(stories.map(s => findMasechta(s.masechta)?.name ?? s.masechta).filter(Boolean))]
     const companions = new Map()
     for (const s of stories) for (const p of s.people ?? []) if (p !== person.name) companions.set(p, (companions.get(p) ?? 0) + 1)
     const often = [...companions].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([n]) => n)

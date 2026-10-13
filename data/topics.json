@@ -1,0 +1,1371 @@
+{
+  "_about": "The one list of topics used on dafyomiinsights.com, for articles and stories. Style: Title Case, 1-5 words (shorter is better), the site's Ashkenazi transliteration (Shabbos, Berachos, Kesubah), 'and' not '&'. A topic is a subject: never a citation (Magen Avraham 147:5), a masechta or daf (they have their own pages), or a person (sages are on the Stories by Sage pages). 'aliases' are old or alternative names; they all point to the topic, so never add a new topic that is already someone's alias. 'retired' lists old tags that are not topics at all. Edit this file to add a topic; scripts/topics/check.mjs checks it.",
+  "groups": [
+    "Shabbos and Yom Tov",
+    "Tefillah and Berachos",
+    "Mitzvos",
+    "Kashrus and Food",
+    "Marriage and Family",
+    "Money and Business",
+    "Beis Din and Halachic Process",
+    "Beis HaMikdash and Korbanos",
+    "Middos and Mussar",
+    "Emunah and Hashkafah",
+    "Life and Society"
+  ],
+  "topics": [
+    {
+      "name": "Shabbos",
+      "group": "Shabbos and Yom Tov",
+      "description": "The laws and ideas of Shabbos from the Daf Yomi: the melachos, kiddush, the Shabbos meals and contemporary Shabbos questions.",
+      "aliases": [
+        "Shabbat",
+        "contemporary Shabbos questions",
+        "Shabbos seudah halacha",
+        "Shabbos challah halacha",
+        "writing on Shabbos halacha",
+        "melacha through speech",
+        "shinui on Shabbos",
+        "Steipler Gaon shinui explanation",
+        "Mishnah Berurah on trapping",
+        "incantations on Shabbos halacha",
+        "maan preparation on Shabbos",
+        "Moshav Zekeinim on maan",
+        "Shulchan Aruch Orach Chaim 328:45",
+        "Rav Chaim Kanievsky speech and melacha",
+        "Melacha"
+      ]
+    },
+    {
+      "name": "Muktzeh",
+      "group": "Shabbos and Yom Tov",
+      "description": "What may and may not be moved on Shabbos and Yom Tov, and why.",
+      "aliases": [
+        "Muktza"
+      ]
+    },
+    {
+      "name": "Eruv",
+      "group": "Shabbos and Yom Tov",
+      "description": "Eruvei chatzeros, techumin and carrying on Shabbos.",
+      "aliases": [
+        "Eruvin (topic)",
+        "Carrying on Shabbos",
+        "Techum Shabbos"
+      ]
+    },
+    {
+      "name": "Yom Tov",
+      "group": "Shabbos and Yom Tov",
+      "description": "The laws of Yom Tov and Chol HaMoed: cooking, preparing and celebrating.",
+      "aliases": [
+        "Chol HaMoed",
+        "Yomim Tovim"
+      ]
+    },
+    {
+      "name": "Pesach",
+      "group": "Shabbos and Yom Tov",
+      "description": "Chametz, matzah, the Korban Pesach and the Seder.",
+      "aliases": [
+        "Seder",
+        "Pesach Seder",
+        "Chametz",
+        "Matzah",
+        "Haggadah",
+        "kittel halacha"
+      ]
+    },
+    {
+      "name": "Sefiras HaOmer",
+      "group": "Shabbos and Yom Tov",
+      "description": "Counting the Omer and the days between Pesach and Shavuos.",
+      "aliases": [
+        "Omer"
+      ]
+    },
+    {
+      "name": "Shavuos",
+      "group": "Shabbos and Yom Tov",
+      "description": "Matan Torah, Shavuos customs and the Yom Tov of receiving the Torah.",
+      "aliases": []
+    },
+    {
+      "name": "Rosh Hashanah",
+      "group": "Shabbos and Yom Tov",
+      "description": "Shofar, the Yom HaDin and the start of the year.",
+      "aliases": [
+        "Shofar"
+      ]
+    },
+    {
+      "name": "Yom Kippur",
+      "group": "Shabbos and Yom Tov",
+      "description": "The fast, the avodah of the Kohen Gadol and the power of Yom Kippur to atone.",
+      "aliases": []
+    },
+    {
+      "name": "Sukkos",
+      "group": "Shabbos and Yom Tov",
+      "description": "The sukkah, the arba minim and the joy of Sukkos.",
+      "aliases": [
+        "Sukkah (mitzvah)",
+        "Lulav and Esrog",
+        "Arba Minim"
+      ]
+    },
+    {
+      "name": "Chanukah",
+      "group": "Shabbos and Yom Tov",
+      "description": "Neiros Chanukah, the miracle of the oil and pirsumei nisa.",
+      "aliases": [
+        "Chanukah Lights"
+      ]
+    },
+    {
+      "name": "Purim",
+      "group": "Shabbos and Yom Tov",
+      "description": "The Megillah, the mitzvos of Purim and the story of Esther.",
+      "aliases": [
+        "Megillah Reading"
+      ]
+    },
+    {
+      "name": "Fast Days",
+      "group": "Shabbos and Yom Tov",
+      "description": "Tishah B'Av, the minor fasts and fasting in times of trouble.",
+      "aliases": [
+        "Tishah B'Av",
+        "Taanis (fast)"
+      ]
+    },
+    {
+      "name": "Rosh Chodesh",
+      "group": "Shabbos and Yom Tov",
+      "description": "The new month, Kiddush HaChodesh and the Jewish calendar.",
+      "aliases": [
+        "Jewish Calendar",
+        "Kiddush HaChodesh",
+        "Kiddush Levanah",
+        "Kiddush HaLevanah"
+      ]
+    },
+    {
+      "name": "Tefillah",
+      "group": "Tefillah and Berachos",
+      "description": "Prayer in the Gemara: Shemoneh Esrei, Minchah, kavanah and davening with a minyan.",
+      "aliases": [
+        "Prayer",
+        "Minchah",
+        "Davening",
+        "Minyan"
+      ]
+    },
+    {
+      "name": "Krias Shema",
+      "group": "Tefillah and Berachos",
+      "description": "The mitzvah of reciting Shema, its times and its meaning.",
+      "aliases": [
+        "Shema"
+      ]
+    },
+    {
+      "name": "Berachos",
+      "group": "Tefillah and Berachos",
+      "description": "Blessings before and after food and mitzvos, and the respect due to a bracha.",
+      "aliases": [
+        "Brachos",
+        "Blessings",
+        "kavod habracha",
+        "Shulchan Aruch HaRav kavod bracha",
+        "Berachos 40a halacha",
+        "hefsek between bracha and eating"
+      ]
+    },
+    {
+      "name": "Hamotzi and Bread",
+      "group": "Tefillah and Berachos",
+      "description": "Bread, Hamotzi, salt on the table and the meal as a mizbeach.",
+      "aliases": [
+        "Hamotzi",
+        "Challah",
+        "dipping challah in salt",
+        "kabbalah dipping challah three times",
+        "salt before hamotzi",
+        "practical halacha salt on table",
+        "segulah salt on table",
+        "Vilna Gaon explanation salt",
+        "table compared to mizbeach",
+        "interruptions after hamotzi",
+        "Shulchan Aruch hamotzi laws",
+        "Magen Avraham 147:5",
+        "Rama Orach Chaim 147:1",
+        "Shulchan Aruch 153:21",
+        "Mishnah Berurah 167:27",
+        "Rema 167:5",
+        "Netilas Yadayim"
+      ]
+    },
+    {
+      "name": "Birkas HaMazon",
+      "group": "Tefillah and Berachos",
+      "description": "Bentching, zimun and thanking Hashem after a meal.",
+      "aliases": [
+        "Bentching",
+        "Grace After Meals",
+        "Zimun"
+      ]
+    },
+    {
+      "name": "Kiddush and Havdalah",
+      "group": "Tefillah and Berachos",
+      "description": "Sanctifying Shabbos and Yom Tov over wine, and separating them from the week.",
+      "aliases": [
+        "Kiddush",
+        "Havdalah"
+      ]
+    },
+    {
+      "name": "Hallel",
+      "group": "Tefillah and Berachos",
+      "description": "Saying Hallel on Yom Tov, Rosh Chodesh and the Seder night, and its berachah.",
+      "aliases": [
+        "Half Hallel",
+        "Hallel HaGadol"
+      ]
+    },
+    {
+      "name": "Krias HaTorah",
+      "group": "Tefillah and Berachos",
+      "description": "Reading the Torah in shul, aliyos and the honor of the Sefer Torah.",
+      "aliases": [
+        "Torah Reading",
+        "Aliyos"
+      ]
+    },
+    {
+      "name": "Shul",
+      "group": "Tefillah and Berachos",
+      "description": "The sanctity of the beis knesses and beis midrash and how to behave in them.",
+      "aliases": [
+        "Beis Knesses",
+        "Synagogue",
+        "Beis Midrash"
+      ]
+    },
+    {
+      "name": "Zmanim",
+      "group": "Tefillah and Berachos",
+      "description": "Halachic times of day: dawn, sunrise, chatzos, sunset and nightfall.",
+      "aliases": [
+        "Halachic Times"
+      ]
+    },
+    {
+      "name": "Tefillin",
+      "group": "Mitzvos",
+      "description": "Writing, wearing and the order of the parshiyos in tefillin, including Rashi and Rabbeinu Tam.",
+      "aliases": [
+        "Rabbeinu Tam tefillin",
+        "Rashi tefillin",
+        "Rashi vs Rabbeinu Tam"
+      ]
+    },
+    {
+      "name": "Mezuzah",
+      "group": "Mitzvos",
+      "description": "Which doorways need a mezuzah, where it goes and what it protects.",
+      "aliases": [
+        "mezuzah placement",
+        "Mezuzos"
+      ]
+    },
+    {
+      "name": "Tzitzis",
+      "group": "Mitzvos",
+      "description": "Tzitzis, techeiles and the four-cornered garment.",
+      "aliases": [
+        "Techeiles",
+        "Tallis"
+      ]
+    },
+    {
+      "name": "Sefer Torah",
+      "group": "Mitzvos",
+      "description": "Writing a Sefer Torah, its laws and its honor, including the last eight pesukim Moshe wrote.",
+      "aliases": [
+        "Sefer Torah writing laws",
+        "Rav Asher Weiss Sefer Torah",
+        "Midrash Moshe thirteen sifrei Torah",
+        "last eight pesukim",
+        "Moshe Rabbeinu last eight verses",
+        "Tosfos on Moshe’s death",
+        "ancient autopen in Torah",
+        "autopen controversy",
+        "Presidential autopen",
+        "supernatural writing in Judaism",
+        "Shelah HaKadosh hashbuas kulmus",
+        "Safrus",
+        "Sofer"
+      ]
+    },
+    {
+      "name": "Tashmishei Kedushah",
+      "group": "Mitzvos",
+      "description": "Holy objects and the things that serve them: covers, paroches, used mitzvah items and repurposing them.",
+      "aliases": [
+        "tashmishei kedushah",
+        "Sefer Torah cover halacha",
+        "paroches halacha",
+        "repurposing garments for mitzvah",
+        "used items for mitzvos",
+        "halachic transformation of objects",
+        "Sheimos",
+        "Genizah"
+      ]
+    },
+    {
+      "name": "Mitzvah Principles",
+      "group": "Mitzvos",
+      "description": "How mitzvos work: intent, adding to the Torah (bal tosif), zrizus and doing a mitzvah through another.",
+      "aliases": [
+        "mitzvah intent",
+        "baal toseif",
+        "Bal Tosif",
+        "Mitzvos Tzrichos Kavanah",
+        "Kavanah",
+        "Hiddur Mitzvah",
+        "Zerizus",
+        "Zrizus"
+      ]
+    },
+    {
+      "name": "Bris Milah",
+      "group": "Mitzvos",
+      "description": "The mitzvah of milah, its timing and its laws.",
+      "aliases": [
+        "Milah",
+        "Bris"
+      ]
+    },
+    {
+      "name": "Pidyon HaBen",
+      "group": "Mitzvos",
+      "description": "Redeeming the firstborn son and the laws of the bechor.",
+      "aliases": [
+        "Bechor",
+        "Firstborn"
+      ]
+    },
+    {
+      "name": "Kibbud Av VaEm",
+      "group": "Mitzvos",
+      "description": "Honoring and fearing parents, and its limits.",
+      "aliases": [
+        "Honoring Parents",
+        "Kibud Av V'Em"
+      ]
+    },
+    {
+      "name": "Tzedakah",
+      "group": "Mitzvos",
+      "description": "Charity: how much, to whom, and its power.",
+      "aliases": [
+        "Charity",
+        "Maaser Kesafim"
+      ]
+    },
+    {
+      "name": "Chesed",
+      "group": "Mitzvos",
+      "description": "Kindness, hachnasas orchim and bikur cholim.",
+      "aliases": [
+        "Hachnasas Orchim",
+        "Bikur Cholim",
+        "Gemilus Chasadim",
+        "Kindness"
+      ]
+    },
+    {
+      "name": "Talmud Torah",
+      "group": "Mitzvos",
+      "description": "The mitzvah of learning Torah, its reward and how to learn.",
+      "aliases": [
+        "Torah Study",
+        "Limud Torah",
+        "Siyum",
+        "Siyum HaShas"
+      ]
+    },
+    {
+      "name": "Eretz Yisrael Mitzvos",
+      "group": "Mitzvos",
+      "description": "Shemittah, terumos and maasros, orlah and the other mitzvos of the Land.",
+      "aliases": [
+        "Shemittah",
+        "Terumos and Maasros",
+        "Orlah",
+        "Maaser"
+      ]
+    },
+    {
+      "name": "Shatnez",
+      "group": "Mitzvos",
+      "description": "The prohibition of wool and linen together.",
+      "aliases": []
+    },
+    {
+      "name": "Shiluach HaKen",
+      "group": "Mitzvos",
+      "description": "Sending away the mother bird: the mitzvah, its reward and its questions.",
+      "aliases": [
+        "Shiluach Hakein",
+        "Sending Away the Mother Bird"
+      ]
+    },
+    {
+      "aliases": [
+        "Kilaim",
+        "Crossbreeding"
+      ],
+      "name": "Kilayim",
+      "group": "Mitzvos",
+      "description": "Forbidden mixtures: crossbreeding animals, grafting and planting seeds together."
+    },
+    {
+      "aliases": [
+        "Baal Tashchis",
+        "Wastefulness"
+      ],
+      "name": "Bal Tashchis",
+      "group": "Mitzvos",
+      "description": "The prohibition of needless destruction, from fruit trees to food."
+    },
+    {
+      "aliases": [
+        "Haircuts and Shaving",
+        "Peyos and Shaving",
+        "Peyos",
+        "Shaving",
+        "Haircuts"
+      ],
+      "name": "Haircuts and Peyos",
+      "group": "Mitzvos",
+      "description": "Peyos, shaving with a razor and haircuts in halacha."
+    },
+    {
+      "aliases": [
+        "Kesoves Kaaka"
+      ],
+      "name": "Tattoos",
+      "group": "Mitzvos",
+      "description": "The prohibition of kesoves ka’aka and writing on the body."
+    },
+    {
+      "name": "Lo Yilbash",
+      "group": "Mitzvos",
+      "description": "The prohibition of wearing the other gender's clothing or adornments.",
+      "aliases": [
+        "Lo Silbash",
+        "Cross-Dressing"
+      ]
+    },
+    {
+      "name": "Hafrashas Challah",
+      "group": "Mitzvos",
+      "description": "Separating challah from dough, and which doughs need it.",
+      "aliases": [
+        "Challah Separation",
+        "Taking Challah",
+        "Hafrashat Challah"
+      ]
+    },
+    {
+      "name": "Pidyon Shevuyim",
+      "group": "Mitzvos",
+      "description": "Redeeming captives and paying ransom.",
+      "aliases": [
+        "Redeeming Captives",
+        "Ransom",
+        "Pidyon Shvuyim"
+      ]
+    },
+    {
+      "name": "Kashrus",
+      "group": "Kashrus and Food",
+      "description": "Kosher and non-kosher food, mixtures, bitul and kitchen questions.",
+      "aliases": [
+        "Kosher",
+        "Bitul",
+        "Taaruvos"
+      ]
+    },
+    {
+      "name": "Basar BeChalav",
+      "group": "Kashrus and Food",
+      "description": "Meat and milk: cooking, eating, waiting and utensils.",
+      "aliases": [
+        "Meat and Milk",
+        "Basar B'Chalav"
+      ]
+    },
+    {
+      "name": "Shechitah",
+      "group": "Kashrus and Food",
+      "description": "Kosher slaughter, treifos and checking animals.",
+      "aliases": [
+        "Treifos",
+        "Shechita"
+      ]
+    },
+    {
+      "name": "Bishul Akum and Pas Akum",
+      "group": "Kashrus and Food",
+      "description": "Food cooked or baked by a non-Jew, and wine (stam yeinam).",
+      "aliases": [
+        "Bishul Akum",
+        "Pas Akum",
+        "Stam Yeinam",
+        "Yayin Nesech"
+      ]
+    },
+    {
+      "aliases": [
+        "Toveling Dishes",
+        "Tevilas Kelim"
+      ],
+      "name": "Tevilas Keilim",
+      "group": "Kashrus and Food",
+      "description": "Immersing new utensils: which need tevilah and why."
+    },
+    {
+      "name": "Chadash and Yashan",
+      "group": "Kashrus and Food",
+      "description": "New grain before the Omer and whether chadash applies outside Eretz Yisrael.",
+      "aliases": [
+        "Chadash",
+        "Yashan"
+      ]
+    },
+    {
+      "name": "Cholov Yisrael",
+      "group": "Kashrus and Food",
+      "description": "Milk supervised by a Jew, cholov akum and dairy kashrus.",
+      "aliases": [
+        "Chalav Yisrael",
+        "Cholov Akum",
+        "Chalav Yisroel"
+      ]
+    },
+    {
+      "name": "Marriage",
+      "group": "Marriage and Family",
+      "description": "Kiddushin, the wedding and the obligations of husband and wife.",
+      "aliases": [
+        "Kiddushin (marriage)",
+        "Wedding",
+        "Cherem Rabbeinu Gershom",
+        "Shidduchim"
+      ]
+    },
+    {
+      "name": "Kesubah",
+      "group": "Marriage and Family",
+      "description": "The marriage contract, its 200 zuz and what it guarantees.",
+      "aliases": [
+        "Ketubah",
+        "Marriage Contract",
+        "200 Zuz",
+        "Kesubos (contract)"
+      ]
+    },
+    {
+      "name": "Divorce",
+      "group": "Marriage and Family",
+      "description": "The get and the laws of divorce.",
+      "aliases": [
+        "Get",
+        "Gittin (divorce)"
+      ]
+    },
+    {
+      "name": "Yibbum and Chalitzah",
+      "group": "Marriage and Family",
+      "description": "Levirate marriage and its release.",
+      "aliases": [
+        "Yibbum",
+        "Chalitzah"
+      ]
+    },
+    {
+      "name": "Chinuch",
+      "group": "Marriage and Family",
+      "description": "Raising and teaching children, and the age of mitzvos.",
+      "aliases": [
+        "Education",
+        "Children",
+        "Bar Mitzvah"
+      ]
+    },
+    {
+      "name": "Jewish Names",
+      "group": "Marriage and Family",
+      "description": "Naming children, changing names and the power of a name.",
+      "aliases": [
+        "Names",
+        "Naming Children"
+      ]
+    },
+    {
+      "name": "Tznius",
+      "group": "Marriage and Family",
+      "description": "Modesty in dress, speech and conduct.",
+      "aliases": [
+        "Modesty"
+      ]
+    },
+    {
+      "name": "Taharas HaMishpacha",
+      "group": "Marriage and Family",
+      "description": "Family purity: niddah and the mikvah.",
+      "aliases": [
+        "Niddah (laws)",
+        "Mikvah",
+        "Family Purity"
+      ]
+    },
+    {
+      "aliases": [
+        "Adopted Children"
+      ],
+      "name": "Adoption",
+      "group": "Marriage and Family",
+      "description": "Raising another’s child: names, yichus and halachic status."
+    },
+    {
+      "name": "Ribbis",
+      "group": "Money and Business",
+      "description": "The prohibition of interest and heter iska.",
+      "aliases": [
+        "Interest",
+        "Heter Iska"
+      ]
+    },
+    {
+      "name": "Loans",
+      "group": "Money and Business",
+      "description": "Lending, repaying, collateral and Shemittah of debts.",
+      "aliases": [
+        "Hilchos Halva'ah",
+        "Hilchos Halva&#x27;ah",
+        "Halva'ah",
+        "Pruzbul"
+      ]
+    },
+    {
+      "name": "Damages",
+      "group": "Money and Business",
+      "description": "Nezikin: an ox, a pit, fire and a person who causes damage.",
+      "aliases": [
+        "Nezikin (damages)",
+        "Liability"
+      ]
+    },
+    {
+      "name": "Theft and Robbery",
+      "group": "Money and Business",
+      "description": "Geneivah, gezeilah and returning stolen property.",
+      "aliases": [
+        "Theft",
+        "Gezel",
+        "Geneivah"
+      ]
+    },
+    {
+      "name": "Lost Objects",
+      "group": "Money and Business",
+      "description": "Hashavas aveidah: finding, announcing and returning.",
+      "aliases": [
+        "Hashavas Aveidah",
+        "Aveidah"
+      ]
+    },
+    {
+      "name": "Business Ethics",
+      "group": "Money and Business",
+      "description": "Honesty in business, ona'ah, competition and fair dealing.",
+      "aliases": [
+        "Onaah",
+        "Ona'ah",
+        "Overcharging",
+        "Hasagas Gevul"
+      ]
+    },
+    {
+      "name": "Workers and Employers",
+      "group": "Money and Business",
+      "description": "Hiring, wages, paying on time and a worker's rights.",
+      "aliases": [
+        "Employees",
+        "Sechar Sachir"
+      ]
+    },
+    {
+      "name": "Buying and Selling",
+      "group": "Money and Business",
+      "description": "Kinyanim, sales, contracts and ownership.",
+      "aliases": [
+        "Kinyanim",
+        "Acquisitions",
+        "Contracts",
+        "Lotteries",
+        "Gambling",
+        "Raffles"
+      ]
+    },
+    {
+      "name": "Neighbors",
+      "group": "Money and Business",
+      "description": "Shared property, privacy (hezek re'iyah) and being a good neighbor.",
+      "aliases": [
+        "Hezek Re'iyah",
+        "Partnerships"
+      ]
+    },
+    {
+      "name": "Inheritance",
+      "group": "Money and Business",
+      "description": "Who inherits, wills and gifts before death.",
+      "aliases": [
+        "Yerushah",
+        "Wills"
+      ]
+    },
+    {
+      "aliases": [
+        "Slaves",
+        "Eved Ivri",
+        "Eved Kenani",
+        "Servants"
+      ],
+      "name": "Avadim",
+      "group": "Money and Business",
+      "description": "Jewish and Canaanite servants: their laws, rights and release."
+    },
+    {
+      "name": "Vows and Oaths",
+      "group": "Money and Business",
+      "description": "Nedarim and shevuos: making, keeping and annulling them.",
+      "aliases": [
+        "Nedarim (vows)",
+        "Shevuos (oaths)",
+        "Oaths",
+        "Vows",
+        "Hataras Nedarim",
+        "Nezirus",
+        "Nazir (vow)"
+      ]
+    },
+    {
+      "name": "Parnassah",
+      "group": "Money and Business",
+      "description": "Earning a living, livelihood and trusting Hashem with money.",
+      "aliases": [
+        "Livelihood",
+        "Parnasa",
+        "Making a Living"
+      ]
+    },
+    {
+      "name": "Beis Din",
+      "group": "Beis Din and Halachic Process",
+      "description": "Jewish courts, judges, and settling disputes by Torah law.",
+      "aliases": [
+        "Dayanim",
+        "Din Torah",
+        "Courts"
+      ]
+    },
+    {
+      "name": "Testimony",
+      "group": "Beis Din and Halachic Process",
+      "description": "Witnesses: who may testify and how testimony works.",
+      "aliases": [
+        "Eidus",
+        "Witnesses"
+      ]
+    },
+    {
+      "aliases": [
+        "Agency",
+        "Shaliach"
+      ],
+      "name": "Shlichus",
+      "group": "Beis Din and Halachic Process",
+      "description": "Agency: acting on someone else’s behalf, and when an agent counts."
+    },
+    {
+      "name": "Psak Halacha",
+      "group": "Beis Din and Halachic Process",
+      "description": "How halacha is decided: rules of psak, asking a rav, and disagreeing poskim.",
+      "aliases": [
+        "Practical Halacha",
+        "practical halacha",
+        "Halacha",
+        "Agudah halacha",
+        "Lo Sisgodedu",
+        "Hora'ah",
+        "Mishnah Berurah halacha",
+        "Shulchan Aruch",
+        "Biur Halacha",
+        "Dirshu Mishnah Berurah",
+        "Sha’ar HaTziyun",
+        "Darchei Moshe"
+      ]
+    },
+    {
+      "name": "Safek",
+      "group": "Beis Din and Halachic Process",
+      "description": "Halachic doubt and how it is resolved: majority, chazakah and safek d'Oraisa.",
+      "aliases": [
+        "safek halacha",
+        "Doubt",
+        "Chazakah",
+        "Rov"
+      ]
+    },
+    {
+      "name": "Rabbinic Decrees",
+      "group": "Beis Din and Halachic Process",
+      "description": "Gezeiros and takanos: why the Rabbis enacted them and how far they reach.",
+      "aliases": [
+        "Rabbinic Decree",
+        "Gezeiros",
+        "Takanos",
+        "Derabbanan"
+      ]
+    },
+    {
+      "name": "Minhagim",
+      "group": "Beis Din and Halachic Process",
+      "description": "Jewish customs: where they come from and how binding they are.",
+      "aliases": [
+        "Minhag",
+        "Customs"
+      ]
+    },
+    {
+      "name": "Mesorah",
+      "group": "Beis Din and Halachic Process",
+      "description": "The chain of tradition: how Torah, customs and kosher species are handed down.",
+      "aliases": [
+        "Tradition",
+        "Masorah"
+      ]
+    },
+    {
+      "name": "Semichah",
+      "group": "Beis Din and Halachic Process",
+      "description": "Rabbinic ordination, from Moshe Rabbeinu to today.",
+      "aliases": [
+        "Smicha",
+        "Ordination"
+      ]
+    },
+    {
+      "name": "Machlokes",
+      "group": "Beis Din and Halachic Process",
+      "description": "Disputes in the Gemara and how Chazal disagreed for the sake of Heaven.",
+      "aliases": [
+        "halachic disputes",
+        "Machlokes L'Shem Shamayim",
+        "Torah Lo Bashamayim"
+      ]
+    },
+    {
+      "name": "Chumros",
+      "group": "Beis Din and Halachic Process",
+      "description": "Stringencies, going beyond the letter of the law, and when not to.",
+      "aliases": [
+        "Chumra",
+        "Stringencies",
+        "Being Machmir"
+      ]
+    },
+    {
+      "name": "Beis HaMikdash",
+      "group": "Beis HaMikdash and Korbanos",
+      "description": "The Mishkan and Beis HaMikdash, its vessels, its site and its avodah.",
+      "aliases": [
+        "Mishkan",
+        "Temple",
+        "Dovid HaMelech Mizbeach",
+        "Shmuel II 24:22",
+        "copper mirrors Mitzrayim",
+        "kiyor Mishkan mirrors",
+        "Mizbeach"
+      ]
+    },
+    {
+      "name": "Korbanos",
+      "group": "Beis HaMikdash and Korbanos",
+      "description": "Offerings: their types, their laws and the salt on every korban.",
+      "aliases": [
+        "Sacrifices",
+        "Al kol korbancha takriv melach",
+        "Menachos 20a korban salt",
+        "Rambam korban without salt invalid",
+        "Menachos"
+      ]
+    },
+    {
+      "name": "Kohanim",
+      "group": "Beis HaMikdash and Korbanos",
+      "description": "The kohanim, the Kohen Gadol and Birkas Kohanim.",
+      "aliases": [
+        "Kohen",
+        "Kohen Gadol",
+        "Birkas Kohanim",
+        "Matanos Kehunah",
+        "Gifts to the Kohen"
+      ]
+    },
+    {
+      "name": "Tumah and Taharah",
+      "group": "Beis HaMikdash and Korbanos",
+      "description": "Ritual impurity and purity, the parah adumah and kohanim and the dead.",
+      "aliases": [
+        "Tumah",
+        "Taharah",
+        "Parah Adumah",
+        "Tumas Meis"
+      ]
+    },
+    {
+      "name": "Churban",
+      "group": "Beis HaMikdash and Korbanos",
+      "description": "The destruction of the Beis HaMikdash and its lessons.",
+      "aliases": [
+        "Destruction of the Temple",
+        "Kamtza and Bar Kamtza"
+      ]
+    },
+    {
+      "name": "Hekdesh",
+      "group": "Beis HaMikdash and Korbanos",
+      "description": "Property consecrated to the Beis HaMikdash, and me'ilah.",
+      "aliases": [
+        "Consecrated Property",
+        "Meilah",
+        "Me'ilah"
+      ]
+    },
+    {
+      "name": "Teshuvah",
+      "group": "Middos and Mussar",
+      "description": "Repentance: its power, its steps and the stories of those who returned.",
+      "aliases": [
+        "Repentance"
+      ]
+    },
+    {
+      "name": "Humility",
+      "group": "Middos and Mussar",
+      "description": "Anavah: humility of Moshe, Hillel and the Sages.",
+      "aliases": [
+        "Anavah"
+      ]
+    },
+    {
+      "name": "Hakaras HaTov",
+      "group": "Middos and Mussar",
+      "description": "Gratitude to Hashem and to people.",
+      "aliases": [
+        "Hakaras Hatov",
+        "Gratitude"
+      ]
+    },
+    {
+      "name": "Honesty",
+      "group": "Middos and Mussar",
+      "description": "Truth, keeping one's word and avoiding deception.",
+      "aliases": [
+        "Truth",
+        "Emes",
+        "Geneivas Daas"
+      ]
+    },
+    {
+      "name": "Anger",
+      "group": "Middos and Mussar",
+      "description": "Anger, patience and controlling one's temper.",
+      "aliases": [
+        "Patience",
+        "Kaas"
+      ]
+    },
+    {
+      "name": "Lashon Hara",
+      "group": "Middos and Mussar",
+      "description": "Forbidden speech: lashon hara, rechilus and embarrassing others.",
+      "aliases": [
+        "Shmiras HaLashon",
+        "Ona'as Devarim",
+        "Embarrassing Others",
+        "Halbanas Panim"
+      ]
+    },
+    {
+      "name": "Shalom",
+      "group": "Middos and Mussar",
+      "description": "Making peace between people and at home.",
+      "aliases": [
+        "Peace",
+        "Shalom Bayis"
+      ]
+    },
+    {
+      "name": "Derech Eretz",
+      "group": "Middos and Mussar",
+      "description": "Manners, respect and saying thank you: from Yasher Koach to greeting others.",
+      "aliases": [
+        "Yasher Koach",
+        "Shkoyach",
+        "Respect",
+        "Manners"
+      ]
+    },
+    {
+      "name": "Kavod HaTorah",
+      "group": "Middos and Mussar",
+      "description": "Honoring Torah scholars, the rebbe and talmid bond and respect for Torah.",
+      "aliases": [
+        "Rebbe and Talmid",
+        "Talmidei Chachamim",
+        "Respect for Torah Scholars"
+      ]
+    },
+    {
+      "name": "Mussar",
+      "group": "Middos and Mussar",
+      "description": "Self-improvement and character in the words of Chazal.",
+      "aliases": [
+        "Middos",
+        "Character"
+      ]
+    },
+    {
+      "name": "Kiddush Hashem",
+      "group": "Middos and Mussar",
+      "description": "Sanctifying Hashem's Name, mesiras nefesh, and avoiding chillul Hashem.",
+      "aliases": [
+        "Chillul Hashem",
+        "Mesiras Nefesh"
+      ]
+    },
+    {
+      "name": "Leadership",
+      "group": "Middos and Mussar",
+      "description": "Leaders of the Jewish people and what Chazal demand of them.",
+      "aliases": [
+        "Nesi'im",
+        "Kings"
+      ]
+    },
+    {
+      "aliases": [
+        "Kinah",
+        "Envy"
+      ],
+      "name": "Jealousy",
+      "group": "Middos and Mussar",
+      "description": "Kinah: envy, competition and being happy with one’s portion."
+    },
+    {
+      "aliases": [
+        "Love Your Neighbor",
+        "Veahavta Lereiacha Kamocha"
+      ],
+      "name": "Ahavas Yisrael",
+      "group": "Middos and Mussar",
+      "description": "Loving one’s fellow Jew, “v’ahavta l’reiacha kamocha”."
+    },
+    {
+      "aliases": [
+        "Joy",
+        "Happiness",
+        "Simcha"
+      ],
+      "name": "Simchah",
+      "group": "Middos and Mussar",
+      "description": "Joy: in mitzvos, on Yom Tov and in life."
+    },
+    {
+      "aliases": [
+        "Beyond the Letter of the Law"
+      ],
+      "name": "Lifnim Meshuras HaDin",
+      "group": "Middos and Mussar",
+      "description": "Going beyond the letter of the law."
+    },
+    {
+      "name": "Tochachah",
+      "group": "Middos and Mussar",
+      "description": "Giving and accepting rebuke: when, how and whether to correct someone.",
+      "aliases": [
+        "Rebuke",
+        "Tochacha",
+        "Tochechah"
+      ]
+    },
+    {
+      "name": "Yetzer Hara",
+      "group": "Middos and Mussar",
+      "description": "The evil inclination and how to overcome it.",
+      "aliases": [
+        "Evil Inclination",
+        "Yetzer HaRa",
+        "Yetzer Hora"
+      ]
+    },
+    {
+      "name": "Emunah and Bitachon",
+      "group": "Emunah and Hashkafah",
+      "description": "Faith and trust in Hashem, hashgachah pratis and accepting His will.",
+      "aliases": [
+        "Emunah",
+        "Bitachon",
+        "Faith",
+        "Hashgacha Pratis",
+        "Divine Providence"
+      ]
+    },
+    {
+      "name": "Miracles",
+      "group": "Emunah and Hashkafah",
+      "description": "Nissim in the Gemara, relying on miracles and hidden miracles.",
+      "aliases": [
+        "Nissim"
+      ]
+    },
+    {
+      "name": "Olam Haba",
+      "group": "Emunah and Hashkafah",
+      "description": "Reward and punishment, Gan Eden and the World to Come.",
+      "aliases": [
+        "Olam HaBa",
+        "Reward and Punishment",
+        "Gan Eden"
+      ]
+    },
+    {
+      "name": "Moshiach and Geulah",
+      "group": "Emunah and Hashkafah",
+      "description": "The coming of Moshiach and the final redemption.",
+      "aliases": [
+        "Moshiach",
+        "Geulah",
+        "Galus",
+        "Redemption"
+      ]
+    },
+    {
+      "name": "Tzaddikim",
+      "group": "Emunah and Hashkafah",
+      "description": "The righteous: their prayers, their power and how they lived.",
+      "aliases": [
+        "Tzaddik"
+      ]
+    },
+    {
+      "name": "Dreams",
+      "group": "Emunah and Hashkafah",
+      "description": "Dreams in the Gemara: their meaning and how to treat them.",
+      "aliases": [
+        "Chalomos"
+      ]
+    },
+    {
+      "name": "Segulos",
+      "group": "Emunah and Hashkafah",
+      "description": "Segulos and protective practices in Chazal, and what to make of them.",
+      "aliases": [
+        "Segulah",
+        "Ayin Hara",
+        "Evil Eye"
+      ]
+    },
+    {
+      "name": "Angels and Sheidim",
+      "group": "Emunah and Hashkafah",
+      "description": "Malachim, sheidim and the hidden world in the Gemara.",
+      "aliases": [
+        "Malachim",
+        "Sheidim",
+        "Angels",
+        "Demons"
+      ]
+    },
+    {
+      "aliases": [
+        "Prophecy",
+        "Prophets",
+        "Neviim"
+      ],
+      "name": "Nevuah",
+      "group": "Emunah and Hashkafah",
+      "description": "Prophecy and the Nevi’im in the Gemara."
+    },
+    {
+      "aliases": [
+        "Idolatry",
+        "Forbidden Images",
+        "Idol Worship"
+      ],
+      "name": "Avodah Zarah",
+      "group": "Emunah and Hashkafah",
+      "description": "Idolatry and its prohibitions, from images and statues to bowing."
+    },
+    {
+      "name": "Medicine and Health",
+      "group": "Life and Society",
+      "description": "Healing, doctors, pikuach nefesh and the Gemara's health advice.",
+      "aliases": [
+        "Medicine",
+        "Health",
+        "Pikuach Nefesh",
+        "Refuah"
+      ]
+    },
+    {
+      "name": "Aveilus",
+      "group": "Life and Society",
+      "description": "Mourning, kevurah and honoring the dead.",
+      "aliases": [
+        "Mourning",
+        "Death",
+        "Burial",
+        "Kevurah"
+      ]
+    },
+    {
+      "name": "Gedolim",
+      "group": "Life and Society",
+      "description": "Tributes, hespedim and stories about the great rabbanim of our time.",
+      "aliases": [
+        "Gadol",
+        "Gedolei Yisrael",
+        "Hespedim",
+        "Hesped",
+        "Tributes"
+      ]
+    },
+    {
+      "name": "Technology and Halacha",
+      "group": "Life and Society",
+      "description": "Modern technology through the lens of the Gemara: machines, voice devices, self-driving cars and more.",
+      "aliases": [
+        "technology and halacha",
+        "Torah and modern technology",
+        "speaking to machines on Shabbos",
+        "voice activated devices on Shabbos",
+        "self driving car Shabbos emergency",
+        "Rav Yitzchak Zilberstein Shabbos technology",
+        "Science"
+      ]
+    },
+    {
+      "name": "Jewish History",
+      "group": "Life and Society",
+      "description": "Events and eras of Jewish history connected to the daf.",
+      "aliases": [
+        "French emperor Jewish history",
+        "Mogilev 1812",
+        "Napoleon Bonaparte",
+        "Napoleon cloak story",
+        "History"
+      ]
+    },
+    {
+      "name": "Eretz Yisrael",
+      "group": "Life and Society",
+      "description": "The Land of Israel: living there, its holiness and its boundaries.",
+      "aliases": [
+        "Land of Israel",
+        "Yerushalayim",
+        "Jerusalem"
+      ]
+    },
+    {
+      "name": "Non-Jews",
+      "group": "Life and Society",
+      "description": "Relations with non-Jews, the Noahide laws and converts.",
+      "aliases": [
+        "Geirim",
+        "Converts",
+        "Conversion",
+        "Bnei Noach",
+        "Gentiles",
+        "Geirus"
+      ]
+    },
+    {
+      "name": "Animals",
+      "group": "Life and Society",
+      "description": "Animals in halacha and aggadah, and tzaar baalei chaim.",
+      "aliases": [
+        "Tzaar Baalei Chaim"
+      ]
+    },
+    {
+      "aliases": [
+        "Tefillas HaDerech",
+        "Flying",
+        "Airplanes"
+      ],
+      "name": "Travel",
+      "group": "Life and Society",
+      "description": "Halacha on the road and in the air: davening, Tefillas HaDerech and travel questions."
+    },
+    {
+      "name": "Daf Quiz",
+      "group": "Life and Society",
+      "description": "Test yourself: quizzes on the Daf Yomi.",
+      "aliases": [
+        "Quiz"
+      ]
+    },
+    {
+      "name": "Rodeif",
+      "group": "Life and Society",
+      "description": "A pursuer, self-defense and when one may stop an attacker.",
+      "aliases": [
+        "Rodef",
+        "Pursuer",
+        "Self-Defense"
+      ]
+    }
+  ],
+  "retired": [
+    "Gemara",
+    "Pasul",
+    "Kesubos",
+    "Pesachim",
+    "Gemara Menachos 22b",
+    "Menachos 30a",
+    "Yevamos 62a",
+    "Shavuos 44a",
+    "Chasam Sofer Orach Chaim 42",
+    "Chavos Yair",
+    "Chazon Ish",
+    "Chofetz Chaim",
+    "Rav Moshe Feinstein",
+    "Rav Shlomo Zalman Auerbach",
+    "Steipler Gaon",
+    "Reb Yosef Luria",
+    "R' Meir",
+    "R&#x27; Meir",
+    "Rabbi Elazar ben Shamua",
+    "Eliyahu HaNavi"
+  ]
+}

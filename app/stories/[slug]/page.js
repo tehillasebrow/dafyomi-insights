@@ -2,10 +2,11 @@ import { cache } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { supabase } from '@/app/lib/supabase'
-import { articlePath, articleDate, dafPath, dafLabel, decodeParam, readingMinutes, slugify } from '@/app/lib/articles'
+import { articlePath, articleDate, articlePlace, dafPath, decodeParam, readingMinutes, slugify, BEYOND_THE_DAF, BEYOND_THE_DAF_PATH } from '@/app/lib/articles'
 import { masechtaHref, findMasechta, hebrewNumeral } from '@/app/lib/shas'
 import { buildMetadata, clip, absoluteUrl, authorJsonLd, breadcrumbJsonLd, talmudSourceJsonLd, WEBSITE_ID } from '@/app/lib/seo'
 import { getStoryBySlug, getStoriesForArticle, storyPath, personPath } from '@/app/lib/stories'
+import { topicsFor, topicPath } from '@/app/lib/topics'
 import JsonLd from '@/app/components/JsonLd'
 import RelatedStories from '@/app/components/RelatedStories'
 import ArticleBody from '@/app/components/ArticleBody'
@@ -31,6 +32,7 @@ const getStoryWithArticle = cache(async (rawSlug) => {
 })
 
 function storyTitle(story) {
+    if (!story.masechta) return `${story.title} – ${BEYOND_THE_DAF}`
     return `${story.title} – ${story.masechta} ${story.daf} Gemara Story`
 }
 
@@ -47,16 +49,18 @@ export async function generateMetadata({ params }) {
         image: `${storyPath(story)}/opengraph-image`, // this segment's generated card
         publishedTime: article ? articleDate(article) : story.created_at,
         modifiedTime: story.updated_at,
-        tags: [...(story.people ?? []), ...(story.tags ?? [])],
+        tags: [...(story.people ?? []), ...topicsFor(story.tags).map(t => t.name)],
         keywords: [
             story.title,
-            `${story.title} Gemara`,
-            `${story.masechta} ${story.daf}`,
-            `${story.masechta} ${story.daf} story`,
-            'Gemara story',
-            'Daf Yomi story',
+            ...(story.masechta ? [
+                `${story.title} Gemara`,
+                `${story.masechta} ${story.daf}`,
+                `${story.masechta} ${story.daf} story`,
+                'Gemara story',
+                'Daf Yomi story',
+            ] : []),
             ...(story.people ?? []).map(p => `${p} story`),
-            ...(story.tags ?? []),
+            ...topicsFor(story.tags).map(t => t.name),
         ],
     })
 }
@@ -91,19 +95,23 @@ export default async function StoryPage({ params }) {
         datePublished: article ? articleDate(article) : story.created_at,
         dateModified: story.updated_at,
         inLanguage: 'en',
-        genre: 'Aggadah',
-        keywords: [...(story.people ?? []), ...(story.tags ?? [])].join(', '),
+        ...(story.masechta && { genre: 'Aggadah' }),
+        keywords: [...(story.people ?? []), ...topicsFor(story.tags).map(t => t.name)].join(', '),
         about: [
-            talmudSourceJsonLd(story.masechta, story.daf),
+            ...(story.masechta ? [talmudSourceJsonLd(story.masechta, story.daf)] : []),
             ...(story.people ?? []).map(name => ({ '@type': 'Person', name })),
         ],
         isPartOf: articleUrl ? { '@type': 'Article', '@id': `${articleUrl}#article`, url: articleUrl, headline: article.title } : { '@id': WEBSITE_ID },
         articleBody: story.content,
     }
-    const breadcrumbs = breadcrumbJsonLd([
+    const breadcrumbs = breadcrumbJsonLd(story.masechta ? [
         { name: 'Masechtos', path: '/masechtos' },
         { name: story.masechta, path: masechtaHref(story.masechta) },
         { name: `${story.masechta} ${story.daf}`, path: dafPath(story.masechta, story.daf) },
+        { name: story.title, path },
+    ] : [
+        { name: BEYOND_THE_DAF, path: BEYOND_THE_DAF_PATH },
+        ...(article ? [{ name: article.title, path: articlePath(article) }] : []),
         { name: story.title, path },
     ])
 
@@ -118,7 +126,7 @@ export default async function StoryPage({ params }) {
                 <nav aria-label="Breadcrumb" className="crumbs">
                     <Link href="/stories">Stories</Link>
                     <span aria-hidden="true">›</span>
-                    <Link href={`/stories#${slugify(story.masechta)}`}>{story.masechta}</Link>
+                    <Link href={`/stories#${slugify(story.masechta || BEYOND_THE_DAF)}`}>{story.masechta || BEYOND_THE_DAF}</Link>
                 </nav>
                 {known && <span lang="he" className="text-[1.2rem]">{known.hebrew} · דף {hebrewNumeral(story.daf)}</span>}
             </div>
@@ -128,8 +136,8 @@ export default async function StoryPage({ params }) {
                 {story.summary && <p className="text-lede text-ink-soft max-w-[54ch] md:col-start-2">{story.summary}</p>}
 
                 <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3.5 gap-y-2 items-center py-2.5 border-y border-rule md:grid-cols-1 md:items-start md:content-start md:py-0 md:border-y-0 md:border-r md:pr-5 md:col-start-1 md:row-start-1 md:row-span-4 md:self-start md:sticky md:top-4">
-                    <span lang="he" className="numeral text-[3.25rem] md:text-[5rem] leading-[0.85]" aria-label={`Daf ${story.daf}`}>{hebrewNumeral(story.daf)}</span>
-                    <p className="meta leading-[1.7]">{story.masechta} {story.daf}{story.content && <><br />{readingMinutes(story)} min read</>}</p>
+                    {story.masechta && <span lang="he" className="numeral text-[3.25rem] md:text-[5rem] leading-[0.85]" aria-label={`Daf ${story.daf}`}>{hebrewNumeral(story.daf)}</span>}
+                    <p className={`meta leading-[1.7] ${story.masechta ? '' : 'col-span-2 md:col-span-1'}`}>{story.masechta ? `${story.masechta} ${story.daf}` : BEYOND_THE_DAF}{story.content && <><br />{readingMinutes(story)} min read</>}</p>
                     {story.people?.length > 0 && (
                         <div className="col-span-2 md:col-span-1 md:border-t md:border-rule md:pt-2.5">
                             <span className="sc">{story.people.length === 1 ? 'Sage' : 'Sages'}</span>
@@ -140,7 +148,7 @@ export default async function StoryPage({ params }) {
                         <div className="col-span-2 md:col-span-1 md:border-t md:border-rule md:pt-2.5">
                             <span className="sc">From the article</span>
                             <p><Link href={`${articlePath(article)}#${encodeURIComponent(story.slug)}`}>{article.title}</Link></p>
-                            <p className="meta">{article.masechta} {dafLabel(article)}</p>
+                            <p className="meta">{articlePlace(article)}</p>
                         </div>
                     )}
                 </div>
@@ -150,10 +158,10 @@ export default async function StoryPage({ params }) {
                 <div className="md:col-start-2"><ArticleBody content={story.content} /></div>
 
                 <div className="grid gap-8 md:col-start-2 pt-2">
-                    {story.tags?.length > 0 && (
+                    {topicsFor(story.tags).length > 0 && (
                         <div className="flex flex-wrap items-center gap-2">
                             <span className="sc">Topics</span>
-                            {story.tags.map(tag => <Link key={tag} href={`/topics/${encodeURIComponent(tag)}`} className="chip">{tag}</Link>)}
+                            {topicsFor(story.tags).map(t => <Link key={t.slug} href={topicPath(t)} className="chip">{t.name}</Link>)}
                         </div>
                     )}
 

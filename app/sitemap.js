@@ -1,17 +1,21 @@
 import { supabase } from '@/app/lib/supabase'
 import { SITE_URL } from '@/app/lib/site'
 import { masechtaHref } from '@/app/lib/shas'
-import { articlePath, articleDate } from '@/app/lib/articles'
+import { articlePath, articleDate, BEYOND_THE_DAF_PATH } from '@/app/lib/articles'
 import { storyPath, personPath } from '@/app/lib/stories'
+import { topicsFor, topicPath } from '@/app/lib/topics'
 
 export const revalidate = 3600
 
 export default async function sitemap() {
-    const [{ data: articles }, { data: dailies }, { data: stories }] = await Promise.all([
-        supabase.from('articles').select('id, slug, masechta, daf, tags, created_at, published_at'),
+    const COLUMNS = 'id, slug, masechta, daf, tags, created_at, published_at'
+    let [{ data: articles, error }, { data: dailies }, { data: stories }] = await Promise.all([
+        supabase.from('articles').select(`${COLUMNS}, refs`),
         supabase.from('daily_discussions').select('date'),
         supabase.from('stories').select('slug, masechta, people, tags, updated_at'),
     ])
+    // Before the article_refs migration there is no refs column
+    if (error) ({ data: articles } = await supabase.from('articles').select(COLUMNS))
 
     const now = new Date()
     const latest = new Map() // path -> most recent article date
@@ -22,21 +26,20 @@ export default async function sitemap() {
     }
 
     for (const a of articles ?? []) {
-        touch(masechtaHref(a.masechta), articleDate(a))
-        for (const tag of a.tags ?? []) {
-            if (tag?.trim()) touch(`/topics/${encodeURIComponent(tag.trim())}`, articleDate(a))
-        }
+        // Articles that aren't on a daf freshen /beyond-the-daf instead of a masechta page
+        touch(a.masechta ? masechtaHref(a.masechta) : BEYOND_THE_DAF_PATH, articleDate(a))
+        // An article also listed under other masechtos (articles.refs) freshens those pages too
+        for (const r of a.refs ?? []) if (r?.masechta) touch(masechtaHref(r.masechta), articleDate(a))
+        for (const t of topicsFor(a.tags)) touch(topicPath(t), articleDate(a))
     }
     for (const s of stories ?? []) {
-        touch(masechtaHref(s.masechta), s.updated_at)
+        if (s.masechta) touch(masechtaHref(s.masechta), s.updated_at)
         touch('/stories', s.updated_at)
         touch('/people', s.updated_at)
         for (const name of s.people ?? []) {
             if (name?.trim()) touch(personPath(name.trim()), s.updated_at)
         }
-        for (const tag of s.tags ?? []) {
-            if (tag?.trim()) touch(`/topics/${encodeURIComponent(tag.trim())}`, s.updated_at)
-        }
+        for (const t of topicsFor(s.tags)) touch(topicPath(t), s.updated_at)
     }
 
     const staticPages = [

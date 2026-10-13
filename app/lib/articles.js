@@ -1,6 +1,7 @@
 // lib/articles.js
 // Shared helpers for article URLs, dates and queries. Safe on client and server.
 import { supabase } from '@/app/lib/supabase'
+import { findMasechta } from '@/app/lib/shas'
 
 export function decodeParam(value) {
     try {
@@ -21,7 +22,17 @@ export function dafPath(masechta, daf) {
     return `/daf/${encodeURIComponent(masechta.toLowerCase())}/${daf}`
 }
 
+// A standalone article (tribute, Q&A, magazine piece) has no masechta/daf.
+// It lives under /beyond-the-daf instead of a daf page.
+export const BEYOND_THE_DAF = 'Beyond the Daf'
+export const BEYOND_THE_DAF_PATH = '/beyond-the-daf'
+
+export function isStandalone(article) {
+    return !article?.masechta
+}
+
 export function articlePath(article) {
+    if (isStandalone(article)) return `${BEYOND_THE_DAF_PATH}/${encodeURIComponent(article.slug || article.id)}`
     return `${dafPath(article.masechta, article.daf)}/${encodeURIComponent(article.slug || article.id)}`
 }
 
@@ -29,6 +40,16 @@ export function dafLabel(article) {
     return article.daf_end && article.daf_end !== article.daf
         ? `${article.daf}–${article.daf_end}`
         : `${article.daf}`
+}
+
+// Where an article sits: "Berachos 12" or "Beyond the Daf"
+export function articlePlace(article) {
+    return isStandalone(article) ? BEYOND_THE_DAF : `${article.masechta} ${dafLabel(article)}`
+}
+
+// Only articles that are about a daf (leaves out Beyond the Daf)
+export function onDaf(query) {
+    return query.not('masechta', 'is', null)
 }
 
 // published_at is the original publication date; older rows may only have created_at
@@ -76,12 +97,28 @@ export function coveringDaf(query, daf) {
         .or(`daf.eq.${daf},daf_end.gte.${daf}`)
 }
 
-// All articles covering a daf, newest first
+// All articles covering a daf, newest first: the ones filed under it, then the
+// ones that also discuss it (articles.refs). refs use the canonical masechta name.
 export async function getArticlesForDaf(masechta, daf, columns = '*') {
     const query = supabase
         .from('articles')
         .select(columns)
         .ilike('masechta', masechta)
-    const { data } = await orderByPublished(coveringDaf(query, daf))
+    const canonical = findMasechta(masechta)?.name ?? masechta
+    const [{ data }, { data: alsoOn }] = await Promise.all([
+        orderByPublished(coveringDaf(query, daf)),
+        orderByPublished(supabase.from('articles').select(columns).contains('refs', [{ masechta: canonical, daf: Number(daf) }])),
+    ])
+    const own = data || []
+    const ids = new Set(own.map(a => a.id))
+    return [...own, ...(alsoOn || []).filter(a => !ids.has(a.id))]
+}
+
+// Articles filed under another masechta that also discuss this one (articles.refs)
+export async function getArticlesReferencing(masechta, columns = '*') {
+    const canonical = findMasechta(masechta)?.name ?? masechta
+    const { data } = await orderByPublished(
+        supabase.from('articles').select(columns).contains('refs', [{ masechta: canonical }])
+    )
     return data || []
 }

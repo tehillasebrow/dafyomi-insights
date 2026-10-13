@@ -1,0 +1,27 @@
+# Hourly: sends article emails that were approved on Shabbos/Yom Tov (they wait
+# until it's over) or that failed and need a retry, and reminds the admin once
+# about a preview that has waited two days. All the work happens on the site,
+# at /api/newsletter/tick; this just calls it.
+name: Mailing list
+
+on:
+  schedule:
+    - cron: '7 * * * *'   # every hour, a few minutes past
+  workflow_dispatch: {}   # "Run workflow" button for a manual run
+
+permissions:
+  contents: read
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Send waiting emails and reminders
+        env:
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://dafyomiinsights.com' }}
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 300 \
+            -X POST "$SITE_URL/api/newsletter/tick" \
+            -H "Authorization: Bearer $REVALIDATE_SECRET"

@@ -6,6 +6,7 @@ import { checkPassword, createAdminSession, clearAdminSession, isAdmin } from '@
 import { slugify, articlePath } from '@/app/lib/articles'
 import { postingStatus } from '@/app/lib/shas'
 import { logEvent } from '@/app/lib/events'
+import { queueArticleEmail } from '@/app/lib/newsletter'
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024
 const NOT_AUTHORIZED = '❌ Not authorized. Please log in again.'
@@ -42,14 +43,15 @@ function optionalInt(formData, key) {
     return Number.isInteger(n) ? n : NaN
 }
 
+// Slugs are unique within a daf, or among the standalone (Beyond the Daf) articles
 async function uniqueSlug(supabase, masechta, daf, title) {
     const base = slugify(title) || 'article'
-    const { data } = await supabase
+    let query = supabase
         .from('articles')
         .select('slug')
-        .ilike('masechta', masechta)
-        .eq('daf', daf)
         .like('slug', `${base}%`)
+    query = masechta ? query.ilike('masechta', masechta).eq('daf', daf) : query.is('masechta', null)
+    const { data } = await query
 
     const taken = new Set((data || []).map(a => a.slug))
     if (!taken.has(base)) return base
@@ -80,13 +82,16 @@ export async function createArticle(prevState, formData) {
     const supabase = getSupabaseAdmin()
 
     const title = text(formData, 'title')
-    const masechta = text(formData, 'masechta')
-    const daf = optionalInt(formData, 'daf')
-    const dafEnd = optionalInt(formData, 'daf_end')
+    // "Beyond the Daf": a tribute, Q&A or other piece that isn't on a daf
+    const standalone = formData.get('standalone') === 'on'
+    const masechta = standalone ? null : text(formData, 'masechta')
+    const daf = standalone ? null : optionalInt(formData, 'daf')
+    const dafEnd = standalone ? null : optionalInt(formData, 'daf_end')
     const publishedAt = text(formData, 'published_at')
 
-    if (!title || !masechta || !Number.isInteger(daf)) {
-        return { error: '❌ Error: Title, Masechta and Daf are required' }
+    if (!title) return { error: '❌ Error: Title is required' }
+    if (!standalone && (!masechta || !Number.isInteger(daf))) {
+        return { error: '❌ Error: Title, Masechta and Daf are required (or tick "Beyond the Daf")' }
     }
     if (Number.isNaN(dafEnd) || (dafEnd !== null && dafEnd < daf)) {
         return { error: '❌ Error: "Through Daf" must be a number ≥ Daf' }
@@ -109,7 +114,7 @@ export async function createArticle(prevState, formData) {
         published_at: publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString(),
     }
 
-    const { error } = await supabase.from('articles').insert([article])
+    const { data: inserted, error } = await supabase.from('articles').insert([article]).select('id').single()
     if (error) return { error: `❌ Error: ${error.message}` }
 
     await logEvent('article_created', {
@@ -117,7 +122,10 @@ export async function createArticle(prevState, formData) {
         details: { title, masechta, daf, slug: article.slug, image_url: article.image_url },
     })
     revalidatePath('/', 'layout')
-    return { error: null, success: '✅ Article Published!', path: articlePath(article) }
+    // Emails a preview to approve before it goes to subscribers (only for articles dated in the last week)
+    const email = await queueArticleEmail(inserted.id)
+    const emailNote = email.queued ? ' A preview email is on its way to you to approve.' : ''
+    return { error: null, success: `✅ Article Published!${emailNote}`, path: articlePath(article) }
 }
 
 // --- Stories ---
@@ -127,13 +135,22 @@ function list(formData, key) {
 }
 
 // Finds the article from its URL, e.g. https://dafyomiinsights.com/daf/pesachim/45/the-slug
+// or https://dafyomiinsights.com/beyond-the-daf/the-slug
 async function articleFromUrl(supabase, url) {
+    const columns = 'id, slug, masechta, daf, content'
+    const standalone = url.match(/\/beyond-the-daf\/([^/?#]+)/)
+    if (standalone) {
+        const slug = decodeURIComponent(standalone[1])
+        const { data: bySlug } = await supabase.from('articles').select(columns).is('masechta', null).eq('slug', slug).limit(1)
+        if (bySlug?.[0]) return bySlug[0]
+        const { data: byId } = await supabase.from('articles').select(columns).is('masechta', null).eq('id', slug).limit(1)
+        return byId?.[0] ?? null
+    }
     const match = url.match(/\/daf\/([^/]+)\/(\d+)\/([^/?#]+)/)
     if (!match) return null
     const [, rawMasechta, , rawSlug] = match
     const masechta = decodeURIComponent(rawMasechta)
     const slug = decodeURIComponent(rawSlug)
-    const columns = 'id, slug, masechta, daf, content'
     const { data: bySlug } = await supabase.from('articles').select(columns).ilike('masechta', masechta).eq('slug', slug).limit(1)
     if (bySlug?.[0]) return bySlug[0]
     const { data: byId } = await supabase.from('articles').select(columns).ilike('masechta', masechta).eq('id', slug).limit(1)
@@ -142,7 +159,8 @@ async function articleFromUrl(supabase, url) {
 
 async function uniqueStorySlug(supabase, title, masechta, daf) {
     const base = slugify(String(title).replace(/['‘’`]/g, '')) || 'story'
-    const candidates = [base, `${base}-${slugify(masechta)}-${daf}`]
+    // A story from a Beyond the Daf article has no masechta/daf to tell it apart
+    const candidates = [base, masechta ? `${base}-${slugify(masechta)}-${daf}` : `${base}-beyond-the-daf`]
     for (let i = 2; candidates.length < 20; i++) candidates.push(`${candidates[1]}-${i}`)
     const { data } = await supabase.from('stories').select('slug').in('slug', candidates)
     const taken = new Set((data || []).map(s => s.slug))

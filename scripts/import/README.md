@@ -54,6 +54,10 @@ An article is held back for a person when:
 - some text didn't fit the columns,
 - or its daf seems far from that week's Daf Yomi.
 
+## Pieces that aren't about a daf ("Beyond the Daf")
+
+Some of his pieces are hespedim, tributes, interviews or other writing, not a daf column. During review these get `"standalone": true` in `article.json`, with `masechta`, `daf` and `daf_end` set to `null` and `refs` set to `[]`. When published they appear under **Beyond the Daf** (`/beyond-the-daf`) instead of on a daf page; their stories show under "Beyond the Daf" on the stories page. `npm run import:publish` refuses any article that is neither standalone nor on a real masechta and daf, and `npm run import:check-seo` flags a standalone article that still has a daf or refs. This needs the database migration `supabase/migrations/20261013000000_standalone_articles.sql`.
+
 Smaller notes don't hold an article back, but they are listed in the review sheet. Examples: the article continues on a second page, there's a second picture, or a pull quote was left out.
 
 ## Files
@@ -68,6 +72,15 @@ Smaller notes don't hold an article back, but they are listed in the review shee
 
 `data/import/` is not saved in git.
 
-## 5 Towns Jewish Times (before mid-2019)
+## 5 Towns Jewish Times (2010–2021)
 
-5TJT rebuilt its website in 2024 and his older columns are no longer on it; the only copies left are in the Internet Archive (web.archive.org). That importer isn't built yet.
+He wrote "Daf Yomi Insights" for 5TJT from at least 2010 until January 2021. 5TJT rebuilt its website in 2024 and the old article pages are gone, so the columns come from two places:
+
+1. **The printed issues (July 2011–2020).** 5tjt.com/paper/ still links every issue to a Flipdocs flipbook with the full PDF. The list of issues is in `scripts/import/5tjt-flipdocs.tsv` (collected 2026-10-12).
+   ```
+   npm run import:5tjt-pdf                    every issue (about an hour; resumes where it stopped)
+   npm run import:5tjt-pdf -- --issue 306203  one issue
+   npm run import:5tjt-pdf -- --year 2018     one year
+   ```
+   It reads each PDF's text with the same layout code as the Jewish Home importer, follows "Continued on Page N", draws the page images itself, and crops the photo. A column also found on the old website (same title, within three weeks) is skipped.
+2. **The old website, via the Internet Archive** (2010–2021, including issues missing from the PDFs). Some networks block archive.org, so the downloading runs on GitHub (`.github/workflows/fetch-5tjt.yml` and `sweep-5tjt.yml` on the `import-5tjt` branch); download the run's files into `data/import/5tjt/<folder>/`, then `npm run import:5tjt -- --new-only` stages them (`--dry-run` to just look). Pages by Baila or other Sebrows are kept apart, never staged.

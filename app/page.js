@@ -1,10 +1,11 @@
 // app/page.js
 import Link from 'next/link'
 import { supabase } from './lib/supabase'
-import { ARTICLE_LIST_COLUMNS, articlePath, articleOpening, dafLabel, formatArticleDate, orderByPublished, readingMinutes } from './lib/articles'
+import { ARTICLE_LIST_COLUMNS, articlePath, articleOpening, dafLabel, formatArticleDate, onDaf, orderByPublished, readingMinutes } from './lib/articles'
 import { STORY_CARD_COLUMNS } from './lib/stories'
 import { MASECHTOS, SEDARIM, findMasechta, masechtaHref, todayInNewYork, dafYomiFor, weekOfDafim, hebrewNumeral, dayLabel, siyumDate, formatDate } from './lib/shas'
 import { buildMetadata } from './lib/seo'
+import { TOPICS, countTopics, topicsFor, topicPath } from './lib/topics'
 import { DEFAULT_TITLE, DEFAULT_DESCRIPTION } from './lib/site'
 import StoryRow from './components/StoryRow'
 import { ArticleThumb } from './components/ArticleImage'
@@ -46,7 +47,7 @@ export default async function Home() {
     }
 
     const [recentRes, storiesRes, indexRes, ...weekLists] = await Promise.all([
-        orderByPublished(supabase.from('articles').select(ARTICLE_LIST_COLUMNS)).limit(11),
+        orderByPublished(onDaf(supabase.from('articles').select(ARTICLE_LIST_COLUMNS))).limit(11),
         supabase.from('stories').select(STORY_CARD_COLUMNS).order('created_at', { ascending: false }).limit(3),
         supabase.from('articles').select('masechta, tags'),
         ...[...spans].map(([name, r]) => articlesOverlapping(name, r.from, r.to)),
@@ -77,9 +78,12 @@ export default async function Home() {
     }
     const seder = MASECHTOS.filter(m => m.seder === todays.masechta.seder && m.dafim > 8)
 
-    const tagCounts = new Map()
-    for (const a of index) for (const t of a.tags ?? []) if (t?.trim()) tagCounts.set(t.trim(), (tagCounts.get(t.trim()) ?? 0) + 1)
-    const topTags = [...tagCounts].sort((a, b) => b[1] - a[1]).slice(0, 6).sort((a, b) => a[0].localeCompare(b[0]))
+    // Most-used topics, by their clean names from data/topics.json
+    const tagCounts = countTopics(index)
+    const topTags = TOPICS
+        .filter(t => tagCounts.get(t.slug))
+        .map(t => [t, tagCounts.get(t.slug)])
+        .sort((a, b) => b[1] - a[1]).slice(0, 6).sort((a, b) => a[0].name.localeCompare(b[0].name))
 
     return (
         <div data-home>
@@ -97,7 +101,7 @@ export default async function Home() {
                             <p className="meta">
                                 {featured.masechta} {dafLabel(featured)}
                                 {featured.content && <><br />{readingMinutes(featured)} min read</>}
-                                {featured.tags?.length > 0 && <span className="max-lg:hidden"><br />{featured.tags.slice(0, 3).map((t, i) => <span key={t}>{i ? ', ' : ''}<Link href={`/topics/${encodeURIComponent(t)}`} className="inline-flex items-center min-h-11">{t}</Link></span>)}</span>}
+                                {topicsFor(featured.tags).length > 0 && <span className="max-lg:hidden"><br />{topicsFor(featured.tags).slice(0, 3).map((t, i) => <span key={t.slug}>{i ? ', ' : ''}<Link href={topicPath(t)} className="inline-flex items-center min-h-11">{t.name}</Link></span>)}</span>}
                             </p>
                         </div>
                         <article className="tzurah-gemara grid gap-4 content-start">
@@ -222,10 +226,10 @@ export default async function Home() {
                         <div>
                             <h2 className="font-semibold text-h2 tracking-[-0.02em]">Topics</h2>
                             <ul className="mt-2">
-                                {topTags.map(([tag, n]) => (
-                                    <li key={tag}>
-                                        <Link href={`/topics/${encodeURIComponent(tag)}`} className="plain flex items-baseline gap-2 min-h-11 py-2 text-[1.08rem] hover:underline">
-                                            {tag}<i className="flex-1 border-b border-dotted border-ink-soft -translate-y-1" /><span className="meta whitespace-nowrap">{n}</span>
+                                {topTags.map(([topic, n]) => (
+                                    <li key={topic.slug}>
+                                        <Link href={topicPath(topic)} className="plain flex items-baseline gap-2 min-h-11 py-2 text-[1.08rem] hover:underline">
+                                            {topic.name}<i className="flex-1 border-b border-dotted border-ink-soft -translate-y-1" /><span className="meta whitespace-nowrap">{n}</span>
                                         </Link>
                                     </li>
                                 ))}

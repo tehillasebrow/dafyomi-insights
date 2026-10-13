@@ -11,8 +11,8 @@ You are reading Rabbi Avrohom Sebrow's Daf Yomi articles and finding the **Gemar
 
 ## Inputs
 
-- `data/articles/*.json`: one article per file: `id`, `masechta`, `daf`, `title`, `summary`, `tags`, `content`. If the folder is empty, say so and stop. (It is filled by `npm run stories:export`.)
-- `data/tag-vocabulary.json`: the topic tags already used on the site.
+- `data/articles/*.json`: one article per file: `id`, `masechta`, `daf`, `title`, `summary`, `tags`, `content`. If the folder is empty, say so and stop. (It is filled by `npm run stories:export`.) A "Beyond the Daf" article (a tribute, interview or other piece not on a daf; file name `standalone-<slug>.json`) has `masechta` and `daf` set to `null`: copy them as `null` into the draft and find its stories the same way.
+- `data/topics.json`: the site's one list of topics. Story and article tags must be topic `name`s from it (never an alias).
 - `data/people-vocabulary.json`: the sages' names already used on the site (exact spellings).
 - If arguments were given ($ARGUMENTS), only process article files whose name or masechta matches them.
 
@@ -48,6 +48,8 @@ If the article has no Gemara stories, write `"stories": []`. That still counts: 
 
 A story is a **narrative**: something that happened to named people (sages, kings, ordinary people), with events or dialogue. Examples: Hillel and the convert on one foot; Choni HaMe'agel sleeping seventy years; Rabbi Akiva and the fox on the Temple Mount; Nakdimon ben Gurion and the water; Kamtza and Bar Kamtza.
 
+Stories from Tanach or the Midrash that the article tells (Yael and Sisera, Elisha and the bears) count too: the site owner wants them to have pages as well. So do stories about later rabbanim (Gedolim) that the article tells, such as Rav Moshe Feinstein, the Chasam Sofer or Rav Henoch Leibowitz: tag them "Gedolim" along with their theme.
+
 These are **not** stories: a halachic discussion, a list of opinions, a single quoted statement ("Rabbi Yochanan said…"), a parable the article invents, or a story the article mentions in one passing sentence. The article must actually tell the story, normally in at least three sentences.
 
 ## Field rules
@@ -56,7 +58,7 @@ These are **not** stories: a halachic discussion, a list of opinions, a single q
 - **slug**: lowercase words joined by hyphens, from the title.
 - **summary**: 1–2 plain-English sentences, about 120–155 characters. Say who is involved and what happens. It is used as the Google description, so make someone want to read it. Paraphrase the article; do not add facts that aren't in it.
 - **people**: the named individuals in the story. Use the exact spelling from `data/people-vocabulary.json` when the person is already there. Otherwise follow the site's Ashkenazi-style transliteration: Rabbi Akiva, Rabbi Yochanan, Reish Lakish, Rabban Gamliel, Rabbi Shimon bar Yochai, Choni HaMe'agel, Hillel, Shammai, Moshe Rabbeinu, Dovid HaMelech. Add any new name to `data/people-vocabulary.json`, keeping it sorted. Leave out unnamed people ("a man", "a Sadducee").
-- **tags**: 1–4 themes of the story (e.g. Humility, Teshuvah, Prayer, Tzedakah, Kiddush Hashem, Patience, Churban). Reuse tags from `data/tag-vocabulary.json` whenever one fits. If a genuinely new tag is needed, use a short Title Case tag and add it to `data/tag-vocabulary.json`. **Every tag you use must be in that file**, or the draft will be rejected.
+- **tags**: 1–3 topics of the story, using the exact `name` of topics in `data/topics.json` (e.g. Humility, Teshuvah, Tefillah, Tzedakah, Kiddush Hashem). Never invent a tag and never edit `data/topics.json` yourself: if an important theme has no topic, list it in the draft as `"new_topics": [{"name": "...", "group": "...", "why": "..."}]` for the site owner. **Every tag you use must be a topic name**, or the draft will be rejected.
 - **article_tags**: 0–5 topic tags for the whole article that it doesn't already have, from the same vocabulary. Never repeat the article's existing tags.
 - **start_text / end_text**: copy these **character for character** from the article's `content`, including punctuation. Each should be 8–15 words, and long enough that it appears only once in the article. The story's page shows exactly the text from start_text through end_text, so:
   - Start where the article begins telling the story, including a short lead-in sentence if the story doesn't make sense without it.
@@ -66,7 +68,7 @@ These are **not** stories: a halachic discussion, a list of opinions, a single q
 ## How to work
 
 1. List the article files (respecting any filter) and skip the ones already done.
-2. Read `data/tag-vocabulary.json` and `data/people-vocabulary.json` once.
+2. Read `data/topics.json` and `data/people-vocabulary.json` once.
 3. Work through the articles one at a time: read the article, find its stories, and write its draft file. With more than about 30 articles in an interactive session, you may hand batches of files to subagents. Tell each one to read and follow this file (`.claude/skills/extract-stories/SKILL.md`), and have only one agent at a time edit the vocabulary files.
 4. Before writing each draft, double-check that every start_text and end_text appears exactly once in `content`. Use Grep on the article file if unsure.
 5. Write only inside `data/`. Never edit `data/articles/`, the code, or anything else.

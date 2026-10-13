@@ -50,7 +50,9 @@ export function slugify(text) {
         .replace(/^-+|-+$/g, '')
 }
 
+// A standalone (Beyond the Daf) article has no masechta/daf
 export function articleFileName(article) {
+    if (!article.masechta) return `standalone-${slugify(article.slug || article.id)}.json`
     return `${slugify(article.masechta)}-${article.daf}-${slugify(article.slug || article.id)}.json`
 }
 
@@ -130,16 +132,11 @@ export async function exportArticles({ all = false, masechta, article: articleId
         })
     }
 
-    // Vocabulary: tags and sages already used on the site
-    const [{ data: tagRows }, { data: storyRows }] = await Promise.all([
-        db.from('articles').select('tags'),
-        db.from('stories').select('people, tags'),
-    ])
-    const tags = new Set(readJson(path.join(DATA, 'tag-vocabulary.json'), []))
+    // Sages already used on the site, so Claude reuses the same spellings.
+    // (Topics come only from data/topics.json.)
+    const { data: storyRows } = await db.from('stories').select('people')
     const people = new Set(readJson(path.join(DATA, 'people-vocabulary.json'), []))
-    for (const r of [...(tagRows ?? []), ...(storyRows ?? [])]) for (const t of r.tags ?? []) if (t?.trim()) tags.add(t.trim())
     for (const r of storyRows ?? []) for (const p of r.people ?? []) if (p?.trim()) people.add(p.trim())
-    writeJson(path.join(DATA, 'tag-vocabulary.json'), [...tags].sort((a, b) => a.localeCompare(b)))
     writeJson(path.join(DATA, 'people-vocabulary.json'), [...people].sort((a, b) => a.localeCompare(b)))
 
     return articles.length
@@ -204,7 +201,7 @@ export function validateDraft(draft, article, vocabulary) {
         const people = (s?.people ?? []).map(p => String(p).trim()).filter(Boolean)
         const tags = (s?.tags ?? []).map(t => String(t).trim()).filter(Boolean)
         const unknownTags = tags.filter(t => !vocabulary.tags.has(t))
-        if (unknownTags.length) problems.push(`tags not in data/tag-vocabulary.json: ${unknownTags.join(', ')}`)
+        if (unknownTags.length) problems.push(`tags not in data/topics.json: ${unknownTags.join(', ')}`)
 
         let start, end
         if (s?.start_text && s?.end_text) {
@@ -260,9 +257,10 @@ function moveTo(dir, file, extra) {
 }
 
 // A slug free for this article: keep it if it's ours already, otherwise
-// qualify it with the masechta and daf, then number it.
+// qualify it with the masechta and daf (or "beyond-the-daf" for a story from a
+// standalone article), then number it.
 async function claimSlug(db, slug, story, articleId) {
-    const candidates = [slug, `${slug}-${slugify(story.masechta)}-${story.daf}`]
+    const candidates = [slug, story.masechta ? `${slug}-${slugify(story.masechta)}-${story.daf}` : `${slug}-beyond-the-daf`]
     for (let i = 2; candidates.length < 12; i++) candidates.push(`${candidates[1]}-${i}`)
     for (const candidate of candidates) {
         const { data } = await db.from('stories').select('article_id').eq('slug', candidate).maybeSingle()
@@ -271,13 +269,41 @@ async function claimSlug(db, slug, story, articleId) {
     throw new Error(`No free slug for "${slug}"`)
 }
 
+// The topic names from data/topics.json: the only tags allowed on stories and articles
+export function topicVocabulary() {
+    const topics = readJson(path.join(DATA, 'topics.json'), { topics: [] }).topics
+    return { tags: new Set(topics.map(t => t.name)) }
+}
+
+// Saves an article's validated stories (from validateDraft), replacing any it
+// had before, and marks the article as processed. Returns the saved rows.
+export async function saveStories(db, article, stories) {
+    const rows = []
+    for (const s of stories) {
+        const row = { ...s, article_id: article.id, masechta: article.masechta, daf: article.daf }
+        row.slug = await claimSlug(db, s.slug, row, article.id)
+        rows.push(row)
+    }
+    if (rows.length) {
+        const { error } = await db.from('stories').upsert(rows, { onConflict: 'slug' })
+        if (error) throw new Error(error.message)
+    }
+    // Drop stories no longer in the draft
+    let stale = db.from('stories').delete().eq('article_id', article.id)
+    if (rows.length) stale = stale.not('slug', 'in', `(${rows.map(r => `"${r.slug}"`).join(',')})`)
+    const { error: deleteError } = await stale
+    if (deleteError) throw new Error(deleteError.message)
+
+    const { error: markError } = await db.from('articles').update({ stories_extracted_at: new Date().toISOString() }).eq('id', article.id)
+    if (markError) throw new Error(markError.message)
+    return rows
+}
+
 // Validates every draft in data/stories/ and publishes the good ones.
 // Returns { published, stories, review }.
 export async function publishDrafts({ dryRun = false, file } = {}) {
     const db = dryRun ? readClient() : writeClient()
-    const vocabulary = {
-        tags: new Set(readJson(path.join(DATA, 'tag-vocabulary.json'), [])),
-    }
+    const vocabulary = topicVocabulary()
     const result = { published: 0, stories: 0, review: 0 }
 
     for (const draftFile of listDrafts(file)) {
@@ -317,33 +343,20 @@ export async function publishDrafts({ dryRun = false, file } = {}) {
             continue
         }
 
-        const rows = []
-        for (const s of stories) {
-            const row = { ...s, article_id: article.id, masechta: article.masechta, daf: article.daf }
-            row.slug = await claimSlug(db, s.slug, row, article.id)
-            rows.push(row)
+        let rows
+        try {
+            rows = await saveStories(db, article, stories)
+        } catch (err) {
+            throw new Error(`${name}: ${err.message}`)
         }
 
-        if (rows.length) {
-            const { error: upsertError } = await db.from('stories').upsert(rows, { onConflict: 'slug' })
-            if (upsertError) throw new Error(`${name}: ${upsertError.message}`)
-        }
-
-        // Re-running extraction replaces the article's stories: drop ones no longer in the draft
-        const keep = rows.map(r => r.slug)
-        let stale = db.from('stories').delete().eq('article_id', article.id)
-        if (keep.length) stale = stale.not('slug', 'in', `(${keep.map(s => `"${s}"`).join(',')})`)
-        const { error: deleteError } = await stale
-        if (deleteError) throw new Error(`${name}: ${deleteError.message}`)
-
-        // Merge suggested article tags (never removes existing ones)
+        // Merge suggested article topics (never removes existing ones)
         const suggested = (draft.article_tags ?? []).map(t => String(t).trim()).filter(t => vocabulary.tags.has(t))
-        const tags = [...new Set([...(article.tags ?? []), ...suggested])]
-        const { error: articleError } = await db
-            .from('articles')
-            .update({ stories_extracted_at: new Date().toISOString(), tags })
-            .eq('id', article.id)
-        if (articleError) throw new Error(`${name}: ${articleError.message}`)
+        if (suggested.length) {
+            const tags = [...new Set([...(article.tags ?? []), ...suggested])]
+            const { error: articleError } = await db.from('articles').update({ tags }).eq('id', article.id)
+            if (articleError) throw new Error(`${name}: ${articleError.message}`)
+        }
 
         moveTo(PUBLISHED_DIR, draftFile)
         log(`${name}: published ${rows.length} stor${rows.length === 1 ? 'y' : 'ies'}${rows.length ? `: ${rows.map(r => r.slug).join(', ')}` : ''}`)

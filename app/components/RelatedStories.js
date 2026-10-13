@@ -1,7 +1,7 @@
 // The links area at the foot of an article or story page: the stories in this
 // article, more stories about the same sage, and more in the masechta.
 import Link from 'next/link'
-import { storyPath, personPath, getStoriesAbout, getStoriesInMasechta } from '@/app/lib/stories'
+import { storyPath, personPath, storyPlace, getStoriesAbout, getStoriesInMasechta } from '@/app/lib/stories'
 import { slugify } from '@/app/lib/articles'
 import StoryRow from './StoryRow'
 import { hebrewNumeral } from '@/app/lib/shas'
@@ -33,7 +33,7 @@ export default async function RelatedStories({ masechta, stories = [], showOwn =
 
     const [aboutPerson, inMasechta] = await Promise.all([
         person ? getStoriesAbout(person, { excludeIds: ownIds, limit: 4 }) : [],
-        getStoriesInMasechta(masechta, { excludeIds: ownIds, limit: 4 }),
+        masechta ? getStoriesInMasechta(masechta, { excludeIds: ownIds, limit: 4 }) : [],
     ])
     const shown = new Set(aboutPerson.map(s => s.id))
     const moreInMasechta = inMasechta.filter(s => !shown.has(s.id))
@@ -50,7 +50,7 @@ export default async function RelatedStories({ masechta, stories = [], showOwn =
                                 <span lang="he" className="numeral text-[1.25rem] text-foil-ink" aria-hidden="true">{hebrewNumeral(i + 1, { punctuate: false })}</span>
                                 <span>
                                     <a href={`#${s.slug}`} className="font-semibold">{s.title}</a>
-                                    <span className="meta block">{s.masechta} {s.daf} · <Link href={storyPath(s)}>Read on its own</Link></span>
+                                    <span className="meta block">{storyPlace(s)} · <Link href={storyPath(s)}>Read on its own</Link></span>
                                 </span>
                             </li>
                         ))}
@@ -58,7 +58,7 @@ export default async function RelatedStories({ masechta, stories = [], showOwn =
                 </Group>
             )}
             {person && <Group title={`More about ${person}`} href={personPath(person)} linkLabel="All stories" stories={aboutPerson} />}
-            <Group title={`More stories in ${masechta}`} href={`/stories#${slugify(masechta)}`} linkLabel="All in this masechta" stories={moreInMasechta} />
+            {masechta && <Group title={`More stories in ${masechta}`} href={`/stories#${slugify(masechta)}`} linkLabel="All in this masechta" stories={moreInMasechta} />}
         </div>
     )
 }

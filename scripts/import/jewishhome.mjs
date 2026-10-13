@@ -12,7 +12,7 @@ import sharp from 'sharp'
 import { parseArgs } from '../lib/stories.mjs'
 import { setDelay } from './lib/http.mjs'
 import { listIssues, getIssue, getTextLayer, getPageGraphics, getPageImage, findBylinePages, findColumnInContents, issueUrl } from './lib/issuu.mjs'
-import { extractArticle } from './lib/layout.mjs'
+import { extractArticle, buildVocab } from './lib/layout.mjs'
 import { cropPhoto } from './lib/photo.mjs'
 import { chooseDaf } from './lib/daf.mjs'
 import { readState, writeState, saveArticle, writeReviewCsv, slugify, summarize } from './lib/staging.mjs'
@@ -47,10 +47,11 @@ export async function processIssue(doc, { log = console.log } = {}) {
         return { status: 'none', date: issue.date }
     }
 
+    const vocab = buildVocab(pages)
     const staged = []
     for (const number of bylinePages) {
         const page = pages[number - 1]
-        const extracted = extractArticle(page, pages.slice(number, number + 2))
+        const extracted = extractArticle(page, pages.slice(number, number + 3), { vocab })
         if (extracted.error) {
             staged.push({ page: number, error: extracted.error })
             continue
@@ -182,6 +183,6 @@ async function main() {
     return summary
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
     await main()
 }

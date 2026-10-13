@@ -52,5 +52,5 @@ The task only runs while the computer is on. If it was off at 2am, it runs as so
 
 - **Re-doing an article:** in Supabase, clear the article's `stories_extracted_at` (set it to empty/null). It will be picked up again, and re-publishing replaces its old stories.
 - **Story text is never retyped.** Claude only marks the first and last words of each story, and the script cuts the text out of the article. So a story can't contain anything the article doesn't say.
-- **Tags and sages' names** stay consistent through `data/tag-vocabulary.json` and `data/people-vocabulary.json`. Claude reuses them and adds new ones when needed.
+- **Topics** come from one list, `data/topics.json` (check it with `npm run topics:check`); **sages' names** stay consistent through `data/people-vocabulary.json`.
 - You can also add a single story by hand in **/admin → Add Story**.
