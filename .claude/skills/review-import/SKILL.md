@@ -55,6 +55,12 @@ Review folders whose `article.json` has `review.status` = `"pending"`. With argu
 These are what make an article show up in Google and in AI answers, so do them for every approved or fixed article.
 
 - **`tags`**: 3–6 topics: every subject a reader might browse or search for that the article really discusses (the site owner wants generous topics, since they help people find the site), using the exact topic `name` from `data/topics.json` (never an alias, a citation, a masechta or a person). If an important subject has no topic, leave it out of `tags` and add it to `review.new_topics` as `[{"name", "group", "why"}]`. The site owner adds it to the list. Check the list with `npm run topics:check`.
+- **Subtopics, also in `tags`**, after the topics: add 2–4 narrower subjects the article answers, phrased the way someone would search for them, e.g. "Presidential Autopen", "Voice-Activated Devices on Shabbos" or "Salt on the Table at Hamotzi". Each one gets its own page at /topics/{topic}/{subtopic}.
+  - Rules: Title Case, 2–7 words, no people, no citations, no masechtos, and no pun headlines.
+  - Reuse an existing subtopic from `topics[].subtopics` in `data/topics.json` whenever one fits.
+  - If none fits, don't put the new name in `tags`. List it in `review.new_subtopics` as `[{"name", "topic", "description"}]`. The description is one neutral sentence of 12–30 words in your own words. The owner is emailed the list.
+  - When working with the owner (not the unattended weekly run), you may instead add it straight to its topic's `subtopics` in `data/topics.json` as `{"name", "description"}`, put it in `tags`, and run `npm run topics:check`. Its page appears after the next deploy.
+  - A subtopic that isn't in `data/topics.json` is dropped when the article is published.
 - **`refs`**: other places the article substantially discusses (a real part of it, not a passing citation), as `[{"masechta": "Bava Basra", "daf": 12}]`. Spell masechtos as in `app/lib/shas.js`. Don't include its own daf. Usually 0–3. Write `[]` if there are none. The article is then listed on those masechta and daf pages too.
 - **`stories`**: the Gemara stories it tells, following `.claude/skills/extract-stories/SKILL.md`. Each is `{ title, slug, summary, people, tags, start_text, end_text }`, where start_text and end_text are copied exactly from the final `content` and appear once each. Use `data/people-vocabulary.json` spellings and list new names in `review.new_people`. Write `[]` if there are none. Each story becomes its own page when the article is published.
 

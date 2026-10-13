@@ -28,6 +28,24 @@ for (const t of data.topics) {
         else owner.set(k, label)
     }
 }
+// Subtopics: their own names, never a topic's name or alias, one parent each
+let subCount = 0
+const subOwner = new Map()
+for (const t of data.topics) {
+    for (const s of t.subtopics ?? []) {
+        subCount++
+        if (!s.description || s.description.length < 30) problems.push(`subtopic "${s.name}": needs a description`)
+        if (/&/.test(s.name)) problems.push(`subtopic "${s.name}": use "and", not "&"`)
+        if (s.name.split(/\s+/).length > 8) problems.push(`subtopic "${s.name}": too long (up to 8 words)`)
+        for (const name of [s.name, ...(s.aliases ?? [])]) {
+            const k = key(name)
+            if (owner.has(k)) problems.push(`subtopic "${s.name}": "${name}" is also ${owner.get(k)}`)
+            else if (subOwner.has(k)) problems.push(`subtopic "${s.name}": "${name}" is also the subtopic "${subOwner.get(k)}"`)
+            else subOwner.set(k, `${t.name} › ${s.name}`)
+        }
+    }
+}
+
 for (const r of data.retired ?? []) {
     if (owner.has(key(r))) problems.push(`retired tag "${r}" is also ${owner.get(key(r))}`)
 }
@@ -36,7 +54,7 @@ for (const g of data.groups) {
     const list = data.topics.filter(t => t.group === g).map(t => t.name)
     console.log(`${g} (${list.length}): ${list.join(', ')}`)
 }
-console.log(`\n${data.topics.length} topics, ${owner.size - data.topics.length} aliases, ${(data.retired ?? []).length} retired tags`)
+console.log(`\n${data.topics.length} topics, ${owner.size - data.topics.length} aliases, ${subCount} subtopics, ${(data.retired ?? []).length} retired tags`)
 
 if (problems.length) {
     console.log(`\n${problems.length} problem(s):\n  ${problems.join('\n  ')}`)

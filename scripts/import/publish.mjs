@@ -136,7 +136,7 @@ export async function publish({ dryRun = false, clean = false, only = null, log 
             daf_end: standalone ? null : article.daf_end ?? null,
             summary: article.summary,
             content: article.content,
-            tags: cleanTags(article.tags, topics).tags, // topic names from data/topics.json only
+            tags: cleanTags(article.tags, topics).tags, // topic and subtopic names from data/topics.json only
             refs: standalone ? [] : cleanRefs(article),
             source: article.source,
             source_url: article.source_url,

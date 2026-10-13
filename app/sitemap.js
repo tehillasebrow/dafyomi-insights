@@ -3,7 +3,7 @@ import { SITE_URL } from '@/app/lib/site'
 import { masechtaHref } from '@/app/lib/shas'
 import { articlePath, articleDate, BEYOND_THE_DAF_PATH } from '@/app/lib/articles'
 import { storyPath, personPath } from '@/app/lib/stories'
-import { topicsFor, topicPath } from '@/app/lib/topics'
+import { topicsFor, topicPath, subtopicsFor, subtopicPath } from '@/app/lib/topics'
 
 export const revalidate = 3600
 
@@ -31,6 +31,7 @@ export default async function sitemap() {
         // An article also listed under other masechtos (articles.refs) freshens those pages too
         for (const r of a.refs ?? []) if (r?.masechta) touch(masechtaHref(r.masechta), articleDate(a))
         for (const t of topicsFor(a.tags)) touch(topicPath(t), articleDate(a))
+        for (const s of subtopicsFor(a.tags)) touch(subtopicPath(s), articleDate(a))
     }
     for (const s of stories ?? []) {
         if (s.masechta) touch(masechtaHref(s.masechta), s.updated_at)
@@ -40,6 +41,7 @@ export default async function sitemap() {
             if (name?.trim()) touch(personPath(name.trim()), s.updated_at)
         }
         for (const t of topicsFor(s.tags)) touch(topicPath(t), s.updated_at)
+        for (const sub of subtopicsFor(s.tags)) touch(subtopicPath(sub), s.updated_at)
     }
 
     const staticPages = [

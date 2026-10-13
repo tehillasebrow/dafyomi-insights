@@ -4,7 +4,7 @@ import { supabase } from '@/app/lib/supabase'
 import { ARTICLE_LIST_COLUMNS, orderByPublished, decodeParam, articlePath } from '@/app/lib/articles'
 import { findMasechta, masechtaHref } from '@/app/lib/shas'
 import { buildMetadata, breadcrumbJsonLd, collectionJsonLd } from '@/app/lib/seo'
-import { findTopic, isRetiredTag, topicPath, tagVariants, TOPICS } from '@/app/lib/topics'
+import { findTopic, isRetiredTag, topicPath, tagVariants, TOPICS, subtopicsFor, subtopicPath } from '@/app/lib/topics'
 import { STORY_CARD_COLUMNS, storyPath } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
 import ArticleRow from '@/app/components/ArticleRow'
@@ -43,6 +43,12 @@ export default async function SingleTopicPage({ params }) {
     const stories = storyData ?? []
     const masechtos = [...new Set([...articles, ...stories].map(x => findMasechta(x.masechta)?.name).filter(Boolean))]
     const related = TOPICS.filter(t => t.group === topic.group && t.slug !== topic.slug)
+    // This topic's subtopics that have something filed under them, most used first
+    const subCounts = new Map()
+    for (const row of [...articles, ...stories]) {
+        for (const s of subtopicsFor(row.tags)) if (s.topic.slug === topic.slug) subCounts.set(s, (subCounts.get(s) ?? 0) + 1)
+    }
+    const subtopics = [...subCounts].sort((a, b) => b[1] - a[1] || a[0].name.localeCompare(b[0].name))
     const path = topicPath(topic)
 
     return (
@@ -69,6 +75,17 @@ export default async function SingleTopicPage({ params }) {
                     {masechtos.length > 0 && <>, in {masechtos.map((m, i) => <span key={m}>{i > 0 && (i === masechtos.length - 1 ? ' and ' : ', ')}<Link href={masechtaHref(m)}>{m}</Link></span>)}</>}
                 </p>
             </header>
+
+            {subtopics.length > 0 && (
+                <nav aria-label={`Subjects within ${topic.name}`} className="py-4 border-b border-rule">
+                    <p className="sc pb-2">Subjects within {topic.name}</p>
+                    <p className="flex flex-wrap gap-2">
+                        {subtopics.map(([s, n]) => (
+                            <Link key={s.slug} href={subtopicPath(s)} className="chip">{s.name}{n > 1 && <span className="text-ink-soft"> · {n}</span>}</Link>
+                        ))}
+                    </p>
+                </nav>
+            )}
 
             {articles.length === 0 && stories.length === 0 && (
                 <p className="text-ink-soft py-4">Nothing is filed under “{topic.name}” yet. <Link href="/topics">See all topics</Link>.</p>

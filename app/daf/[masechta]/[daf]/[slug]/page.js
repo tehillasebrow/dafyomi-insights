@@ -5,7 +5,7 @@ import { articlePath, articleDate, formatArticleDate, dafLabel, dafPath, decodeP
 import { masechtaHref, findMasechta, hebrewNumeral } from '@/app/lib/shas'
 import { buildMetadata, clip, absoluteUrl, authorJsonLd, breadcrumbJsonLd, talmudSourceJsonLd, WEBSITE_ID } from '@/app/lib/seo'
 import { getStoriesForArticle, storyPath } from '@/app/lib/stories'
-import { topicsFor, topicPath } from '@/app/lib/topics'
+import { topicsFor, topicPath, subtopicsFor, subtopicPath } from '@/app/lib/topics'
 import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import Comments from '@/app/components/Comments'
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }) {
     if (!article) return {}
 
     const stories = await getStoriesForArticle(article.id, 'title, people')
-    const tags = [...new Set([...topicsFor(article.tags).map(t => t.name), ...stories.flatMap(s => s.people ?? [])])]
+    const tags = [...new Set([...topicsFor(article.tags).map(t => t.name), ...subtopicsFor(article.tags).map(s => s.name), ...stories.flatMap(s => s.people ?? [])])]
 
     return buildMetadata({
         title: `${article.masechta} ${dafLabel(article)}: ${article.title}`,
@@ -123,7 +123,7 @@ export default async function ArticlePage({ params }) {
         ...(article.updated_at && { dateModified: article.updated_at }),
         inLanguage: 'en',
         about: talmudSourceJsonLd(article.masechta, dafLabel(article)),
-        keywords: topicsFor(article.tags).map(t => t.name).join(", "),
+        keywords: [...topicsFor(article.tags), ...subtopicsFor(article.tags)].map(t => t.name).join(", "),
         articleBody: article.content,
         ...(stories.length && {
             hasPart: stories.map(s => ({
@@ -205,6 +205,16 @@ export default async function ArticlePage({ params }) {
                             <span className="sc">Topics</span>
                             {topicsFor(article.tags).map(t => (
                                 <Link key={t.slug} href={topicPath(t)} className="chip">{t.name}</Link>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* The narrower subjects it covers, each with its own page */}
+                    {subtopicsFor(article.tags).length > 0 && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="sc">Subjects</span>
+                            {subtopicsFor(article.tags).map(s => (
+                                <Link key={s.slug} href={subtopicPath(s)} className="chip">{s.name}</Link>
                             ))}
                         </div>
                     )}
