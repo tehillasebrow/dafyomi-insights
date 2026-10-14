@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { decodeParam } from '@/app/lib/articles'
-import { MASECHTOS, findMasechta, masechtaHref } from '@/app/lib/shas'
+import { supabase } from '@/app/lib/supabase'
+import { decodeParam, articlePath, articlePlace } from '@/app/lib/articles'
+import { MASECHTOS, findMasechta, masechtaHref, hebrewNumeral } from '@/app/lib/shas'
 import { buildMetadata, collectionJsonLd, breadcrumbJsonLd } from '@/app/lib/seo'
-import { findPersonBySlug, getStoriesAbout, storyPath, personPath } from '@/app/lib/stories'
+import { findPersonBySlug, getStoriesAbout, storyPath, personPath, STORY_CARD_COLUMNS } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
 import StoryRow from '@/app/components/StoryRow'
 
@@ -37,8 +38,26 @@ export default async function PersonPage({ params }) {
     const person = await findPersonBySlug(decodeParam((await params).name))
     if (!person) return notFound()
 
-    const stories = (await getStoriesAbout(person.name, { limit: 500 })).sort((a, b) => shasOrder(a) - shasOrder(b) || (a.daf ?? 0) - (b.daf ?? 0))
+    const stories = (await getStoriesAbout(person.name, { limit: 500, columns: `${STORY_CARD_COLUMNS}, article_id, position` }))
+        .sort((a, b) => shasOrder(a) - shasOrder(b) || (a.daf ?? 0) - (b.daf ?? 0) || (a.position ?? 0) - (b.position ?? 0))
     const path = personPath(person.name)
+
+    // The page leads to the articles: each article that tells a story about this sage,
+    // with its stories named quietly underneath (each opens the article, lit up).
+    const articleIds = [...new Set(stories.map(s => s.article_id).filter(Boolean))]
+    const { data: articleData } = articleIds.length
+        ? await supabase.from('articles').select('id, slug, title, masechta, daf, daf_end').in('id', articleIds)
+        : { data: [] }
+    const byId = new Map((articleData ?? []).map(a => [a.id, a]))
+    const groups = []
+    const loose = []
+    for (const s of stories) {
+        const article = byId.get(s.article_id)
+        if (!article) { loose.push(s); continue }
+        let g = groups.find(g => g.article.id === article.id)
+        if (!g) groups.push(g = { article, stories: [] })
+        g.stories.push(s)
+    }
 
     const masechtos = [...new Set(stories.map(s => findMasechta(s.masechta)?.name ?? s.masechta).filter(Boolean))]
     const companions = new Map()
@@ -65,7 +84,7 @@ export default async function PersonPage({ params }) {
             </nav>
 
             <header className="grid gap-1.5 pb-4 border-b border-rule-hard">
-                <p className="sc">Stories about</p>
+                <p className="sc">Articles with stories about</p>
                 <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.25rem)] leading-[1.02] tracking-[-0.02em]">{person.name}</h1>
                 <p className="meta">
                     {person.count} {person.count === 1 ? 'story' : 'stories'}
@@ -75,7 +94,19 @@ export default async function PersonPage({ params }) {
                 </p>
             </header>
 
-            {stories.map(s => <StoryRow key={s.id} story={s} />)}
+            {groups.map(({ article, stories }) => (
+                <article key={article.id} className="row">
+                    <span lang="he" aria-hidden="true" className="row-num numeral">{article.masechta ? hebrewNumeral(article.daf) : ''}</span>
+                    <p className="meta">{articlePlace(article)}</p>
+                    <h2 className="row-title"><Link href={articlePath(article)}>{article.title}</Link></h2>
+                    <p className="meta">
+                        {stories.length === 1 ? 'Story' : 'Stories'}: {stories.map((s, i) => (
+                            <span key={s.id}>{i > 0 && ', '}<Link href={`${articlePath(article)}#${encodeURIComponent(s.slug)}`}>{s.title}</Link></span>
+                        ))}
+                    </p>
+                </article>
+            ))}
+            {loose.map(s => <StoryRow key={s.id} story={s} />)}
 
             {often.length > 0 && (
                 <p className="meta pt-5">

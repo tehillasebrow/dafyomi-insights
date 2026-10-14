@@ -5,13 +5,11 @@ import { supabase } from '@/app/lib/supabase'
 import { articlePath, articleDate, articlePlace, dafPath, decodeParam, readingMinutes, slugify, BEYOND_THE_DAF, BEYOND_THE_DAF_PATH } from '@/app/lib/articles'
 import { masechtaHref, findMasechta, hebrewNumeral } from '@/app/lib/shas'
 import { buildMetadata, clip, absoluteUrl, authorJsonLd, breadcrumbJsonLd, talmudSourceJsonLd, WEBSITE_ID } from '@/app/lib/seo'
-import { getStoryBySlug, getStoriesForArticle, storyPath, personPath } from '@/app/lib/stories'
+import { getStoryBySlug, storyPath, personPath } from '@/app/lib/stories'
 import { topicsFor, topicPath } from '@/app/lib/topics'
 import JsonLd from '@/app/components/JsonLd'
 import RelatedStories from '@/app/components/RelatedStories'
-import ArticleBody from '@/app/components/ArticleBody'
-import ShareButtons from '@/app/components/ShareButtons'
-import { Byline } from '@/app/components/Author'
+import ArticleBody, { locate, paragraphs } from '@/app/components/ArticleBody'
 
 export const revalidate = 3600
 
@@ -23,13 +21,30 @@ const getStoryWithArticle = cache(async (rawSlug) => {
     const { data: article } = story.article_id
         ? await supabase
             .from('articles')
-            .select('id, slug, title, masechta, daf, daf_end, published_at, created_at')
+            .select('id, slug, title, masechta, daf, daf_end, published_at, created_at, content')
             .eq('id', story.article_id)
             .maybeSingle()
         : { data: null }
 
     return { story, article }
 })
+
+// The story as it sits in the article: the paragraphs it spans, with the story lit up
+// and any of the article's own words around it shown faded. Null if the article was
+// edited and the story can no longer be found in it.
+function clipping(story, article) {
+    const content = article?.content
+    if (!content) return null
+    const at = locate(content, story)
+    if (!at) return null
+    const spans = paragraphs(content).filter(([s, e]) => e > at.start && s < at.end)
+    if (!spans.length) return null
+    const from = spans[0][0], to = spans.at(-1)[1]
+    return {
+        content: content.slice(from, to),
+        story: { ...story, start_offset: at.start - from, end_offset: at.end - from },
+    }
+}
 
 function storyTitle(story) {
     if (!story.masechta) return `${story.title} – ${BEYOND_THE_DAF}`
@@ -69,12 +84,6 @@ export default async function StoryPage({ params }) {
     const found = await getStoryWithArticle((await params).slug)
     if (!found) return notFound()
     const { story, article } = found
-
-    // Previous / next story in the same article
-    const siblings = article ? await getStoriesForArticle(article.id, 'id, slug, title, position') : []
-    const index = siblings.findIndex(s => s.id === story.id)
-    const prev = index > 0 ? siblings[index - 1] : null
-    const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : null
 
     const path = storyPath(story)
     const url = absoluteUrl(path)
@@ -116,7 +125,12 @@ export default async function StoryPage({ params }) {
     ])
 
     const known = findMasechta(story.masechta)
+    const clipped = clipping(story, article)
+    const backToArticle = article ? `${articlePath(article)}#${encodeURIComponent(story.slug)}` : null
+    const topics = topicsFor(story.tags)
 
+    // Laid out as a clipping of the article, not an article of its own: where it comes
+    // from, the story lit up in its place, and one clear way into the whole article.
     return (
         <div className="folio py-5 md:py-7">
             <JsonLd data={jsonLd} />
@@ -131,65 +145,45 @@ export default async function StoryPage({ params }) {
                 {known && <span lang="he" className="text-[1.2rem]">{known.hebrew} · דף {hebrewNumeral(story.daf)}</span>}
             </div>
 
-            <article className="grid gap-4.5 md:grid-cols-[12rem_minmax(0,1fr)] md:gap-x-9">
-                <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.02] tracking-[-0.02em] md:col-start-2">{story.title}</h1>
-                {story.summary && <p className="text-lede text-ink-soft max-w-[54ch] md:col-start-2">{story.summary}</p>}
+            <article className="grid gap-5 max-w-[46rem]">
+                {article && (
+                    <p className="meta">
+                        A story from the article <Link href={articlePath(article)} className="font-semibold">{article.title}</Link>
+                        <span aria-hidden="true"> · </span>{articlePlace(article)}
+                    </p>
+                )}
+                <h1 className="font-semibold text-[clamp(2rem,4.5vw,3rem)] leading-[1.04] tracking-[-0.02em]">{story.title}</h1>
+                {story.summary && <p className="text-lede text-ink-soft max-w-[54ch]">{story.summary}</p>}
 
-                <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3.5 gap-y-2 items-center py-2.5 border-y border-rule md:grid-cols-1 md:items-start md:content-start md:py-0 md:border-y-0 md:border-r md:pr-5 md:col-start-1 md:row-start-1 md:row-span-4 md:self-start md:sticky md:top-4">
-                    {story.masechta && <span lang="he" className="numeral text-[3.25rem] md:text-[5rem] leading-[0.85]" aria-label={`Daf ${story.daf}`}>{hebrewNumeral(story.daf)}</span>}
-                    <p className={`meta leading-[1.7] ${story.masechta ? '' : 'col-span-2 md:col-span-1'}`}>{story.masechta ? `${story.masechta} ${story.daf}` : BEYOND_THE_DAF}{story.content && <><br />{readingMinutes(story)} min read</>}</p>
-                    {story.people?.length > 0 && (
-                        <div className="col-span-2 md:col-span-1 md:border-t md:border-rule md:pt-2.5">
-                            <span className="sc">{story.people.length === 1 ? 'Sage' : 'Sages'}</span>
-                            <ul>{story.people.map(name => <li key={name}><Link href={personPath(name)} className="min-h-10 inline-flex items-center">{name}</Link></li>)}</ul>
-                        </div>
-                    )}
-                    {article && (
-                        <div className="col-span-2 md:col-span-1 md:border-t md:border-rule md:pt-2.5">
-                            <span className="sc">From the article</span>
-                            <p><Link href={`${articlePath(article)}#${encodeURIComponent(story.slug)}`}>{article.title}</Link></p>
-                            <p className="meta">{articlePlace(article)}</p>
-                        </div>
-                    )}
+                <div className="story-clip">
+                    {clipped
+                        ? <ArticleBody content={clipped.content} stories={[clipped.story]} />
+                        : <ArticleBody content={story.content} />}
                 </div>
 
-                <div className="md:col-start-2"><Byline /></div>
+                {article && (
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                        <Link href={backToArticle} className="btn">Read the whole article</Link>
+                        {article.content && <span className="meta">{readingMinutes(article)} min read · the story is highlighted</span>}
+                    </div>
+                )}
 
-                <div className="md:col-start-2"><ArticleBody content={story.content} /></div>
+                {(story.people?.length > 0 || topics.length > 0) && (
+                    <div className="grid gap-1 border-t border-rule pt-3">
+                        {story.people?.length > 0 && (
+                            <p className="meta">
+                                {story.people.length === 1 ? 'Sage' : 'Sages'}: {story.people.map((name, i) => <span key={name}>{i > 0 && ', '}<Link href={personPath(name)}>{name}</Link></span>)}
+                            </p>
+                        )}
+                        {topics.length > 0 && (
+                            <p className="meta">
+                                Topics: {topics.map((t, i) => <span key={t.slug}>{i > 0 && ', '}<Link href={topicPath(t)}>{t.name}</Link></span>)}
+                            </p>
+                        )}
+                    </div>
+                )}
 
-                <div className="grid gap-8 md:col-start-2 pt-2">
-                    {topicsFor(story.tags).length > 0 && (
-                        <div className="flex flex-wrap items-center gap-2">
-                            <span className="sc">Topics</span>
-                            {topicsFor(story.tags).map(t => <Link key={t.slug} href={topicPath(t)} className="chip">{t.name}</Link>)}
-                        </div>
-                    )}
-
-                    <ShareButtons url={url} title={story.title} />
-
-                    {(prev || next) && (
-                        <nav aria-label="More stories from this article" className="grid md:grid-cols-2 border-y border-rule-hard">
-                            {prev ? (
-                                <Link href={storyPath(prev)} className="plain grid gap-0.5 py-3.5 group">
-                                    <span className="meta">Previous story in this article</span>
-                                    <b className="font-semibold text-[1.19rem] leading-tight group-hover:underline">{prev.title}</b>
-                                </Link>
-                            ) : <span className="hidden md:block" />}
-                            {next && (
-                                <Link href={storyPath(next)} className="plain grid gap-0.5 py-3.5 group border-t border-rule md:border-t-0 md:border-l md:pl-5 md:text-right">
-                                    <span className="meta">Next story in this article</span>
-                                    <b className="font-semibold text-[1.19rem] leading-tight group-hover:underline">{next.title}</b>
-                                </Link>
-                            )}
-                        </nav>
-                    )}
-
-                    <RelatedStories masechta={story.masechta} stories={[story]} showOwn={false} />
-
-                    {article && (
-                        <p className="meta">Questions about this story? <Link href={`${articlePath(article)}#discussion`}>Ask in the article’s discussion</Link>.</p>
-                    )}
-                </div>
+                <RelatedStories masechta={story.masechta} stories={[story]} showOwn={false} folded />
             </article>
         </div>
     )

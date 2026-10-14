@@ -250,7 +250,7 @@ export default async function ArticlePage({ params }) {
                         </nav>
                     )}
 
-                    <RelatedStories masechta={article.masechta} stories={stories} />
+                    <RelatedStories masechta={article.masechta} stories={stories} folded />
 
                     <Comments articleId={article.id} isAdmin={admin} />
 

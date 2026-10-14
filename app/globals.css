@@ -432,7 +432,38 @@
     font-size: 1.22em; line-height: 1.85; font-weight: 450;
     padding-block: 0.75rem; border-block: 1px solid var(--rule);
 }
-.daf-text :target { background: var(--mark); }
+/* A Gemara story lit up inside the article (StoryHighlighter) */
+.daf-text [data-story] { border-radius: 2px; transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out; }
+.daf-text [data-story].is-lit { background: var(--mark); box-shadow: 0 0 0 0.2em var(--mark); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.daf-text [data-story]:focus { outline: none; }
+@media (prefers-reduced-motion: reduce) { .daf-text [data-story] { transition: none; } }
+
+/* A story page shows the story as a clipping: lit up, the article's words around it faded */
+.story-clip { padding: 1.25rem 1.25rem 0.25rem; background: var(--paper-sunk); border-radius: var(--radius-control); }
+.story-clip .prose.daf-text { --tw-prose-body: var(--ink-faint); color: var(--ink-faint); }
+.story-clip .daf-text [data-story] { color: var(--ink); background: var(--mark); }
+
+/* The stories folded shut at the foot of an article: one quiet line until opened */
+.story-fold { border-block: 1px solid var(--rule); }
+.story-fold > summary {
+    display: flex; align-items: center; gap: 0.5rem; min-height: 48px; cursor: pointer; list-style: none;
+    font-family: var(--font-mono); font-size: var(--text-small); color: var(--ink-soft);
+}
+.story-fold > summary::-webkit-details-marker { display: none; }
+.story-fold > summary::before { content: "▸"; color: var(--foil-ink); transition: transform 0.15s ease-out; }
+.story-fold[open] > summary::before { transform: rotate(90deg); }
+.story-fold > summary:hover { color: var(--ink); }
+
+/* The slim bar naming the lit-up story, with Done */
+.story-bar {
+    position: fixed; inset-inline: 0; bottom: 0; z-index: 40;
+    padding-block: 0.625rem calc(0.625rem + env(safe-area-inset-bottom, 0px));
+    background: var(--paper); border-top: 2px solid var(--rule-hard);
+}
+@media (prefers-reduced-motion: no-preference) {
+    .story-bar { animation: story-bar-in 0.2s ease-out; }
+    @keyframes story-bar-in { from { transform: translateY(100%); } }
+}
 /* Subheadings from the newspaper column */
 .prose.daf-text > h2 {
     font-size: 1.45em; line-height: 1.2; font-weight: 600; letter-spacing: -0.015em;

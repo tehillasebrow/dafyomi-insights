@@ -186,7 +186,7 @@ export default async function BeyondTheDafArticlePage({ params }) {
 
                     <ShareButtons url={absoluteUrl(canonical)} title={article.title} />
 
-                    <RelatedStories masechta={null} stories={stories} />
+                    <RelatedStories masechta={null} stories={stories} folded />
 
                     <Comments articleId={article.id} isAdmin={admin} />
 

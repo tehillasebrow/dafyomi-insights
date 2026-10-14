@@ -4,8 +4,9 @@ import { isMostlyHebrew } from '@/app/lib/shas'
 // <span id={slug}> anchor so links (and Google's "jump to") can land on it; a story that
 // runs across paragraphs is wrapped piece by piece, with the id on its first piece.
 // Offsets are only a hint: if the article was edited, the story is found by its text,
-// and if it's gone the text simply renders without an anchor.
-function locate(content, story) {
+// and if it's gone the text simply renders without an anchor. Every piece carries
+// data-story so StoryHighlighter can light the whole story up.
+export function locate(content, story) {
     const { start_offset: start, end_offset: end } = story
     if (Number.isInteger(start) && Number.isInteger(end) && content.slice(start, end) === story.content) {
         return { start, end }
@@ -14,7 +15,7 @@ function locate(content, story) {
     return found === -1 ? null : { start: found, end: found + story.content.length }
 }
 
-function paragraphs(content) {
+export function paragraphs(content) {
     const out = []
     const re = /\n[ \t]*\n+/g
     let last = 0
@@ -53,7 +54,7 @@ export default function ArticleBody({ content = '', stories = [] }) {
                     if (end <= ps || start >= pe) continue
                     const s = Math.max(start, ps), e = Math.min(end, pe)
                     if (s > cursor) parts.push(content.slice(cursor, s))
-                    parts.push(<span key={`${story.id}-${s}`} id={s === start ? story.slug : undefined}>{content.slice(s, e)}</span>)
+                    parts.push(<span key={`${story.id}-${s}`} id={s === start ? story.slug : undefined} data-story={story.slug}>{content.slice(s, e)}</span>)
                     cursor = e
                 }
                 if (cursor < pe) parts.push(content.slice(cursor, pe))

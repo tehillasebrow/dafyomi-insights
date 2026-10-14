@@ -38,10 +38,10 @@ export async function getStoriesForArticle(articleId, columns = '*') {
     return data ?? []
 }
 
-export async function getStoriesAbout(person, { excludeIds = [], limit = 6 } = {}) {
+export async function getStoriesAbout(person, { excludeIds = [], limit = 6, columns = STORY_CARD_COLUMNS } = {}) {
     let query = supabase
         .from('stories')
-        .select(STORY_CARD_COLUMNS)
+        .select(columns)
         .contains('people', [person])
         .order('masechta')
         .order('daf')

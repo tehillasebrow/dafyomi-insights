@@ -1,9 +1,13 @@
 // The links area at the foot of an article or story page: the stories in this
 // article, more stories about the same sage, and more in the masechta.
+// On an article it is folded shut: the stories are there for Google and for anyone
+// who looks, without pulling readers away from the article. A story in this article
+// is lit up in place (StoryHighlighter) rather than opened on its own page.
 import Link from 'next/link'
 import { storyPath, personPath, storyPlace, getStoriesAbout, getStoriesInMasechta } from '@/app/lib/stories'
 import { slugify } from '@/app/lib/articles'
 import StoryRow from './StoryRow'
+import StoryHighlighter from './StoryHighlighter'
 import { hebrewNumeral } from '@/app/lib/shas'
 
 // The sage who appears in the most of these stories
@@ -27,7 +31,7 @@ function Group({ title, href, linkLabel, stories, children }) {
 }
 
 // stories: the stories in this article (or, on a story page, the story itself)
-export default async function RelatedStories({ masechta, stories = [], showOwn = true, ownTitle = 'Stories in this article' }) {
+export default async function RelatedStories({ masechta, stories = [], showOwn = true, folded = false, ownTitle = 'Stories in this article' }) {
     const ownIds = stories.map(s => s.id)
     const person = mainPerson(stories)
 
@@ -40,7 +44,7 @@ export default async function RelatedStories({ masechta, stories = [], showOwn =
 
     if (!(showOwn && stories.length) && !aboutPerson.length && !moreInMasechta.length) return null
 
-    return (
+    const groups = (
         <div className="grid gap-8" aria-label="Related Gemara stories">
             {showOwn && (
                 <Group title={ownTitle} stories={stories}>
@@ -49,8 +53,10 @@ export default async function RelatedStories({ masechta, stories = [], showOwn =
                             <li key={s.id} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-2.5 py-2.5 border-b border-rule items-baseline">
                                 <span lang="he" className="numeral text-[1.25rem] text-foil-ink" aria-hidden="true">{hebrewNumeral(i + 1, { punctuate: false })}</span>
                                 <span>
-                                    <a href={`#${s.slug}`} className="font-semibold">{s.title}</a>
-                                    <span className="meta block">{storyPlace(s)} · <Link href={storyPath(s)}>Read on its own</Link></span>
+                                    {folded
+                                        ? <a href={storyPath(s)} data-story-highlight={s.slug} className="font-semibold">{s.title}</a>
+                                        : <a href={`#${s.slug}`} className="font-semibold">{s.title}</a>}
+                                    <span className="meta block">{storyPlace(s)}{!folded && <> · <Link href={storyPath(s)}>Read on its own</Link></>}</span>
                                 </span>
                             </li>
                         ))}
@@ -60,5 +66,17 @@ export default async function RelatedStories({ masechta, stories = [], showOwn =
             {person && <Group title={`More about ${person}`} href={personPath(person)} linkLabel="All stories" stories={aboutPerson} />}
             {masechta && <Group title={`More stories in ${masechta}`} href={`/stories#${slugify(masechta)}`} linkLabel="All in this masechta" stories={moreInMasechta} />}
         </div>
+    )
+    if (!folded) return groups
+
+    const count = showOwn ? stories.length : 0
+    return (
+        <>
+            <details className="story-fold" data-no-print>
+                <summary>{count ? `${ownTitle} (${count})` : 'More Gemara stories'}</summary>
+                <div className="pt-2 pb-5">{groups}</div>
+            </details>
+            {count > 0 && <StoryHighlighter stories={stories.map(s => ({ slug: s.slug, title: s.title }))} />}
+        </>
     )
 }
