@@ -4,7 +4,7 @@ import { supabase } from '@/app/lib/supabase'
 import { ARTICLE_LIST_COLUMNS, orderByPublished, decodeParam, articlePath } from '@/app/lib/articles'
 import { findMasechta, masechtaHref } from '@/app/lib/shas'
 import { buildMetadata, breadcrumbJsonLd, collectionJsonLd } from '@/app/lib/seo'
-import { findTopic, findSubtopic, topicPath, subtopicPath, subtopicVariants } from '@/app/lib/topics'
+import { findTopic, findSubtopic, topicPath, subtopicPath, subtopicVariants, subtopicHeading, topicHeading } from '@/app/lib/topics'
 import { STORY_CARD_COLUMNS, storyPath } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
 import ArticleRow from '@/app/components/ArticleRow'
@@ -25,7 +25,8 @@ export async function generateMetadata({ params }) {
     if (!sub) return {}
     const { count } = await supabase.from('articles').select('id', { count: 'exact', head: true }).overlaps('tags', subtopicVariants(sub))
     const meta = buildMetadata({
-        title: `${sub.name} – ${sub.topic.name} in the Gemara`,
+        // "Are Pets Muktzeh? – Shabbos in the Gemara"; no second "in the Gemara" when the heading has one
+        title: subtopicHeading(sub).endsWith(' in the Gemara') ? `${subtopicHeading(sub)} – ${sub.topic.name}` : `${subtopicHeading(sub)} – ${topicHeading(sub.topic)}`,
         description: `${sub.description} Daf Yomi articles by Rabbi Avrohom Sebrow.`,
         path: subtopicPath(sub),
         keywords: [sub.name, `${sub.name} halacha`, `${sub.name} Gemara`, sub.topic.name, ...(sub.aliases ?? []).slice(0, 4)],
@@ -55,7 +56,7 @@ export default async function SubtopicPage({ params }) {
         <div className="folio py-6 md:py-8">
             <JsonLd data={breadcrumbJsonLd([{ name: 'Topics', path: '/topics' }, { name: sub.topic.name, path: topicPath(sub.topic) }, { name: sub.name, path }])} />
             <JsonLd data={collectionJsonLd({
-                name: sub.name,
+                name: subtopicHeading(sub),
                 description: sub.description,
                 path,
                 items: [
@@ -71,7 +72,7 @@ export default async function SubtopicPage({ params }) {
 
             <header className="grid gap-1.5 pb-4 border-b border-rule-hard">
                 <p className="sc">{sub.topic.name}</p>
-                <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.25rem)] leading-[1.02] tracking-[-0.02em]">{sub.name}</h1>
+                <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.25rem)] leading-[1.02] tracking-[-0.02em]">{subtopicHeading(sub)}</h1>
                 <p className="text-lede text-ink-soft max-w-[62ch]">{sub.description}</p>
                 <p className="meta">
                     {articles.length} {articles.length === 1 ? 'article' : 'articles'}

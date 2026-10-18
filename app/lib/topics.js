@@ -75,6 +75,22 @@ export function topicHeading(topic) {
     return PLAIN_HEADINGS.has(topic.slug) ? topic.name : `${topic.name} in the Gemara`
 }
 
+// A subtopic page's heading, in the same spirit, worded so it still reads naturally:
+//   "Prohibition of Raising Pigs" -> "Prohibition of Raising Pigs in the Gemara"
+//   "Are Pets Muktzeh"            -> "Are Pets Muktzeh?"  (a real question)
+//   "Why Chanukah Is Eight Days", "Celebrating Birthdays in Halacha" -> unchanged
+const AUX = 'are|is|was|were|do|does|did|can|could|will|would|should|may|might|must'
+const QUESTION = new RegExp(`^(?:(?:${AUX})|(?:why|what|how|who|where|when|which)\\s+(?:${AUX}))\\b`, 'i')
+const QUESTION_WORD = /^(?:why|what|how|who|where|when|which)\b/i
+const NAMES_A_SOURCE = /\b(?:gemara|talmud|halacha|torah|tanach|midrash|chazal|mishnah?|haggadah)\b/i
+export function subtopicHeading(sub) {
+    const name = sub.name.trim()
+    if (/[?!.]$/.test(name)) return name
+    if (QUESTION.test(name)) return `${name}?`
+    if (QUESTION_WORD.test(name) || NAMES_A_SOURCE.test(name) || PLAIN_HEADINGS.has(sub.topic?.slug)) return name
+    return `${name} in the Gemara`
+}
+
 // The written introduction for a topic page (data/topic-intros.json), or null.
 // intro is paragraphs separated by blank lines; [text](/path) makes a link.
 export function topicIntro(topic) {

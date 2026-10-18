@@ -43,6 +43,7 @@ ${dirs.map(d => `- ${path.relative(ROOT, d).replace(/\\/g, '/')}`).join('\n')}
 Rules for the unattended run:
 - Set review.status to "approved" or "fixed" only when you are confident the article matches the printed page and the daf is clear. These are published automatically right after you finish.
 - If anything is doubtful (text you can't match to the page, a missing piece, an unclear daf, a possible reprint of an older column, anything else a person should decide), set review.status to "held" and explain in review.notes in one or two plain-English sentences what the site owner should check.
+- The daf: when the column itself names a daf, use that one. When it names none, keep the daf the importer chose from the date (the week's daf) and don't hold the article over it: the site owner always wants that one, not a guess from the Gemara passage.
 - Not his byline: "rejected", as the skill says.
 - Only edit files inside the folders listed above, plus data/topics.json to add new subtopics. The site owner approved adding them without asking, so in this run a new subtopic goes straight into its topic's subtopics in data/topics.json (as {"name", "description"}, following the skill's subtopic rules) AND into the article's tags; don't use review.new_subtopics. In data/topics.json only add subtopics: never change or remove anything else, and re-read it right before editing. Never edit data/people-vocabulary.json: put a new name in review.new_people. A missing main topic goes in review.new_topics.
 - Don't run import:reprints, import:publish or anything that touches the website. Run npm run import:check-seo at the end and fix what it reports for these folders.`
@@ -122,10 +123,14 @@ try {
     } else {
         // Claude Code reviews them; it may only read, write inside data/ and run the checks
         say(`${stagedNow.size} new column(s); Claude Code is reviewing`)
+        // On Windows Claude Code runs commands through PowerShell, so each command is allowed for both shells
+        const commands = [
+            'npm run import:check-seo*', 'npm run topics:check*', 'npm run import:preview*',
+            'npm run -s photos:find*', 'npm run -s photos:pick*', 'npm run photos:find*', 'npm run photos:pick*',
+        ]
         runClaude(REVIEW_PROMPT([...stagedNow]), [
             'Skill', 'Read', 'Glob', 'Grep', 'Edit(data/import/**)', 'Edit(data/topics.json)',
-            'Bash(npm run import:check-seo*)', 'Bash(npm run topics:check*)', 'Bash(npm run import:preview*)',
-            'Bash(npm run -s photos:find*)', 'Bash(npm run -s photos:pick*)', 'Bash(npm run photos:find*)', 'Bash(npm run photos:pick*)',
+            ...commands.flatMap(c => [`Bash(${c})`, `PowerShell(${c})`]),
         ])
 
         if (!dryRun) shipTopics()
