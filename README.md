@@ -1,12 +1,17 @@
-Daf Yomi Insights
+# Daf Yomi Insights
 
-DafYomiInsights.com
+**Live site: [dafyomiinsights.com](https://dafyomiinsights.com)**
 
-A modern, high-performance web application designed to provide daily insights, summaries, and educational resources for the global Daf Yomi community. Built with a focus on speed, accessibility, and clean typography to facilitate focused study.
+Daf Yomi articles, Gemara stories and topic guides by Rabbi Avrohom Sebrow, organized by masechta and daf.
 
 🚀 Overview
 
-Daf Yomi is the practice of studying one page of the Talmud every day. This platform serves as a digital companion to that journey, offering a streamlined interface for students to access daily content, search through archives, and stay on track with the global cycle.
+Daf Yomi is the practice of studying one page of the Talmud every day. [Daf Yomi Insights](https://dafyomiinsights.com) collects more than 450 of Rabbi Sebrow's weekly newspaper columns on the daf. Readers can:
+
+- open [today's daf](https://dafyomiinsights.com/daily)
+- browse every [masechta](https://dafyomiinsights.com/masechtos) daf by daf
+- explore [topics](https://dafyomiinsights.com/topics), from what the Gemara says about anger to tzedakah
+- read the famous Gemara stories inside the articles where they appear
 
 For Recruiters
 
@@ -24,15 +29,15 @@ Security: Implementation of a lightweight, environment-protected Admin Panel for
 
 🛠 Tech Stack
 
-Core: Next.js 14+ (App Router)
+Core: Next.js 16 (App Router), React 19
 
 Language: JavaScript (ES6+)
 
-Styling: Tailwind CSS
+Styling: Tailwind CSS 4
+
+Database: Supabase (Postgres)
 
 Deployment: Vercel
-
-Icons: Lucide React / Heroicons
 
 ✨ Key Features
 
@@ -64,7 +69,7 @@ Note: This repository is intended for showcase purposes.
 
 Clone the repository:
 
-git clone [https://github.com/your-username/dafyomi-insights.git](https://github.com/your-username/dafyomi-insights.git)
+git clone https://github.com/tehillasebrow/dafyomi-insights.git
 cd dafyomi-insights
 
 
@@ -95,4 +100,4 @@ npm run dev
 
 🛑 Contributions
 
-This is a personal project and is not open for public contributions. Pull requests and issues will not be reviewed or merged. I am maintaining this code exclusively for the operation of DafYomiInsights.com.
+This is a personal project and is not open for public contributions. Pull requests and issues will not be reviewed or merged. I am maintaining this code exclusively for the operation of [DafYomiInsights.com](https://dafyomiinsights.com).
