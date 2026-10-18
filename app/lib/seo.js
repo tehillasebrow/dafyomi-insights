@@ -3,6 +3,7 @@
 // builders. Every page builds its metadata through buildMetadata, because Next
 // replaces (not merges) the layout's openGraph/twitter when a page sets them.
 import { SITE_URL, SITE_NAME, AUTHOR, DEFAULT_DESCRIPTION } from '@/app/lib/site'
+import { otherSpellings } from '@/app/lib/shas'
 
 export const DEFAULT_OG_IMAGE = '/opengraph-image'
 
@@ -136,6 +137,6 @@ export function talmudSourceJsonLd(masechta, dafLabel) {
     return {
         '@type': 'CreativeWork',
         name: `Talmud Bavli, ${masechta} ${dafLabel}`,
-        alternateName: `Gemara ${masechta} ${dafLabel}`,
+        alternateName: [`Gemara ${masechta} ${dafLabel}`, ...otherSpellings(masechta).map(s => `${s} ${dafLabel}`)],
     }
 }

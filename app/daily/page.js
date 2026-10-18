@@ -1,16 +1,22 @@
 import { supabase } from '@/app/lib/supabase'
 import { isAdmin } from '@/app/lib/adminAuth'
 import { buildMetadata } from '@/app/lib/seo'
-import { todayInNewYork } from '@/app/lib/shas'
+import { todayInNewYork, dafYomiFor } from '@/app/lib/shas'
 import DailyView from '@/app/components/DailyView'
 
 export const revalidate = 0
 
-export const metadata = buildMetadata({
-    title: "Today's Daf Yomi: Daily Daf Discussion & Articles",
-    description: "Today's Daf Yomi daf with a live discussion, the related Daf Yomi articles and Gemara stories, and insights on the daily Daf by Rabbi Avrohom Sebrow.",
-    path: '/daily',
-})
+// The title names today's daf, the way people search: "Daf Yomi Today: Bechoros 29 (October 18, 2026)"
+export async function generateMetadata() {
+    const today = todayInNewYork()
+    const { masechta, daf } = dafYomiFor(today)
+    const date = today.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric' })
+    return buildMetadata({
+        title: `Daf Yomi Today: ${masechta.name} ${daf} (${date})`,
+        description: `Today's Daf Yomi is ${masechta.name} ${daf}. The day's discussion, Daf Yomi articles and Gemara stories on ${masechta.name}, by Rabbi Avrohom Sebrow.`,
+        path: '/daily',
+    })
+}
 
 export default async function DailyDafPage() {
     const today = todayInNewYork()

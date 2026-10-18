@@ -71,6 +71,8 @@ export default async function Home() {
 
     return (
         <div data-home className="folio pt-6 md:pt-10 pb-10 grid gap-12 md:gap-16">
+            {/* The page's main heading names the site for Google and screen readers; the lead article's title stays the big type */}
+            {featured && <h1 className="sr-only">Daf Yomi Insights: Daf Yomi articles and Gemara stories by Rabbi Avrohom Sebrow</h1>}
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 items-start">
                 {/* The lead article, set beside its daf numeral */}
                 {featured ? (
@@ -84,9 +86,9 @@ export default async function Home() {
                         </div>
                         <div className="grid gap-5 content-start min-w-0">
                             <p className="kicker">{kicker}{lead && lead.day.offset !== 0 ? ` · ${lead.day.masechta.name} ${lead.day.daf}` : ''}{!lead ? ` · ${shortDate(featured)}` : ''}</p>
-                            <h1 id="lead-h" className="text-[clamp(2.3rem,5.6vw,4.2rem)] leading-[1.05] lead-title">
+                            <h2 id="lead-h" className="text-[clamp(2.3rem,5.6vw,4.2rem)] leading-[1.05] lead-title">
                                 <Link href={articlePath(featured)} className="hl">{featured.title}</Link>
-                            </h1>
+                            </h2>
                             <Link href={articlePath(featured)} tabIndex={-1} aria-hidden="true" className="block">
                                 <ArticleThumb article={featured} priority className="aspect-[2/1]" sizes="(min-width: 1024px) 640px, 100vw" />
                             </Link>
