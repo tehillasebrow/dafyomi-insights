@@ -1,0 +1,29 @@
+# One-time: download the old 5tjt.com/pdfs/ printed issues (2006–2010) from the Internet Archive.
+# Result: artifact "5tjt-oldpdfs".
+name: Old 5TJT PDFs
+
+on:
+  push:
+    branches: [import-5tjt]
+    paths: [scripts/import/fivetowns-oldpdfs.mjs, .github/workflows/oldpdfs-5tjt.yml]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/import/fivetowns-oldpdfs.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 5tjt-oldpdfs
+          path: data/import/5tjt/raw/pdfs/
+          retention-days: 30
