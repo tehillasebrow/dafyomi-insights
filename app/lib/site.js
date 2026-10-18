@@ -16,5 +16,5 @@ export const AUTHOR = {
     // Drop a portrait into /public and set its path here, e.g. '/rabbi-sebrow.jpg'.
     // Until then a printed monogram plate is shown in its place.
     photo: null,
-    bio: 'Maggid shiur and Rebbe at Yeshiva Ateres Shimon in Far Rockaway. He leads the Daf Yomi chaburah at Eitz Chayim of Dogwood Park in West Hempstead, and writes “Delving into the Daf” each week for The Jewish Home.',
+    bio: 'Rebbe at Yeshiva Ateres Shimon in Far Rockaway. He leads the Daf Yomi chaburah at Eitz Chayim of Dogwood Park in West Hempstead, and writes “Delving into the Daf” each week for The Jewish Home.',
 }

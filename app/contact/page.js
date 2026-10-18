@@ -5,7 +5,7 @@ import CopyText from '@/app/components/CopyText'
 
 export const metadata = buildMetadata({
     title: 'About & Contact Rabbi Avrohom Sebrow',
-    description: 'About Rabbi Avrohom Sebrow, maggid shiur and author of Delving into the Daf, and how to reach him or join his Daf Yomi chaburah in West Hempstead.',
+    description: 'About Rabbi Avrohom Sebrow, author of Delving into the Daf, and how to reach him or join his Daf Yomi chaburah in West Hempstead.',
     path: '/contact',
 })
 
@@ -20,7 +20,7 @@ export default function ContactPage() {
                         <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.4rem)] leading-none tracking-[-0.02em]">{AUTHOR.name}</h1>
                     </div>
                     <div className="grid gap-3.5 text-read max-w-[58ch]">
-                        <p>Rabbi Avrohom Sebrow is a maggid shiur and writes <i>{AUTHOR.column}</i> each week for The Jewish Home.</p>
+                        <p>Rabbi Avrohom Sebrow writes <i>{AUTHOR.column}</i> each week for The Jewish Home.</p>
                         <p>He is a Rebbe at Yeshiva Ateres Shimon in Far Rockaway, and leads a Daf Yomi chaburah at Eitz Chayim of Dogwood Park in West Hempstead, NY. His articles bring together practical halacha, history and mussar.</p>
                         <p>Have a question on the Daf, or interested in joining the chaburah? Write to him directly.</p>
                     </div>
