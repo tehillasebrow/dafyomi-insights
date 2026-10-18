@@ -59,7 +59,8 @@ export async function generateMetadata({ params }) {
 
     return buildMetadata({
         title: `${article.masechta} ${dafLabel(article)}: ${article.title}`,
-        description: clip(article.summary || article.content),
+        // Written for Google in the author's voice; the page itself still opens with the article
+        description: article.seo_description || clip(article.summary || article.content),
         path: articlePath(article),
         type: 'article',
         image: article.image_url,
