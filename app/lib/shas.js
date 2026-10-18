@@ -77,8 +77,22 @@ export function findMasechta(name) {
     return BY_KEY.get(key) ?? MASECHTOS.find(m => m.name === ALIASES[key]) ?? null
 }
 
+// The masechta's part of a URL: "Bava Metzia" -> "bava-metzia"
+export function masechtaSlug(name) {
+    return String(name).toLowerCase().trim().replace(/\s+/g, '-')
+}
+
 export function masechtaHref(name) {
-    return `/daf/${encodeURIComponent(name.toLowerCase())}`
+    return `/daf/${masechtaSlug(name)}`
+}
+
+// A masechta from its URL part ("bava-metzia", "bava%20metzia", "menachot"):
+// the official name, or the words as typed when it isn't a masechta
+export function masechtaFromParam(raw) {
+    let text = String(raw ?? '')
+    try { text = decodeURIComponent(text) } catch {}
+    text = text.replace(/-/g, ' ')
+    return findMasechta(text)?.name ?? text
 }
 
 
