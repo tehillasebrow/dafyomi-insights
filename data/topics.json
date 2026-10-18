@@ -320,6 +320,30 @@
         {
           "name": "Writing Acronyms on Shabbos",
           "description": "Whether writing an acronym or a single letter that stands for a word is the full melacha of writing on Shabbos."
+        },
+        {
+          "name": "Cleaning Shoes on Shabbos",
+          "description": "Whether one may pour water on leather shoes, rub off wet mud or dust them off on Shabbos without violating the melacha of laundering."
+        },
+        {
+          "name": "Boarding a Boat Before Shabbos",
+          "description": "Why the Gemara forbids setting sail less than three days before Shabbos, with the Rishonim's reasons of seasickness, foreseeable Shabbos desecration and techum."
+        },
+        {
+          "name": "Chopping Salad on Shabbos",
+          "description": "Whether cutting vegetables into small pieces on Shabbos is the melacha of tochein, and the leniency of preparing a salad right before the meal."
+        },
+        {
+          "name": "Mashing a Banana on Shabbos",
+          "description": "Why mashing fruits or vegetables can count as grinding on Shabbos, and whether doing it just before eating is allowed."
+        },
+        {
+          "name": "Cutting Food Into Thin Strips on Shabbos",
+          "description": "Whether slicing vegetables into thin strips on Shabbos is grinding, as with cutting reeds for a basket, or whether food is judged differently."
+        },
+        {
+          "name": "Measuring on Shabbos",
+          "description": "Whether one may measure on Shabbos, when measuring for a mitzvah is allowed, and whether idle measuring without any purpose is permitted."
         }
       ]
     },
@@ -470,6 +494,10 @@
           "aliases": [
             "Yom Tov Sheni in Eretz Yisrael"
           ]
+        },
+        {
+          "name": "Shabbos Holier Than Yom Tov",
+          "description": "In what ways Shabbos is holier than the festivals, as expressed in the Friday-night Amidah, including harsher penalties and stricter laws of work."
         }
       ]
     },
@@ -680,6 +708,18 @@
         {
           "name": "Zevachim and Pesachim in the Haggadah",
           "description": "Why the bracha at the end of Maggid mentions zevachim before pesachim, and whether the order changes in certain years."
+        },
+        {
+          "name": "Romaine Lettuce for Karpas",
+          "description": "Using romaine lettuce for karpas at the Seder when it is also used for marror, and when the berachah on marror is said."
+        },
+        {
+          "name": "Milk for the Four Cups",
+          "description": "Whether milk may be used for the four cups at the Seder when wine or grape juice is not available, and what that means for the meal."
+        },
+        {
+          "name": "Eating Charoses on Erev Pesach",
+          "description": "Whether charoses, a food made for the Seder, may be eaten on Erev Pesach before the wine is added to the mixture."
         }
       ]
     },
@@ -1228,6 +1268,10 @@
         {
           "name": "Why Esther Invited Haman",
           "description": "The many reasons offered for why Queen Esther invited Haman to her feasts with Achashverosh, and what they teach."
+        },
+        {
+          "name": "Purim Torah Parodies",
+          "description": "Humorous Purim pieces that retell the Megillah in modern dress, part of the long tradition of lighthearted Purim writing."
         }
       ]
     },
@@ -1543,6 +1587,14 @@
           "aliases": [
             "Why Hashem Desires Our Prayers"
           ]
+        },
+        {
+          "name": "Unsure if You Said Morid HaGeshem",
+          "description": "What someone who cannot remember whether he said Morid HaGeshem in Shemoneh Esrei should do, depending on habit and on how soon the doubt arose."
+        },
+        {
+          "name": "Meaning of Ishei Yisrael in Retzei",
+          "description": "Whether \"Ishei Yisrael\" in the Retzei blessing refers to the Temple fire-offerings or to our prayers, and where to pause when saying it."
         }
       ]
     },
@@ -1838,6 +1890,10 @@
           "aliases": [
             "Scoring the Challah Before Hamotzi"
           ]
+        },
+        {
+          "name": "Lechem Mishneh on Yom Tov",
+          "description": "Whether the mitzvah of two loaves applies on yom tov, and whether the mon fell on the eve of a holiday or on the holiday itself."
         }
       ]
     },
@@ -1885,6 +1941,10 @@
         {
           "name": "Women's Obligation in Bentching",
           "description": "The unresolved question of whether women are obligated in Birkas HaMazon by Torah law or only rabbinically."
+        },
+        {
+          "name": "Removing Knives During Bentching",
+          "description": "The custom to remove or cover knives on the table during Birkas HaMazon, its reasons, and whether it applies on Shabbos or to butter and plastic knives."
         }
       ]
     },
@@ -2127,6 +2187,10 @@
         {
           "name": "Wearing Shoes in Shul",
           "description": "Whether the comparison of a shul to the Beis HaMikdash could mean shoes should be removed there, and why shoes are permitted."
+        },
+        {
+          "name": "Kiddush Club During the Haftarah",
+          "description": "Whether congregants may leave the sanctuary during the Haftarah and the rabbi's sermon to make Kiddush and socialize, and why it is considered disrespectful."
         }
       ]
     },
@@ -2149,6 +2213,10 @@
         {
           "name": "Rabbeinu Tam Zman for Ending Shabbos",
           "description": "The later time for nightfall at 72 minutes after sunset, how it compares with the Vilna Gaon's view, and common practice in New York."
+        },
+        {
+          "name": "Is a Deadline Day Inclusive",
+          "description": "Whether a time limit set 'until' a day or hour includes that day or hour itself, the Gemara's question of ad v'lo ad bichlal."
         }
       ]
     },
@@ -2261,6 +2329,10 @@
           "aliases": [
             "Angle of the Mezuzah"
           ]
+        },
+        {
+          "name": "Mezuzah on an Ownerless House",
+          "description": "Whether someone living in a house declared hefker must affix a mezuzah, and how declaring a home ownerless was used to avoid staying without valid mezuzos."
         }
       ]
     },
@@ -2368,6 +2440,10 @@
         {
           "name": "Writing Pesukim Outside a Sefer Torah",
           "description": "Whether verses of the Torah may be written on their own, such as on a board or worksheet, rather than as part of a complete Chumash."
+        },
+        {
+          "name": "Raffling Off a Sefer Torah",
+          "description": "Whether offering a sefer Torah as a raffle or Chinese auction prize is a disgrace to the Torah or a display of how much people value it."
         }
       ]
     },
@@ -2511,6 +2587,18 @@
         {
           "name": "Tadir Kodem",
           "description": "The principle that a more frequent mitzvah comes before a less frequent one, and how it decides the order of competing mitzvos."
+        },
+        {
+          "name": "Doing a Mitzvah Through Your Job",
+          "description": "Whether work done for pay, like writing tefillin, selling clothing or arranging a mortgage, also counts as a mitzvah when the worker intends to help others."
+        },
+        {
+          "name": "Do Mitzvos Require Intent",
+          "description": "The Talmudic debate whether a mitzvah performed without conscious intent to fulfill it still counts, and how a berachah can supply that intent."
+        },
+        {
+          "name": "Intending Not to Fulfill a Mitzvah",
+          "description": "Whether deliberately intending not to fulfill a mitzvah blocks it, and why one should not push away a mitzvah that is right in front of him."
         }
       ]
     },
@@ -2549,6 +2637,10 @@
         {
           "name": "Shalom Zachar Origin",
           "description": "The sources and reasons for the Friday night gathering after a baby boy's birth, from thanksgiving to comforting the baby."
+        },
+        {
+          "name": "Bris Milah for a Jaundiced Baby",
+          "description": "Whether a bris must be delayed for a jaundiced baby, and the requirement to wait seven days after an illness passes before performing the milah."
         }
       ]
     },
@@ -2605,6 +2697,10 @@
         {
           "name": "Fulfilling a Parent's Last Wishes",
           "description": "The obligation of children to carry out a parent's final requests, and how an oath to a dying parent may strengthen it."
+        },
+        {
+          "name": "Which Twin Is the Older Brother",
+          "description": "Whether the twin born first or the one who becomes bar mitzvah first counts as the older brother for honoring an older sibling and for yibum."
         }
       ]
     },
@@ -2734,6 +2830,14 @@
         {
           "name": "Where to Sit When Visiting the Sick",
           "description": "The tradition about not sitting at the head or foot of a sick person's bed, and why the patient's comfort comes first."
+        },
+        {
+          "name": "Who Counts as a Guest for Hachnasas Orchim",
+          "description": "Which guests qualify for the mitzvah of hachnasas orchim, such as out-of-town visitors, students far from home or lonely people."
+        },
+        {
+          "name": "Helping Flood Victims",
+          "description": "Communal kindness for families whose homes were flooded, from the Danube flood in Pressburg to Hurricane Sandy, and the merit such chesed brings."
         }
       ]
     },
@@ -2938,6 +3042,10 @@
         {
           "name": "Zoom Shiur Versus Attending in Person",
           "description": "Whether traveling to a Torah class adds value over joining online, considering the effort of walking and the benefits of studying in a group."
+        },
+        {
+          "name": "Learning Torah in a Group",
+          "description": "Why the Gemara praises Torah study in a group and warns against learning alone, and when studying alone is still praiseworthy."
         }
       ]
     },
@@ -2975,6 +3083,14 @@
         {
           "name": "Who Receives Maaser Rishon",
           "description": "Whether the first tithe belongs only to Levi'im or may also go to kohanim, and the later decree to give it to the poor."
+        },
+        {
+          "name": "Orlah on Transplanted Trees",
+          "description": "When replanting a tree restarts the three years of orlah, and why a tree moved with enough of its original soil does not start again."
+        },
+        {
+          "name": "Buying Potted Fruit Trees and Orlah",
+          "description": "Whether fruit trees bought bareroot online or potted from a local nursery start a new count of orlah, and the leniency for doubts outside Israel."
         }
       ]
     },
@@ -3059,6 +3175,10 @@
         {
           "name": "Pluots and Hybrid Fruits",
           "description": "Whether cross-pollinated fruits like pluots, apriums and plumcots involve forbidden mixing of species, and which step of their commercial production raises concerns."
+        },
+        {
+          "name": "Plowing With an Ox and a Donkey",
+          "description": "The prohibition of working two different species together, and the Sefer HaChinuch’s lesson about not pairing people of very different natures."
         }
       ]
     },
@@ -3162,6 +3282,10 @@
         {
           "name": "Yael and the Tent Peg",
           "description": "Why Yael may have killed Sisera with a tent peg instead of a sword, and whether a Torah prohibition would apply when lives are at stake."
+        },
+        {
+          "name": "Men Dyeing Gray Hair",
+          "description": "Whether a man may dye his gray hair to look younger for a job or a shidduch, given the prohibition on adopting women's ways of beautifying themselves."
         }
       ]
     },
@@ -3373,6 +3497,30 @@
         {
           "name": "Zebu Beef Kashrus",
           "description": "The controversy over zebu cattle in imported beef, and why some kashrus agencies accept it while others refuse it for lack of a tradition."
+        },
+        {
+          "name": "Mouse Found in a Drink",
+          "description": "Whether a drink stays kosher after a mouse or other non-kosher creature falls in, including soaking, sharp liquids and bad-tasting flavor."
+        },
+        {
+          "name": "Kavush KeMevushal Soaking",
+          "description": "The rule that a non-kosher item soaking long enough in a cold kosher liquid transfers its taste as if cooked, and how long that takes."
+        },
+        {
+          "name": "Trusting a Non-Jew to Taste Food",
+          "description": "Whether a non-Jewish cook or expert may be relied on to taste a mixture and say if a non-kosher flavor can be detected."
+        },
+        {
+          "name": "Treifos and Modern Medicine",
+          "description": "How the halachic list of treifos, such as an animal without kidneys or with a damaged liver, compares with modern medical and veterinary knowledge."
+        },
+        {
+          "name": "Ba'al Tishaktzu Repulsive Foods",
+          "description": "The prohibition of eating things that disgust a person, and whether it applies to foods most people find repulsive even when they are kosher."
+        },
+        {
+          "name": "Animal Fattened on Non-Kosher Food",
+          "description": "Whether meat from a kosher animal raised mainly on non-kosher feed may be eaten, and the views of Tosfos, the Rema, the Mordechai and the Rambam."
         }
       ]
     },
@@ -3407,6 +3555,14 @@
         {
           "name": "Waiting Between Meat and Milk",
           "description": "The different customs for how long to wait after eating meat before dairy, from one meal to the next up to a full day."
+        },
+        {
+          "name": "Pet Food With Milk and Meat",
+          "description": "Why pet food containing cooked milk and meat may not be used or returned for credit, since it is forbidden to benefit from it."
+        },
+        {
+          "name": "Milk and Meat Served to the Angels",
+          "description": "How Avraham Avinu could serve his angelic guests butter, milk and meat together, answered by serving the milk first and the meat afterwards."
         }
       ]
     },
@@ -3554,6 +3710,10 @@
         {
           "name": "Using a Utensil Before Tevilah",
           "description": "Whether a new utensil may be used even once before immersion, and the exception for disposable aluminum pans."
+        },
+        {
+          "name": "Tevilah for Electric Appliances",
+          "description": "How tevillas keilim applies to electric appliances that would be ruined by immersion, including selling to a non-Jew, attaching to the house, or partial immersion."
         }
       ]
     },
@@ -3725,6 +3885,10 @@
         {
           "name": "Younger Sibling Marrying First",
           "description": "Whether a younger son or daughter should wait for an older sibling to marry, and whether this is halacha or custom."
+        },
+        {
+          "name": "Marrying Off a Daughter to an Older Man",
+          "description": "The Gemara's warning against marrying a young daughter to a much older man, and whether the match is allowed when she agrees to it."
         }
       ]
     },
@@ -3777,6 +3941,14 @@
         {
           "name": "Who May Write a Get",
           "description": "Whether a divorce document may be written by anyone, including someone not legally competent, and whether the writer must be the husband's agent."
+        },
+        {
+          "name": "Writing a Get on Skin",
+          "description": "Whether a get written on a person’s skin is valid, and whether writing it there violates the rabbinic prohibition against tattooing."
+        },
+        {
+          "name": "Freeing an Agunah After a Disaster",
+          "description": "How a beis din can permit a woman whose husband died in a plane crash or similar disaster to remarry when his body cannot be identified."
         }
       ]
     },
@@ -3882,6 +4054,18 @@
         {
           "name": "Value of Raising Children",
           "description": "The idea that caring for children is so precious that mothers are not drafted even for conquering the land, linked to shiluach haken."
+        },
+        {
+          "name": "Tuition Tax Credits",
+          "description": "Proposals for government tax credits or refunds to parents who pay yeshiva and private school tuition while also funding public schools through taxes."
+        },
+        {
+          "name": "Exact Time a Boy Becomes Bar Mitzvah",
+          "description": "Whether a boy becomes bar mitzvah at the start of his thirteenth birthday or only at the hour he was born, and what thirteen years and a day means."
+        },
+        {
+          "name": "Bar Mitzvah Seudah",
+          "description": "The mitzvah of a festive meal when a son becomes bar mitzvah, and whether meat may be served at it during the Nine Days."
         }
       ]
     },
@@ -3909,6 +4093,10 @@
         {
           "name": "Naming a Child After a Rasha",
           "description": "Whether parents may give a child the name of a wicked person from Tanach, and whether the concern applies only to real names or also to nicknames."
+        },
+        {
+          "name": "Stepfather's Name for an Aliyah",
+          "description": "Whether a stepson is called to the Torah with his biological father's name or his stepfather's, and the related question for a matzeivah."
         }
       ]
     },
@@ -4036,6 +4224,10 @@
           "aliases": [
             "Items Left to a Debtor During Collection"
           ]
+        },
+        {
+          "name": "Refusing Payment in Unwanted Coins",
+          "description": "Whether someone who is owed money may refuse to be paid in pennies or in worn coins that are not accepted everywhere."
         }
       ]
     },
@@ -4125,6 +4317,10 @@
         {
           "name": "Throwing Cargo Overboard to Save a Ship",
           "description": "How losses are shared when passengers must lighten a ship in a storm, whether by weight or by value, and who must compensate whom."
+        },
+        {
+          "name": "Payment for Embarrassment",
+          "description": "Boshes, the compensation a person who shames or strikes another must pay for the humiliation he caused, and how the amount is set."
         }
       ]
     },
@@ -4642,6 +4838,14 @@
           "aliases": [
             "Worrying About Parnassah"
           ]
+        },
+        {
+          "name": "Why People Lose Their Wealth",
+          "description": "The Gemara's reasons that a person's money may be lost, such as eating a Shabbos meal while the rabbi is teaching Torah."
+        },
+        {
+          "name": "Living Within Your Means",
+          "description": "The Torah lesson, drawn from the korban oleh v'yored, that a person should not spend beyond what he can afford."
         }
       ]
     },
@@ -4689,6 +4893,14 @@
         {
           "name": "Unanimous Guilty Verdict Acquits",
           "description": "The striking rule that a defendant is released if every judge votes guilty, because no one argued in his defense."
+        },
+        {
+          "name": "Judges Who Hate Each Other",
+          "description": "Why two scholars who dislike each other may not sit on the same court, and whether this means real hatred or simply clashing temperaments."
+        },
+        {
+          "name": "Can a Woman Serve as a Judge",
+          "description": "Whether a woman may serve as a dayan, given the rule linking judges and witnesses, and how Devorah the prophetess judged Yisrael."
         }
       ]
     },
@@ -4735,6 +4947,18 @@
         {
           "name": "Witness Who Raised His Hand to Strike",
           "description": "Whether someone who lifts his hand to hit another Jew becomes disqualified as a witness, and how provocation changes the picture."
+        },
+        {
+          "name": "Women as Witnesses",
+          "description": "Why women are not compelled to testify in monetary and capital cases, and the reasons offered for this exemption."
+        },
+        {
+          "name": "Trusting Claims That Can Easily Be Checked",
+          "description": "The principle that people do not tell a lie that is bound to be exposed, so a claim that can readily be verified is believed even from someone not normally trusted."
+        },
+        {
+          "name": "Identifying a Body to Free a Widow",
+          "description": "What evidence a beis din accepts to identify a husband's remains, such as a ring or laundry tag, so that his widow may remarry."
         }
       ]
     },
@@ -4965,6 +5189,14 @@
         {
           "name": "Writing Birthdates in Seforim",
           "description": "The old custom of recording children's names and birthdates inside family seforim, and its use as halachic evidence."
+        },
+        {
+          "name": "Order of Putting On and Tying Shoes",
+          "description": "Why the right shoe is put on first but the left shoe is tied first, and how this applies to women and to a left-handed person."
+        },
+        {
+          "name": "Reasons for a Shalom Zachor",
+          "description": "Why a shalom zachor is held on the first Friday night after a boy is born, and whether one is made for a girl or when the baby is absent."
         }
       ]
     },
@@ -4992,6 +5224,10 @@
         {
           "name": "Mesorah for Kosher Birds",
           "description": "Why only birds with an established tradition are eaten as kosher today, even though most bird species are not on the forbidden list."
+        },
+        {
+          "name": "Torah and Science",
+          "description": "How the Torah and Chazal relate to scientific claims, including whether Creation and the Flood are literal and when statements of Chazal are authoritative."
         }
       ]
     },
@@ -5031,6 +5267,10 @@
         {
           "name": "Oven of Achnai",
           "description": "The famous Talmudic dispute over an oven's purity in which miracles were rejected as proof, and what the carob, canal and slanted walls symbolize."
+        },
+        {
+          "name": "Disagreeing Without Personal Animosity",
+          "description": "Holding firm in a halachic or hashkafic dispute while still honoring the other side and bearing no grudge against opponents."
         }
       ]
     },
@@ -5187,6 +5427,14 @@
         {
           "name": "Zecher LeMikdash",
           "description": "Practices instituted after the destruction to remember the Beis HaMikdash, and the idea that remembering it helps bring its rebuilding."
+        },
+        {
+          "name": "Building the Beis HaMikdash at Night",
+          "description": "Whether the Beis HaMikdash may be built at night or on Shabbos and Yom Tov, and how this applies to a Third Temple descending from heaven."
+        },
+        {
+          "name": "Iron Touching the Mizbeach",
+          "description": "Why an iron implement that touches a stone of the Mizbeach disqualifies it, since iron can shorten life while the Altar lengthens it."
         }
       ]
     },
@@ -5264,6 +5512,10 @@
         {
           "name": "Who Paid for the Ketores",
           "description": "Whether the incense used at the Mishkan's inauguration was bought with Moshe Rabbeinu's own money or with communal funds."
+        },
+        {
+          "name": "Eating Korbanos Like Royalty",
+          "description": "The Gemara's teaching that korbanos are eaten l'mashcha, in a royal manner, and what that implies for when and how they should be eaten."
         }
       ]
     },
@@ -5377,6 +5629,10 @@
         {
           "name": "Using a Kohen to Serve You",
           "description": "Whether one may have a kohen perform personal services, and whether a kohen may waive the honor owed to him."
+        },
+        {
+          "name": "Kohen Trusted About a Bechor's Blemish",
+          "description": "Whether a kohen is believed about how his firstborn animal got its blemish, or that a sage examined it and permitted it to be slaughtered."
         }
       ]
     },
@@ -5434,6 +5690,14 @@
         {
           "name": "Who Slaughters the Parah Adumah",
           "description": "Whether the shechitah of the red heifer must be done by a kohen in priestly garments, or may be performed by any Jew."
+        },
+        {
+          "name": "Retroactive Tumah of a Niddah",
+          "description": "The rabbinic rule that food a woman touched in the 24 hours before becoming a niddah is treated as tamei, and how it explains Avraham Avinu's rolls."
+        },
+        {
+          "name": "Why a Metzora Calls Out Tamei",
+          "description": "Why a person with tzara'as must announce that he is tamei: to warn others away and so that they will pray for his recovery."
         }
       ]
     },
@@ -5641,6 +5905,14 @@
         {
           "name": "Gratitude to Those Who Protect Us",
           "description": "The obligation to show appreciation to people who risk their lives for others, seen as a natural extension of thanking anyone who helps us."
+        },
+        {
+          "name": "Thanking Service Workers",
+          "description": "Expressing gratitude to the delivery drivers, mail carriers and other workers whose everyday service a community relies on."
+        },
+        {
+          "name": "Saying Goodbye to a Delivery Driver",
+          "description": "How a community can show appreciation to a longtime delivery driver or route worker when he moves on to a new position."
         }
       ]
     },
@@ -5693,6 +5965,10 @@
         {
           "name": "White Lies to Spare Feelings",
           "description": "When altering the truth slightly is allowed in order to avoid hurting or insulting another person."
+        },
+        {
+          "name": "Honesty in Yeshiva Finances",
+          "description": "Why a yeshiva must keep its finances scrupulously honest, avoid unpayable debt and return unused grant money, and how this affects its learning."
         }
       ]
     },
@@ -5789,6 +6065,10 @@
         {
           "name": "Taking Blame to Spare Another's Shame",
           "description": "How far a person should go to avoid embarrassing someone, even accepting blame or hiding pain rather than shaming another."
+        },
+        {
+          "name": "Pain Caused by Hurtful Words",
+          "description": "How words and ridicule can hurt as much as physical harm, and the duty to make sure our speech never causes another person pain."
         }
       ]
     },
@@ -5816,6 +6096,14 @@
         {
           "name": "Misjudging Others' Intentions",
           "description": "How disputes arise when people misread one another's feelings and motives, as seen with Yosef and his brothers."
+        },
+        {
+          "name": "Torah Scholars Increase Peace",
+          "description": "The teaching that Torah scholars increase peace in the world, and the different ways their knowledge prevents or resolves disputes."
+        },
+        {
+          "name": "Suspecting the Innocent",
+          "description": "The Gemara's warning that one who wrongly suspects an innocent person is punished, and who counts as innocent when a person is guilty of other things."
         }
       ]
     },
@@ -5997,6 +6285,18 @@
         {
           "name": "Value of Time",
           "description": "The idea that every moment of life is precious and should be used for Torah and mitzvos rather than spent chasing things not truly needed."
+        },
+        {
+          "name": "Seeing What You Want to See",
+          "description": "How people with an agenda deny obvious truth and grasp at small inconsistencies, as shown by Pharaoh's astrologers and the Egyptian slaves."
+        },
+        {
+          "name": "Seeing Your Own Faults in Others",
+          "description": "The idea that the faults a person notices in others often reflect his own, and how people project their shortcomings onto those around them."
+        },
+        {
+          "name": "Motivation From Past Accomplishments",
+          "description": "Looking back at what one has already achieved, rather than at what is left, as a source of encouragement to keep learning and growing."
         }
       ]
     },
@@ -6039,6 +6339,10 @@
         {
           "name": "Yosef Meshisa Story",
           "description": "The account of a collaborator who looted the Temple for the Romans, then refused a second time and died sanctifying Hashem's name."
+        },
+        {
+          "name": "Fear of Ridicule When Doing a Mitzvah",
+          "description": "Acting for the sake of Heaven even when others may mock or call one a hypocrite, a test that can be harder than facing physical danger."
         }
       ]
     },
@@ -6103,6 +6407,10 @@
             "Spark of Good in Every Jew",
             "Kiruv and Every Jew's Potential"
           ]
+        },
+        {
+          "name": "Feeling Another’s Pain",
+          "description": "The duty to truly feel and pray over another person's suffering, even a small loss, learned from the metzora, the sick tree painted red and Moshe Rabbeinu."
         }
       ]
     },
@@ -6174,6 +6482,10 @@
         {
           "name": "Tzaddikim Struggling With Temptation",
           "description": "Talmudic stories showing that great sages faced the same desires as everyone, and why the Gemara records even their near failures."
+        },
+        {
+          "name": "Desires Behind Disbelief",
+          "description": "The idea that heresy comes from a wish to be free of moral restraint, much as a bribe blinds even a wise judge."
         }
       ]
     },
@@ -6230,6 +6542,14 @@
         {
           "name": "Why the Manna Fell Daily",
           "description": "The parable of the king who gave his son a daily allowance, explaining why the manna fell each day rather than once a year."
+        },
+        {
+          "name": "Mitzvah to Believe in Hashem",
+          "description": "How the Torah can command belief in Hashem, and why honest reasoning free of personal desires leads a person to recognize the Creator."
+        },
+        {
+          "name": "Naaseh Venishma",
+          "description": "Why the Jewish people accepted the Torah before hearing its contents, and what that trust in Hashem says about the relationship between them."
         }
       ]
     },
@@ -6282,6 +6602,10 @@
         {
           "name": "Wheat That Rained From the Sky",
           "description": "The Talmudic account of grain falling from clouds and whether it could be used for Temple offerings requiring local produce."
+        },
+        {
+          "name": "The Sun Standing Still",
+          "description": "Times the sun stood still or changed its course, for Moshe, Yehoshua, Nakdimon ben Gurion, Yaakov Avinu and Chizkiyah, and why only some are counted."
         }
       ]
     },
@@ -6465,6 +6789,10 @@
         {
           "name": "Let Us Make Man Meaning",
           "description": "Why the Torah uses a plural phrase for the creation of man, the idea that Hashem consulted the angels, and the risk of misreading it."
+        },
+        {
+          "name": "What Sheidim Are",
+          "description": "What sheidim (demons) are according to Chazal and the commentators, such as the view that they are part spiritual and part physical beings."
         }
       ]
     },
@@ -6568,6 +6896,10 @@
         {
           "name": "Worshipping Idols Out of Fear",
           "description": "Whether an act of idol worship done out of fear or respect for a person counts as idolatry, and when one must give up one's life instead."
+        },
+        {
+          "name": "Owning Dolls in Halacha",
+          "description": "Whether owning dolls and other human figures is forbidden because onlookers might suspect idol worship, and why most authorities permit it today."
         }
       ]
     },
@@ -6647,6 +6979,10 @@
         {
           "name": "Walking After Eating",
           "description": "The Talmudic health advice to walk a few steps after a meal before sleeping, and how it shaped what a creditor must leave a debtor."
+        },
+        {
+          "name": "Scheduling Surgery Before Shabbos",
+          "description": "Planning non-emergency surgery or a tooth extraction early in the week so that recovery will not require breaking Shabbos or spoil its enjoyment."
         }
       ]
     },
@@ -6687,6 +7023,10 @@
         {
           "name": "Yahrzeit in a Leap Year",
           "description": "When to observe a parent's yahrzeit that fell in Adar of a regular year once a leap year with two Adars arrives."
+        },
+        {
+          "name": "Burying Objects With the Deceased",
+          "description": "Whether personal items may be placed in or near a coffin, and the rule that nothing should interpose between the coffin and the ground."
         }
       ]
     },
@@ -6797,6 +7137,10 @@
         {
           "name": "Translation of the Torah Into Greek",
           "description": "Why the miraculous translation of the Torah into Greek for King Ptolemy is remembered as a sad day for the Jewish people."
+        },
+        {
+          "name": "Roman Decrees Against Shabbos and Milah",
+          "description": "The Roman government's decrees banning Shabbos, bris milah and family purity, and how the sages worked to have them annulled."
         }
       ]
     },
@@ -6837,6 +7181,10 @@
         {
           "name": "Reunification of Jerusalem in 1967",
           "description": "How events and infrastructure in the years before the Six-Day War set the stage for Jerusalem's Old City coming under Jewish control."
+        },
+        {
+          "name": "Supporting Israel in Congress",
+          "description": "How Jewish communities weigh elected officials and candidates by their support for the security of Israel and their stand on pressure for concessions."
         }
       ]
     },
@@ -6880,6 +7228,10 @@
         {
           "name": "Moabite Converts and Dovid's Lineage",
           "description": "The ruling that the ban on Moabite converts applies only to men and not women, which settled the question of Dovid HaMelech's descent from Rus."
+        },
+        {
+          "name": "Seven Noahide Laws",
+          "description": "The seven commandments binding on all mankind, and how non-Jews can be held responsible for laws they may never have been taught."
         }
       ]
     },
@@ -6952,6 +7304,10 @@
         {
           "name": "When to Say Tefillas HaDerech",
           "description": "Which kinds of trips call for reciting the traveler's prayer, and why people on the same train or bus may differ in practice."
+        },
+        {
+          "name": "Taking a Cruise Over Shabbos",
+          "description": "Whether one may stay on an engine-powered cruise ship over Shabbos when non-Jewish crew run it, depending on who the passengers are and whether it sails regardless."
         }
       ]
     },
@@ -6985,6 +7341,34 @@
           "description": "Whether it is ever permitted to take one innocent life in order to save several others, explored through a wartime rescue dilemma."
         }
       ]
+    },
+    {
+      "name": "Yichud",
+      "group": "Marriage and Family",
+      "description": "The halachos of yichud, the prohibition of a man and woman being secluded together, and the Gemara and poskim behind them.",
+      "aliases": [],
+      "subtopics": []
+    },
+    {
+      "name": "Voting and Elections",
+      "group": "Life and Society",
+      "description": "Civic duty, voting and choosing leaders, seen through the Gemara and the Torah’s view of community responsibility.",
+      "aliases": [],
+      "subtopics": []
+    },
+    {
+      "name": "Community and Current Events",
+      "group": "Life and Society",
+      "description": "Local news, community events and current affairs that Rabbi Sebrow reported on or connected to the Daf Yomi.",
+      "aliases": [],
+      "subtopics": []
+    },
+    {
+      "name": "Kiruv",
+      "group": "Mitzvos",
+      "description": "Bringing Jews closer to Torah and mitzvos: kiruv programs, learning partners and the Gemara’s view of teaching others.",
+      "aliases": [],
+      "subtopics": []
     }
   ],
   "retired": [

@@ -84,11 +84,13 @@ Smaller notes don't hold an article back, but they are listed in the review shee
 
 He wrote "Daf Yomi Insights" for 5TJT from at least 2010 until January 2021. 5TJT rebuilt its website in 2024 and the old article pages are gone, so the columns come from two places:
 
-1. **The printed issues (July 2011–2020).** 5tjt.com/paper/ still links every issue to a Flipdocs flipbook with the full PDF. The list of issues is in `scripts/import/5tjt-flipdocs.tsv` (collected 2026-10-12).
+1. **The printed issues (2006–2021).** 5tjt.com/paper/ still links every issue from July 2011 on to a Flipdocs flipbook with the full PDF. The list of issues is in `scripts/import/5tjt-flipdocs.tsv` (collected 2026-10-12). On 2026-10-18, 153 more issues were added to it: 2006–2013 issues the 5tjt.com pages no longer list, found through the Internet Archive.
    ```
    npm run import:5tjt-pdf                    every issue (about an hour; resumes where it stopped)
    npm run import:5tjt-pdf -- --issue 306203  one issue
    npm run import:5tjt-pdf -- --year 2018     one year
    ```
    It reads each PDF's text with the same layout code as the Jewish Home importer, follows "Continued on Page N", draws the page images itself, and crops the photo. A column also found on the old website (same title, within three weeks) is skipped.
+
+   The importer only finds a column whose byline line reads exactly "By Rabbi Avrohom Sebrow". In older issues the byline is often a picture, or there is only the "Daf Yomi Insights" heading (the front page's "Inside" box still lists it). Those columns are staged with `node scripts/import/stage-by-hand.mjs`, from a list of issue, page and headline. The draft holds every line of those pages, and /review-import cuts it down to the column.
 2. **The old website, via the Internet Archive** (2010–2021, including issues missing from the PDFs). Some networks block archive.org, so the downloading runs on GitHub (`.github/workflows/fetch-5tjt.yml` and `sweep-5tjt.yml` on the `import-5tjt` branch); download the run's files into `data/import/5tjt/<folder>/`, then `npm run import:5tjt -- --new-only` stages them (`--dry-run` to just look). Pages by Baila or other Sebrows are kept apart, never staged.
