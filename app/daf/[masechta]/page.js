@@ -1,7 +1,8 @@
 import Link from 'next/link'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { supabase } from '@/app/lib/supabase'
-import { ARTICLE_LIST_COLUMNS, articlePath, decodeParam, getArticlesReferencing } from '@/app/lib/articles'
-import { findMasechta, titleCase, masechtaHref, todayInNewYork, dafYomiFor, siyumDate, dateOfDaf, formatDate } from '@/app/lib/shas'
+import { ARTICLE_LIST_COLUMNS, articlePath, getArticlesReferencing } from '@/app/lib/articles'
+import { findMasechta, titleCase, masechtaHref, masechtaFromParam, masechtaSlug, todayInNewYork, dafYomiFor, siyumDate, dateOfDaf, formatDate } from '@/app/lib/shas'
 import { buildMetadata, breadcrumbJsonLd, collectionJsonLd } from '@/app/lib/seo'
 import { getStoriesInMasechta } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
@@ -15,7 +16,7 @@ function displayName(masechta) {
 }
 
 export async function generateMetadata({ params }) {
-    const masechta = decodeParam((await params).masechta)
+    const masechta = masechtaFromParam((await params).masechta)
     const formattedName = displayName(masechta)
 
     return buildMetadata({
@@ -29,8 +30,11 @@ export async function generateMetadata({ params }) {
 const SHORT = { weekday: 'long', month: 'long', day: 'numeric' }
 
 export default async function MasechtaPage({ params }) {
-    const masechta = decodeParam((await params).masechta)
+    const raw = (await params).masechta
+    const masechta = masechtaFromParam(raw)
     const known = findMasechta(masechta)
+    // /daf/bava%20metzia and /daf/menachot -> /daf/bava-metzia, /daf/menachos
+    if (known && raw !== masechtaSlug(known.name)) permanentRedirect(masechtaHref(known.name))
     const name = displayName(masechta)
 
     const [{ data }, stories, referencing] = await Promise.all([
@@ -46,6 +50,8 @@ export default async function MasechtaPage({ params }) {
     // Articles filed under another masechta that also discuss this one are listed
     // at the daf they discuss here
     const own = data ?? []
+    // A made-up masechta name in the URL is a real 404, not an empty page
+    if (!known && own.length === 0) notFound()
     const ownIds = new Set(own.map(a => a.id))
     const alsoHere = referencing
         .filter(a => !ownIds.has(a.id))

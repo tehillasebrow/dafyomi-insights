@@ -2,7 +2,7 @@ import { cache } from 'react'
 import { supabase } from '@/app/lib/supabase'
 import { isAdmin } from '@/app/lib/adminAuth'
 import { articlePath, articleDate, formatArticleDate, dafLabel, dafPath, decodeParam, readingMinutes } from '@/app/lib/articles'
-import { masechtaHref, findMasechta, hebrewNumeral } from '@/app/lib/shas'
+import { masechtaHref, masechtaFromParam, masechtaSlug, findMasechta, hebrewNumeral } from '@/app/lib/shas'
 import { buildMetadata, clip, absoluteUrl, authorJsonLd, breadcrumbJsonLd, talmudSourceJsonLd, WEBSITE_ID } from '@/app/lib/seo'
 import { getStoriesForArticle, storyPath } from '@/app/lib/stories'
 import { topicsFor, topicPath, subtopicsFor, subtopicPath } from '@/app/lib/topics'
@@ -20,7 +20,7 @@ export const revalidate = 0
 
 // Shared by generateMetadata and the page, so the DB is only hit once
 const getArticle = cache(async (rawMasechta, rawDaf, rawSlug) => {
-    const masechta = decodeParam(rawMasechta)
+    const masechta = masechtaFromParam(rawMasechta)
     const slug = decodeParam(rawSlug)
     const daf = Number(rawDaf)
     if (!Number.isInteger(daf)) return null
@@ -84,7 +84,7 @@ export default async function ArticlePage({ params }) {
 
     // Reached through another daf in the article's range, or an id link: send to the canonical URL
     const canonical = articlePath(article)
-    if (String(article.daf) !== daf || (article.slug && article.slug !== decodeParam(slug))) {
+    if (String(article.daf) !== daf || masechta !== masechtaSlug(article.masechta) || (article.slug && article.slug !== decodeParam(slug))) {
         permanentRedirect(canonical)
     }
 

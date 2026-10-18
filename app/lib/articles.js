@@ -1,7 +1,7 @@
 // lib/articles.js
 // Shared helpers for article URLs, dates and queries. Safe on client and server.
 import { supabase } from '@/app/lib/supabase'
-import { findMasechta } from '@/app/lib/shas'
+import { findMasechta, masechtaSlug } from '@/app/lib/shas'
 
 export function decodeParam(value) {
     try {
@@ -19,7 +19,7 @@ export function slugify(text) {
 }
 
 export function dafPath(masechta, daf) {
-    return `/daf/${encodeURIComponent(masechta.toLowerCase())}/${daf}`
+    return `/daf/${masechtaSlug(masechta)}/${daf}`
 }
 
 // A standalone article (tribute, Q&A, magazine piece) has no masechta/daf.
