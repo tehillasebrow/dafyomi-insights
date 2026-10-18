@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { supabase } from '@/app/lib/supabase'
 import { buildMetadata, collectionJsonLd } from '@/app/lib/seo'
-import { TOPICS, TOPIC_GROUPS, countTopics, topicPath } from '@/app/lib/topics'
+import { TOPICS, TOPIC_GROUPS, countTopics, topicPath, subtopicsFor, subtopicPath } from '@/app/lib/topics'
 import { slugify } from '@/app/lib/articles'
 import JsonLd from '@/app/components/JsonLd'
 
@@ -24,6 +24,15 @@ export default async function TopicsPage() {
     ])
     const articleCounts = countTopics(articles)
     const storyCounts = countTopics(stories)
+    // Each topic's subjects that have something filed under them, most used first
+    const subCounts = new Map()
+    for (const row of [...(articles ?? []), ...(stories ?? [])]) {
+        for (const s of subtopicsFor(row.tags)) subCounts.set(s, (subCounts.get(s) ?? 0) + 1)
+    }
+    const subjectsOf = t => t.subtopics
+        .filter(s => subCounts.has(s))
+        .sort((a, b) => subCounts.get(b) - subCounts.get(a) || a.name.localeCompare(b.name))
+    const SHOWN = 6
 
     // Only topics with something filed under them, grouped like data/topics.json
     const groups = TOPIC_GROUPS
@@ -66,12 +75,21 @@ export default async function TopicsPage() {
                         <section key={g.group} id={slugify(g.group)} aria-labelledby={`${slugify(g.group)}-h`} className="pt-7 scroll-mt-24">
                             <h2 id={`${slugify(g.group)}-h`} className="font-semibold text-h2 tracking-[-0.02em] border-b border-rule-hard pb-2">{g.group}</h2>
                             <ul className="grid md:grid-cols-2 md:gap-x-8">
-                                {g.topics.map(t => (
-                                    <li key={t.slug} className="border-b border-rule py-2.5">
-                                        <Link href={topicPath(t)} className="font-semibold">{t.name}</Link>
-                                        <span className="meta block">{t.note}</span>
-                                    </li>
-                                ))}
+                                {g.topics.map(t => {
+                                    const subjects = subjectsOf(t)
+                                    return (
+                                        <li key={t.slug} className="border-b border-rule py-2.5">
+                                            <Link href={topicPath(t)} className="font-semibold">{t.name}</Link>
+                                            <span className="meta block">{t.note}</span>
+                                            {subjects.length > 0 && (
+                                                <p className="text-sm text-ink-soft pt-1 leading-relaxed">
+                                                    {subjects.slice(0, SHOWN).map((s, i) => <span key={s.slug}>{i > 0 && ' · '}<Link href={subtopicPath(s)}>{s.name}</Link></span>)}
+                                                    {subjects.length > SHOWN && <> · <Link href={topicPath(t)}>{subjects.length - SHOWN} more</Link></>}
+                                                </p>
+                                            )}
+                                        </li>
+                                    )
+                                })}
                             </ul>
                         </section>
                     ))}
