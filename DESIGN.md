@@ -28,8 +28,8 @@ The yellow marker every chavrusa runs across the page, black ink, and the blue b
   labelled by how close it is ("On tomorrow's daf", "On Thursday's daf, earlier this week").
   Beside it, a yellow today panel with the week as rows. Then more articles, the seder as
   left-to-right bars and topics; stories last.
-- **Menu order:** Articles, Beyond the Daf, Masechtos, Today's Daf, Stories, Topics, More.
-  Stories and Topics move into More on narrower screens.
+- **Menu order:** Articles, Beyond the Daf, Masechtos, Topics, Today's Daf, About, More.
+  More holds Gemara stories, Stories by sage and Past discussions.
 
 ## Fixed rules (apply whatever look is picked)
 

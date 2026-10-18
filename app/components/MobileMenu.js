@@ -10,17 +10,7 @@ import ThemeToggle from './ThemeToggle'
 import { LogoMark } from './Logo'
 import { dafYomiFor, todayInNewYork, hebrewNumeral, dayLabel } from '@/app/lib/shas'
 
-const LINKS = [
-    NAV[0],
-    NAV[1],
-    NAV[2],
-    NAV[3],
-    { ...NAV[4], label: 'Gemara stories' },
-    MORE[0],
-    NAV[5],
-    MORE[1],
-    MORE[2],
-]
+const LINKS = [...NAV.slice(0, 5), ...MORE, { ...NAV[5], label: 'About and contact' }]
 
 // Full-height menu for phones. Today's daf is worked out when the menu opens,
 // so a cached page never shows yesterday's daf.

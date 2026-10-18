@@ -143,7 +143,7 @@ export default function Search() {
         <>
             <button ref={triggerRef} type="button" onClick={() => setIsOpen(true)} className="btn-quiet" aria-haspopup="dialog">
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="hidden sm:block w-[18px] h-[18px] fill-none stroke-current stroke-[1.7]"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></svg>
-                Search
+                <span className="lg:max-xl:sr-only">Search</span>
             </button>
 
             {isOpen && createPortal(

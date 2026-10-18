@@ -4,21 +4,20 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-// Main menu, in the owner's order. `wide` items show in the bar only on wide screens;
-// on narrower ones they move into "More" with the rest.
+// Main menu, in the owner's order. Stories and the smaller pages live under "More".
 export const NAV = [
     { href: '/articles', label: 'Articles', match: ['/articles', '/daf/'] },
     { href: '/beyond-the-daf', label: 'Beyond the Daf', match: ['/beyond-the-daf'] },
     { href: '/masechtos', label: 'Masechtos', match: ['/masechtos'] },
+    { href: '/topics', label: 'Topics', match: ['/topics'] },
     { href: '/daily', label: "Today's Daf", match: ['/daily'] },
-    { href: '/stories', label: 'Stories', match: ['/stories'], wide: true },
-    { href: '/topics', label: 'Topics', match: ['/topics'], wide: true },
+    { href: '/contact', label: 'About', match: ['/contact'] },
 ]
 
 export const MORE = [
+    { href: '/stories', label: 'Gemara stories', match: ['/stories'] },
     { href: '/people', label: 'Stories by sage', match: ['/people'] },
     { href: '/daily/archive', label: 'Past discussions', match: ['/daily/archive'] },
-    { href: '/contact', label: 'About and contact', match: ['/contact'] },
 ]
 
 export function isCurrent(pathname, item) {
@@ -41,8 +40,7 @@ export default function NavLinks() {
         return () => { window.removeEventListener('keydown', onKey); document.removeEventListener('pointerdown', onClick) }
     }, [open])
 
-    const wide = NAV.filter(item => item.wide)
-    const more = [...wide.map(item => ({ ...item, onlyNarrow: true })), ...MORE]
+    const more = MORE
     const moreCurrent = more.some(item => isCurrent(pathname, item))
 
     return (
@@ -52,7 +50,7 @@ export default function NavLinks() {
                     key={item.href}
                     href={item.href}
                     aria-current={isCurrent(pathname, item) ? 'page' : undefined}
-                    className={`nav-a ${item.wide ? 'hidden xl:inline-flex' : ''}`}
+                    className="nav-a"
                 >
                     {item.label}
                 </Link>
@@ -72,7 +70,7 @@ export default function NavLinks() {
                 {open && (
                     <ul id="more-menu" className="absolute right-0 top-full z-40 mt-1 min-w-[14rem] index-card py-1">
                         {more.map(item => (
-                            <li key={item.href} className={item.onlyNarrow ? 'xl:hidden' : ''}>
+                            <li key={item.href}>
                                 <Link
                                     href={item.href}
                                     aria-current={isCurrent(pathname, item) ? 'page' : undefined}
