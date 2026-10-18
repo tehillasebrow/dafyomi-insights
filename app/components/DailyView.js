@@ -7,6 +7,7 @@ import DailyDiscussion from './DailyDiscussion'
 import Luach from './Luach'
 import DafPicker from './DafPicker'
 import { ArticleThumb } from './ArticleImage'
+import { nearestDafArticle } from '@/app/lib/nearest'
 
 const iso = d => d.toISOString().slice(0, 10)
 const LONG = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
@@ -30,6 +31,7 @@ export default async function DailyView({ date, daily, admin = false }) {
         daily ? { data: [] } : supabase.from('daily_discussions').select('date, masechta, daf, topic_summary').lte('date', iso(date)).order('date', { ascending: false }).limit(3),
     ])
     const article = articles[0]
+    const nearest = article ? null : await nearestDafArticle(date)
 
     // The week's article, for the gold bar on the luach
     const coverage = article && findMasechta(article.masechta)
@@ -46,7 +48,7 @@ export default async function DailyView({ date, daily, admin = false }) {
         <>
             <div className="on-binding">
                 <div className="folio grid gap-3 py-5 md:grid-cols-[auto_1fr] md:gap-x-7 md:items-end md:py-7">
-                    <span lang="he" className="numeral text-[clamp(4.25rem,10vw,6.5rem)] text-foil leading-[0.85]">{hebrewNumeral(daf)}</span>
+                    <span lang="he" className="numeral sticker sticker-tilt self-start justify-self-start text-[clamp(3.5rem,8vw,5.25rem)] [border-color:#17181c]">{hebrewNumeral(daf)}</span>
                     <div>
                         <p className="meta">
                             {formatDate(date, LONG)} · <span lang="he" dir="rtl">{hebrewDate(date)}</span>
@@ -83,8 +85,20 @@ export default async function DailyView({ date, daily, admin = false }) {
                         </>
                     ) : (
                         <>
-                            <span className="sc">No article on this daf yet</span>
-                            <Link href={dafPath(masechta.name, daf)} className="tap">See the nearest article</Link>
+                            <span className="sc">No article on {masechta.name} {daf} yet</span>
+                            {nearest ? (
+                                <div className="card grid-cols-[7.5rem_minmax(0,1fr)] md:grid-cols-[11rem_minmax(0,1fr)] gap-x-4 items-start mt-2">
+                                    <ArticleThumb article={nearest.article} sizes="(min-width: 768px) 11rem, 7.5rem" className="row-span-3" />
+                                    <span className="kicker">{nearest.label} · {nearest.day.masechta.name} {nearest.day.daf}</span>
+                                    <b className="card-title text-[1.32rem]"><Link href={articlePath(nearest.article)}>{nearest.article.title}</Link></b>
+                                    <span className="meta">
+                                        {nearest.article.masechta} {dafLabel(nearest.article)}
+                                        {nearest.article.content && ` · ${readingMinutes(nearest.article)} min read`}
+                                    </span>
+                                </div>
+                            ) : (
+                                <Link href={dafPath(masechta.name, daf)} className="tap">See the nearest article</Link>
+                            )}
                         </>
                     )}
                     {stories?.length > 0 && (

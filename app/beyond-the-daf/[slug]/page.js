@@ -137,7 +137,7 @@ export default async function BeyondTheDafArticlePage({ params }) {
             </div>
 
             <article className="grid gap-4.5 md:grid-cols-[12rem_minmax(0,1fr)] md:gap-x-9">
-                <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.02] tracking-[-0.02em] md:col-start-2">{article.title}</h1>
+                <h1 className="text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.08] md:col-start-2"><span className="hl">{article.title}</span></h1>
                 {article.image_url && (
                     <div className="md:col-start-2"><ArticleImage src={article.image_url} credit={article.image_credit} alt="" priority className="max-w-[50rem]" sizes="(min-width: 768px) 800px, 100vw" /></div>
                 )}

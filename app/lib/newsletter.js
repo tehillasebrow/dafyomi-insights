@@ -62,21 +62,21 @@ export function renderArticleEmail(article, { unsubscribe, banner = '', bannerTe
     const html = `<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escapeHtml(article.title)}</title></head>
-<body style="margin:0;padding:0;background:#f5f5f2;color:#121317;font-family:Georgia,'Times New Roman',serif;">
+<body style="margin:0;padding:0;background:#f6f7f3;color:#17181c;font-family:Georgia,'Times New Roman',serif;">
 ${banner}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f2;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f7f3;">
 <tr><td align="center" style="padding:24px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;">
-<tr><td style="background:#1c1e23;color:#f1eee5;padding:16px 24px;font-size:20px;font-weight:bold;">
-<a href="${SITE_URL}" style="color:#f1eee5;text-decoration:none;">${escapeHtml(SITE_NAME)}</a>
+<tr><td style="background:#17181c;color:#fdfdfa;padding:16px 24px;font-size:20px;font-weight:bold;">
+<a href="${SITE_URL}" style="color:#fdfdfa;text-decoration:none;">${escapeHtml(SITE_NAME)}</a>
 <div style="font-family:'Courier New',monospace;font-size:13px;font-weight:normal;color:#c9c6bc;margin-top:4px;">${escapeHtml(AUTHOR.column)} · ${escapeHtml(AUTHOR.name)}</div>
 </td></tr>
 ${article.image_url ? `<tr><td><a href="${url}"><img src="${escapeHtml(article.image_url)}" alt="" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;"></a></td></tr>` : ''}
 <tr><td style="background:#ffffff;padding:24px;border:1px solid #bfbeb6;border-top:0;">
-<div style="font-family:'Courier New',monospace;font-size:13px;color:#7a5b12;letter-spacing:0.04em;text-transform:uppercase;">${escapeHtml(where)}</div>
-<h1 style="font-size:26px;line-height:1.25;margin:8px 0 16px;"><a href="${url}" style="color:#121317;text-decoration:none;">${escapeHtml(article.title)}</a></h1>
+<div style="font-family:'Courier New',monospace;font-size:13px;color:#1e3fae;letter-spacing:0.04em;text-transform:uppercase;">${escapeHtml(where)}</div>
+<h1 style="font-size:26px;line-height:1.25;margin:8px 0 16px;"><a href="${url}" style="color:#17181c;text-decoration:none;">${escapeHtml(article.title)}</a></h1>
 <p style="font-size:18px;line-height:1.6;margin:0 0 24px;color:#313339;">${escapeHtml(opening)}</p>
-<a href="${url}" style="display:inline-block;background:#121317;color:#f5f5f2;font-family:'Courier New',monospace;font-size:16px;padding:14px 24px;text-decoration:none;border-radius:4px;">Read more →</a>
+<a href="${url}" style="display:inline-block;background:#17181c;color:#f6f7f3;font-family:'Courier New',monospace;font-size:16px;padding:14px 24px;text-decoration:none;border-radius:4px;">Read more →</a>
 </td></tr>
 <tr><td style="padding:20px 24px;font-family:'Courier New',monospace;font-size:12px;line-height:1.6;color:#45474e;text-align:center;">
 You're getting this because you signed up at <a href="${SITE_URL}" style="color:#45474e;">dafyomiinsights.com</a>.<br>
@@ -110,10 +110,10 @@ function previewBanner(sendId, { reminder = false } = {}) {
     const heading = reminder ? 'Reminder: this email is still waiting for your OK' : 'Preview: only you got this'
     return {
         url: approveUrl,
-        html: `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#c8a24a;"><tr><td align="center" style="padding:16px;font-family:Arial,sans-serif;color:#121317;">
+        html: `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffe53b;"><tr><td align="center" style="padding:16px;font-family:Arial,sans-serif;color:#17181c;">
 <strong style="font-size:16px;">${heading}</strong><br>
 <span style="font-size:14px;">Nothing goes to subscribers until you approve it.</span><br>
-<a href="${approveUrl}" style="display:inline-block;margin-top:10px;background:#121317;color:#ffffff;padding:12px 22px;text-decoration:none;border-radius:4px;font-weight:bold;">Review &amp; approve</a>
+<a href="${approveUrl}" style="display:inline-block;margin-top:10px;background:#17181c;color:#ffffff;padding:12px 22px;text-decoration:none;border-radius:4px;font-weight:bold;">Review &amp; approve</a>
 </td></tr></table>`,
         text: `${heading.toUpperCase()}\nNothing goes to subscribers until you approve it.\nReview & approve: ${approveUrl}\n\n----------------------------------------\n`,
     }

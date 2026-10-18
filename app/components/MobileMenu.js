@@ -4,21 +4,22 @@ import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { NAV, isCurrent } from './NavLinks'
+import { NAV, MORE, isCurrent } from './NavLinks'
 import DafPicker from './DafPicker'
 import ThemeToggle from './ThemeToggle'
 import { LogoMark } from './Logo'
 import { dafYomiFor, todayInNewYork, hebrewNumeral, dayLabel } from '@/app/lib/shas'
 
 const LINKS = [
-    { ...NAV[0], match: ['/articles', '/daf/'] },
-    { href: '/beyond-the-daf', label: 'Beyond the Daf', match: ['/beyond-the-daf'] },
-    { href: '/stories', label: 'Gemara stories', match: ['/stories'] },
-    { href: '/people', label: 'Stories by sage', match: ['/people'] },
+    NAV[0],
+    NAV[1],
     NAV[2],
     NAV[3],
-    { href: '/daily/archive', label: 'Past discussions', match: ['/daily/archive'] },
-    { href: '/contact', label: 'About and contact', match: ['/contact'] },
+    { ...NAV[4], label: 'Gemara stories' },
+    MORE[0],
+    NAV[5],
+    MORE[1],
+    MORE[2],
 ]
 
 // Full-height menu for phones. Today's daf is worked out when the menu opens,
@@ -60,7 +61,7 @@ export default function MobileMenu() {
                 <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 bg-paper text-ink overflow-y-auto lg:hidden">
                     <div className="folio pb-8">
                         <div className="flex items-center justify-between py-2.5 border-b-[3px] border-double border-rule">
-                            <span className="flex items-center gap-2.5"><LogoMark className="w-9 h-9" /><span className="font-semibold text-[1.25rem] tracking-[-0.02em]">Daf Yomi Insights</span></span>
+                            <span className="flex items-center gap-2.5"><LogoMark className="w-9 h-9" /><span className="font-display text-[1.3rem]">Daf Yomi Insights</span></span>
                             <button ref={closeRef} type="button" className="btn-quiet" onClick={() => setOpen(false)}>Close</button>
                         </div>
                         <div className="grid gap-4 py-4 border-b border-rule-hard">

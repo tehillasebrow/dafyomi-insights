@@ -1,17 +1,17 @@
 // app/page.js
 import Link from 'next/link'
 import { supabase } from './lib/supabase'
-import { ARTICLE_LIST_COLUMNS, articlePath, articleOpening, dafLabel, formatArticleDate, onDaf, orderByPublished, readingMinutes } from './lib/articles'
+import { ARTICLE_LIST_COLUMNS, articlePath, articleOpening, dafLabel, dafPath, formatArticleDate, onDaf, orderByPublished, readingMinutes } from './lib/articles'
 import { STORY_CARD_COLUMNS } from './lib/stories'
 import { MASECHTOS, SEDARIM, findMasechta, masechtaHref, todayInNewYork, dafYomiFor, weekOfDafim, hebrewNumeral, dayLabel, siyumDate, formatDate } from './lib/shas'
 import { buildMetadata } from './lib/seo'
-import { TOPICS, countTopics, topicsFor, topicPath } from './lib/topics'
+import { TOPICS, countTopics, topicPath } from './lib/topics'
 import { DEFAULT_TITLE, DEFAULT_DESCRIPTION } from './lib/site'
 import StoryRow from './components/StoryRow'
 import { ArticleThumb } from './components/ArticleImage'
-import Luach from './components/Luach'
 import DafPicker from './components/DafPicker'
 import { AuthorStrip } from './components/Author'
+import { nearestDafArticle, coversDaf } from './lib/nearest'
 
 // Cached for 5 minutes, so today's daf turns over shortly after midnight in New York.
 // Publishing from /admin or the story pipeline refreshes it immediately.
@@ -23,13 +23,7 @@ export const metadata = buildMetadata({
     path: '/',
 })
 
-// Articles in a masechta whose range (daf..daf_end) overlaps from..to
-async function articlesOverlapping(masechta, from, to) {
-    const { data } = await orderByPublished(
-        supabase.from('articles').select(ARTICLE_LIST_COLUMNS).ilike('masechta', masechta).lte('daf', to).or(`daf.gte.${from},daf_end.gte.${from}`)
-    ).limit(3)
-    return data ?? []
-}
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Shabbos']
 
 const shortDate = a => formatArticleDate(a, { month: 'short', day: 'numeric', year: 'numeric' })
 
@@ -39,209 +33,200 @@ export default async function Home() {
     const week = weekOfDafim(today)
     const label = dayLabel(today)
 
-    // The week can span two masechtos
-    const spans = new Map()
-    for (const d of week) {
-        const s = spans.get(d.masechta.name) ?? { from: d.daf, to: d.daf }
-        spans.set(d.masechta.name, { from: Math.min(s.from, d.daf), to: Math.max(s.to, d.daf) })
-    }
-
-    const [recentRes, storiesRes, indexRes, ...weekLists] = await Promise.all([
+    // The lead: an article on today's daf, else the nearest daf from last week to next week
+    const [recentRes, storiesRes, indexRes, lead] = await Promise.all([
         orderByPublished(onDaf(supabase.from('articles').select(ARTICLE_LIST_COLUMNS))).limit(11),
         supabase.from('stories').select(STORY_CARD_COLUMNS).order('created_at', { ascending: false }).limit(3),
         supabase.from('articles').select('masechta, tags'),
-        ...[...spans].map(([name, r]) => articlesOverlapping(name, r.from, r.to)),
+        nearestDafArticle(today),
     ])
     const recent = recentRes.data ?? []
     const stories = storiesRes.data ?? []
     const index = indexRes.data ?? []
 
-    // This week's article: one covering today's daf, otherwise any covering this week's dafim
-    const weekArticles = weekLists.flat()
-    const covers = (a, name, daf) => findMasechta(a.masechta)?.name === name && a.daf <= daf && (a.daf_end ?? a.daf) >= daf
-    const weekArticle = weekArticles.find(a => covers(a, todays.masechta.name, todays.daf)) ?? weekArticles[0] ?? null
-    const featured = weekArticle ?? recent[0] ?? null
+    const featured = lead?.article ?? recent[0] ?? null
+    const kicker = lead ? lead.label : 'Recently added'
     const rest = recent.filter(a => a.id !== featured?.id)
-    const margin = rest.slice(0, 3)
-    const mosaic = rest.slice(0, 9)
-    const featuredMasechta = featured && findMasechta(featured.masechta)
+    const also = rest.slice(0, 4)
+    const more = rest.slice(4, 10).length >= 4 ? rest.slice(4, 10) : rest.slice(0, 6)
 
-    const coverage = weekArticle && findMasechta(weekArticle.masechta)
-        ? { masechta: findMasechta(weekArticle.masechta).name, from: weekArticle.daf, to: weekArticle.daf_end ?? weekArticle.daf, href: articlePath(weekArticle), label: "This week's article" }
-        : null
+    // This week's dafim that have the lead article, for the today panel
+    const leadCovers = d => lead && coversDaf(lead.article, d.masechta.name, d.daf)
 
-    // Shelf: the seder being learned now, each spine as wide as its masechta is long
+    // The seder being learned now, each masechta as a bar as long as the masechta
     const counts = new Map()
     for (const a of index) {
         const m = findMasechta(a.masechta)
         if (m) counts.set(m.name, (counts.get(m.name) ?? 0) + 1)
     }
     const seder = MASECHTOS.filter(m => m.seder === todays.masechta.seder && m.dafim > 8)
+    const longest = Math.max(...seder.map(m => m.dafim))
 
     // Most-used topics, by their clean names from data/topics.json
     const tagCounts = countTopics(index)
     const topTags = TOPICS
         .filter(t => tagCounts.get(t.slug))
         .map(t => [t, tagCounts.get(t.slug)])
-        .sort((a, b) => b[1] - a[1]).slice(0, 6).sort((a, b) => a[0].name.localeCompare(b[0].name))
+        .sort((a, b) => b[1] - a[1]).slice(0, 10)
 
     return (
-        <div data-home>
-            {/* The front page set as a daf: folio in the margin, the article in the Gemara block,
-                more reading in the Tosafos margin */}
-            {featured ? (
-                <div className="folio pt-6 md:pt-8 pb-8 md:pb-10">
-                    <p className="runhead">
-                        <span><b className="font-medium text-foil-ink">{weekArticle ? 'This week’s article' : 'Recently added'}</b> · {featured.masechta} {dafLabel(featured)} · {shortDate(featured)}</span>
-                        {featuredMasechta && <span lang="he" dir="rtl">מסכת {featuredMasechta.hebrew} · דף {hebrewNumeral(featured.daf)}</span>}
-                    </p>
-                    <div className="tzurah pt-5">
-                        <div className="tzurah-margin">
-                            <span lang="he" aria-hidden="true" className="numeral text-[3rem] lg:text-[6rem] leading-[0.85]">{hebrewNumeral(featured.daf)}</span>
+        <div data-home className="folio pt-6 md:pt-10 pb-10 grid gap-12 md:gap-16">
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 items-start">
+                {/* The lead article, set beside its daf numeral */}
+                {featured ? (
+                    <article className="grid gap-5 md:grid-cols-[8.5rem_minmax(0,1fr)] md:gap-x-8" aria-labelledby="lead-h">
+                        <div className="flex md:flex-col items-center md:items-start gap-3">
+                            {featured.masechta && <span lang="he" aria-hidden="true" className="numeral sticker text-[3rem] md:text-[4.5rem]">{hebrewNumeral(featured.daf)}</span>}
                             <p className="meta">
-                                {featured.masechta} {dafLabel(featured)}
+                                {featured.masechta ? `${featured.masechta} ${dafLabel(featured)}` : 'Beyond the Daf'}
                                 {featured.content && <><br />{readingMinutes(featured)} min read</>}
-                                {topicsFor(featured.tags).length > 0 && <span className="max-lg:hidden"><br />{topicsFor(featured.tags).slice(0, 3).map((t, i) => <span key={t.slug}>{i ? ', ' : ''}<Link href={topicPath(t)} className="inline-flex items-center min-h-11">{t.name}</Link></span>)}</span>}
                             </p>
                         </div>
-                        <article className="tzurah-gemara grid gap-4 content-start">
-                            <h1 className="font-medium text-[clamp(2.3rem,5.4vw,4rem)] leading-[1] tracking-[-0.02em] [font-variation-settings:'opsz'_72]">
-                                <Link href={articlePath(featured)} className="plain hover:underline">{featured.title}</Link>
+                        <div className="grid gap-5 content-start min-w-0">
+                            <p className="kicker">{kicker}{lead && lead.day.offset !== 0 ? ` · ${lead.day.masechta.name} ${lead.day.daf}` : ''}{!lead ? ` · ${shortDate(featured)}` : ''}</p>
+                            <h1 id="lead-h" className="text-[clamp(2.3rem,5.6vw,4.2rem)] leading-[1.05] lead-title">
+                                <Link href={articlePath(featured)} className="hl">{featured.title}</Link>
                             </h1>
-                            {featured.image_url && (
-                                <Link href={articlePath(featured)} tabIndex={-1} aria-hidden="true" className="block">
-                                    <ArticleThumb article={featured} priority className="aspect-[2/1]" sizes="(min-width: 1024px) 640px, 100vw" />
-                                </Link>
-                            )}
-                            <p className="text-lede text-ink-soft max-w-[52ch]">{articleOpening(featured, 320)}</p>
-                            <Link href={articlePath(featured)} className="btn justify-self-start">Read the article</Link>
-                        </article>
-                        {margin.length > 0 && (
-                            <aside aria-labelledby="also-h" className="tzurah-tosafos max-lg:hidden">
-                                <h2 id="also-h" className="text-ui font-semibold pb-1.5">Also recently</h2>
-                                <ul>
-                                    {margin.map(a => (
-                                        <li key={a.id} className="card grid-cols-[5.5rem_minmax(0,1fr)] gap-x-3 items-start py-3 border-t border-rule">
-                                            <ArticleThumb article={a} sizes="5.5rem" />
-                                            <div>
-                                                <p className="meta">{a.masechta} {dafLabel(a)}</p>
-                                                <h3 className="card-title text-[1.125rem]"><Link href={articlePath(a)}>{a.title}</Link></h3>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
+                            <Link href={articlePath(featured)} tabIndex={-1} aria-hidden="true" className="block">
+                                <ArticleThumb article={featured} priority className="aspect-[2/1]" sizes="(min-width: 1024px) 640px, 100vw" />
+                            </Link>
+                            <p className="text-lede text-ink-soft max-w-[54ch]">{articleOpening(featured, 320)}</p>
+                            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                                <Link href={articlePath(featured)} className="btn">Read the article</Link>
                                 <Link href="/articles" className="tap">All articles</Link>
-                            </aside>
-                        )}
-                    </div>
-                </div>
-            ) : (
-                <div className="folio py-10">
-                    <h1 className="font-medium text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.02] tracking-[-0.02em]">Daf Yomi Insights</h1>
-                    <p className="text-lede text-ink-soft mt-2">Articles are on their way. In the meantime, follow <Link href="/daily">today’s daf</Link>.</p>
-                </div>
-            )}
-
-            {/* The week, bound in black */}
-            <section aria-labelledby="week-h" className="on-binding border-t-2 border-foil">
-                <div className="folio py-6 grid gap-5 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-10 lg:items-center">
-                    <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 items-center">
-                        <span lang="he" aria-hidden="true" className="numeral text-[4rem] text-foil row-span-3">{hebrewNumeral(todays.daf)}</span>
-                        <p className="sc">Today{label ? ` · ${label.name}` : ''}</p>
-                        <h2 id="week-h" className="text-[1.5rem] leading-tight font-semibold">{todays.masechta.name} {todays.daf}</h2>
-                        <Link href="/daily" className="btn-quiet justify-self-start mt-2">Join today’s discussion</Link>
-                    </div>
-                    <Luach today={today} coverage={coverage} />
-                    <div className="lg:hidden"><DafPicker id="band-picker" initialMasechta={todays.masechta.name} initialDaf={todays.daf} /></div>
-                </div>
-            </section>
-
-            <div className="folio py-8 md:py-10 grid gap-10">
-                {/* More articles, picture first */}
-                {mosaic.length > 0 && (
-                    <section aria-labelledby="more-h" className={rest.length > 3 ? '' : 'lg:hidden'}>
-                        <div className="flex items-baseline justify-between gap-3 border-b border-rule-hard pb-2 mb-5">
-                            <h2 id="more-h" className="font-semibold text-h2 tracking-[-0.02em]">More articles</h2>
-                            <Link href="/articles" className="tap shrink-0 meta">All articles</Link>
+                            </div>
+                            {also.length > 0 && (
+                                <section aria-labelledby="also-h" className="max-md:hidden grid gap-2 pt-2">
+                                    <h2 id="also-h" className="font-serif text-ui font-bold">Also recently</h2>
+                                    <ul className="grid grid-cols-2 gap-3">
+                                        {also.map(a => (
+                                            <li key={a.id} className="index-card relative px-4 py-3 hover:border-foil-ink">
+                                                <p className="meta">{a.masechta ? `${a.masechta} ${dafLabel(a)}` : 'Beyond the Daf'}</p>
+                                                <h3 className="text-[1.1rem] leading-snug"><Link href={articlePath(a)} className="plain hover:underline after:absolute after:inset-0">{a.title}</Link></h3>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </section>
+                            )}
                         </div>
-                        <div className="mosaic">
-                            {mosaic.map((a, i) => (
-                                <article key={a.id} className={['card', i < 3 && 'lg:hidden', i === 0 && 'lead-sm', i === 3 && 'lead-lg', i >= 6 && 'as-row'].filter(Boolean).join(' ')}>
-                                    <ArticleThumb article={a} sizes={i === 0 || i === 3 ? '(min-width: 1024px) 760px, 100vw' : '(min-width: 1024px) 360px, 50vw'} />
-                                    <p className="meta">{a.masechta} {dafLabel(a)}<span className={i === 0 ? '' : 'max-lg:hidden'}> · {shortDate(a)}</span></p>
-                                    <h3 className={`card-title ${i === 0 ? 'max-lg:text-[clamp(1.5rem,5vw,2.1rem)] max-lg:leading-[1.08]' : ''} ${i === 3 ? 'lg:text-[2.1rem] lg:leading-[1.08]' : ''}`}><Link href={articlePath(a)}>{a.title}</Link></h3>
-                                    <p className={`card-text ${i === 0 ? '' : 'max-lg:[-webkit-line-clamp:2] max-lg:text-ui'}`}>{articleOpening(a, i === 0 || i === 3 ? 280 : 200)}</p>
-                                </article>
+                    </article>
+                ) : (
+                    <div className="grid gap-3">
+                        <h1 className="text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.05]"><span className="hl">Daf Yomi Insights</span></h1>
+                        <p className="text-lede text-ink-soft">Articles are on their way. In the meantime, follow <Link href="/daily">today’s daf</Link>.</p>
+                    </div>
+                )}
+
+                {/* Today's daf: the learner's place this week */}
+                <section aria-labelledby="today-h" className="today-panel">
+                    <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 items-center">
+                        <span lang="he" aria-hidden="true" className="numeral sticker sticker-tilt today-num row-span-2">{hebrewNumeral(todays.daf)}</span>
+                        <p className="text-small">Today · {formatDate(today, { weekday: 'long', month: 'long', day: 'numeric' })}{label ? ` · ${label.name}` : ''}</p>
+                        <h2 id="today-h" className="text-[1.75rem] leading-tight">{todays.masechta.name} {todays.daf}</h2>
+                    </div>
+                    <Link href="/daily" className="btn w-full">Join today’s discussion</Link>
+                    <ol className="week-rows" aria-label="This week’s dafim">
+                        {week.map((d, i) => (
+                            <li key={d.date.toISOString()}>
+                                <Link
+                                    href={d.isToday ? '/daily' : dafPath(d.masechta.name, d.daf)}
+                                    className="week-row"
+                                    aria-current={d.isToday ? 'date' : undefined}
+                                >
+                                    <span>{WEEKDAYS[i]}</span>
+                                    <span lang="he" aria-hidden="true" className="numeral">{hebrewNumeral(d.daf)}</span>
+                                    <span>{d.masechta.name !== todays.masechta.name ? `${d.masechta.name} ` : ''}{d.daf}</span>
+                                    <span className="week-tag">{d.isToday ? 'today' : leadCovers(d) ? 'article' : d.label?.short ?? ''}</span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ol>
+                    <p className="text-small flex items-baseline gap-2">Siyum {todays.masechta.name}<i className="flex-1 border-b border-dotted border-[#17181c] -translate-y-1" /><span className="whitespace-nowrap">{formatDate(siyumDate(todays.masechta, today), { weekday: 'short', month: 'short', day: 'numeric' })}</span></p>
+                </section>
+            </div>
+
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 items-start">
+                {/* More articles as index cards */}
+                {more.length > 0 && (
+                    <section aria-labelledby="more-h">
+                        <div className="sec-head">
+                            <h2 id="more-h" className="sec-title"><span className="hl">More articles</span></h2>
+                            <Link href="/articles" className="tap shrink-0">All articles</Link>
+                        </div>
+                        <ul className="grid gap-4 sm:grid-cols-2">
+                            {more.map(a => (
+                                <li key={a.id} className="index-card relative grid gap-2 content-start p-5 hover:border-foil-ink">
+                                    <div className="flex items-start justify-between gap-3 pb-2 border-b-[3px] border-double border-rule-hard">
+                                        <p className="meta">{a.masechta ? `${a.masechta} ${dafLabel(a)}` : 'Beyond the Daf'} · {shortDate(a)}</p>
+                                        {a.masechta && <span lang="he" aria-hidden="true" className="numeral text-[1.6rem] text-foil-ink shrink-0">{hebrewNumeral(a.daf)}</span>}
+                                    </div>
+                                    <h3 className="card-title"><Link href={articlePath(a)} className="plain hover:underline after:absolute after:inset-0">{a.title}</Link></h3>
+                                    <p className="card-text text-[1.05rem]">{articleOpening(a, 200)}</p>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
                     </section>
                 )}
 
-                <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:gap-x-10">
-                    {stories.length > 0 && (
-                        <section aria-labelledby="stories-h">
-                            <div className="flex items-baseline justify-between gap-3 border-b border-rule-hard pb-2">
-                                <h2 id="stories-h" className="font-semibold text-h2 tracking-[-0.02em]">Stories from the Gemara</h2>
-                                <Link href="/stories" className="tap shrink-0 meta">All stories</Link>
-                            </div>
-                            {stories.map(s => <StoryRow key={s.id} story={s} />)}
-                        </section>
-                    )}
-                    <div className="grid gap-5 content-start lg:col-start-2 lg:border-l lg:border-rule lg:pl-8">
-                        <div className="max-lg:hidden"><DafPicker id="home-picker" initialMasechta={todays.masechta.name} initialDaf={todays.daf} /></div>
-                        <p className="flex items-baseline gap-2 min-h-11 py-2">Siyum on {todays.masechta.name}<i className="flex-1 border-b border-dotted border-ink-soft -translate-y-1" /><span className="meta whitespace-nowrap">{formatDate(siyumDate(todays.masechta, today), { weekday: 'short', month: 'short', day: 'numeric' })}</span></p>
-                    </div>
-                </div>
-            </div>
-
-            {/* The shelf */}
-            <section aria-label="Browse" className="bg-paper-sunk border-y border-rule">
-                <div className="folio py-8 grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:gap-12">
-                    <div>
-                        <h2 className="font-semibold text-h2 tracking-[-0.02em]">Masechtos</h2>
-                        <p className="meta mt-1"><span lang="he" className="text-[1.05rem] text-ink">סדר {SEDARIM.find(x => x.name === todays.masechta.seder)?.hebrew}</span> · Seder {todays.masechta.seder}, being learned now</p>
-                        <ol className="flex flex-wrap items-end gap-1 pt-4" aria-label={`Seder ${todays.masechta.seder}`}>
+                {/* Masechtos and topics, read left to right */}
+                <aside className="grid gap-10 content-start">
+                    <section aria-labelledby="seder-h">
+                        <div className="sec-head">
+                            <h2 id="seder-h" className="sec-title"><span className="hl">Seder {todays.masechta.seder}</span> <span lang="he" className="numeral text-[1.1rem] text-foil-ink">{SEDARIM.find(x => x.name === todays.masechta.seder)?.hebrew}</span></h2>
+                        </div>
+                        <ul className="grid gap-1.5">
                             {seder.map(m => {
                                 const n = counts.get(m.name) ?? 0
                                 const now = m.name === todays.masechta.name
-                                const Spine = n ? Link : 'span'
                                 return (
                                     <li key={m.name}>
-                                        <Spine
-                                            href={n ? masechtaHref(m.name) : undefined}
-                                            aria-label={`${m.name}${now ? ', learning now' : ''}, ${n} ${n === 1 ? 'article' : 'articles'}`}
-                                            className={`plain flex flex-col items-center justify-between h-[9rem] py-2 px-1 border-t-2 ${n ? 'on-binding border-foil' : 'border-rule text-ink-soft outline outline-1 -outline-offset-1 outline-rule hover:bg-paper'} ${now ? 'outline-2 outline outline-foil-ink outline-offset-2' : ''}`}
-                                            style={{ width: `${44 + Math.round((m.dafim / 176) * 28)}px` }}
+                                        <Link
+                                            href={masechtaHref(m.name)}
+                                            className={`seder-bar ${now ? 'is-now' : ''}`}
+                                            style={{ '--len': `${Math.round((m.dafim / longest) * 100)}%` }}
                                         >
-                                            <span className="[writing-mode:vertical-rl] rotate-180 text-ui">{m.name}</span>
-                                            <span className="font-mono text-small text-foil">{n || ''}</span>
-                                        </Spine>
+                                            <span className="font-semibold">{m.name}{now && <span className="text-foil-ink"> · now</span>}</span>
+                                            <span lang="he" className="numeral ms-auto">{m.hebrew}</span>
+                                            <span className="text-small w-[5.5rem] text-right">{n} {n === 1 ? 'article' : 'articles'}</span>
+                                        </Link>
                                     </li>
                                 )
                             })}
-                        </ol>
-                        <Link href="/masechtos" className="tap meta">All masechtos</Link>
-                    </div>
+                        </ul>
+                        <div className="mt-4"><DafPicker id="home-picker" initialMasechta={todays.masechta.name} initialDaf={todays.daf} /></div>
+                        <Link href="/masechtos" className="tap">All masechtos</Link>
+                    </section>
                     {topTags.length > 0 && (
-                        <div>
-                            <h2 className="font-semibold text-h2 tracking-[-0.02em]">Topics</h2>
-                            <ul className="mt-2">
+                        <section aria-labelledby="topics-h">
+                            <div className="sec-head">
+                                <h2 id="topics-h" className="sec-title"><span className="hl">Browse by topic</span></h2>
+                            </div>
+                            <ul className="grid">
                                 {topTags.map(([topic, n]) => (
                                     <li key={topic.slug}>
-                                        <Link href={topicPath(topic)} className="plain flex items-baseline gap-2 min-h-11 py-2 text-[1.08rem] hover:underline">
-                                            {topic.name}<i className="flex-1 border-b border-dotted border-ink-soft -translate-y-1" /><span className="meta whitespace-nowrap">{n}</span>
+                                        <Link href={topicPath(topic)} className="plain flex items-baseline gap-2 min-h-11 py-2 border-b border-rule hover:underline">
+                                            {topic.name}<span className="ms-auto meta">{n}</span>
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
-                            <Link href="/topics" className="tap meta">All topics</Link>
-                        </div>
+                            <Link href="/topics" className="tap">All topics</Link>
+                        </section>
                     )}
-                </div>
-            </section>
+                </aside>
+            </div>
 
-            <div className="folio py-8"><AuthorStrip /></div>
+            {stories.length > 0 && (
+                <section aria-labelledby="stories-h">
+                    <div className="sec-head">
+                        <h2 id="stories-h" className="sec-title"><span className="hl">Stories from the Gemara</span></h2>
+                        <Link href="/stories" className="tap shrink-0">All stories</Link>
+                    </div>
+                    {stories.map(s => <StoryRow key={s.id} story={s} />)}
+                </section>
+            )}
+
+            <AuthorStrip />
         </div>
     )
 }
-

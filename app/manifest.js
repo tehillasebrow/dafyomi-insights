@@ -5,8 +5,8 @@ export default function manifest() {
         description: 'Daf Yomi articles and insights by Rabbi Avrohom Sebrow.',
         start_url: '/',
         display: 'standalone',
-        background_color: '#f5f5f2',
-        theme_color: '#1c1e23',
+        background_color: '#f6f7f3',
+        theme_color: '#17181c',
         icons: [
             { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
             { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },

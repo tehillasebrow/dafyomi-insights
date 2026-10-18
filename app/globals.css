@@ -2,81 +2,99 @@
 @plugin "@tailwindcss/typography";
 
 /*
- * Daf Yomi Insights: the Vilna Shas as an object, with a shul luach's clarity.
- * Paper and ink inside, black binding and gold foil outside.
+ * Daf Yomi Insights: "Highlighter Shiur". The yellow marker every chavrusa runs across the page,
+ * black ink, and the blue ballpoint in the margin. Chosen 2026-10-17; see DESIGN.md.
  * Every colour, size and face on the site is defined here.
  *
- * Accessibility notes: ink/paper 16:1, soft/paper 11:1, faint/paper 8:1,
- * foil-ink/paper 5.8:1, foil/binding 6.9:1, binding-soft/binding 9:1, field borders 4.5:1.
- * Gold (--foil) is never used for text on paper, and never as the only signal of meaning.
+ * Budget: yellow (--foil, --mark) is for highlights, today's daf and the band; blue (--foil-ink)
+ * is the one small accent: daf numbers in lists, small labels, story sources, the current page,
+ * focus. Body text is always ink on paper. Contrast: ink/paper 17:1, soft/paper 10:1,
+ * faint/paper 6.6:1, blue/paper 8.6:1, ink/yellow 15:1, yellow/black 15:1.
+ * Old token names (binding, foil) are kept so every page follows: binding = black, foil = yellow.
  */
 
 :root {
     color-scheme: light dark;
 
-    --paper: #f5f5f2;
-    --paper-sunk: #e8e7e1;
-    --ink: #121317;
-    --ink-soft: #313339;
-    --ink-faint: #45474e;
-    --rule: #bfbeb6;
-    --rule-hard: #121317;
-    --field: #6a6963;
-    --binding: #1c1e23;
-    --binding-ink: #f1eee5;
-    --binding-soft: #c9c6bc;
-    --binding-line: #6b6d73;
-    --foil: #c8a24a;
-    --foil-ink: #7a5b12;
-    --mark: rgb(200 162 74 / 0.6);
-    --focus: #7a5b12;
+    --paper: #f6f7f3;
+    --paper-sunk: #ebede5;
+    --surface: #fdfdfa;
+    --ink: #17181c;
+    --ink-soft: #3d4048;
+    --ink-faint: #565a63;
+    --rule: #d6d8cf;
+    --rule-hard: #17181c;
+    --field: #565a63;
+    --binding: #17181c;
+    --binding-ink: #fdfdfa;
+    --binding-soft: #cfd1c8;
+    --binding-line: #5a5d64;
+    --foil: #ffe53b;
+    --foil-ink: #1e3fae;
+    --mark: #fff07a;
+    --focus: #1e3fae;
+    --on-foil: #17181c;
+    --btn-bg: #17181c;
+    --btn-ink: #ffe53b;
+    --btn-hover: #2c2e33;
 
     &:has(> head > meta[name="color-scheme"][content="light"]) { color-scheme: light; }
     &:has(> head > meta[name="color-scheme"][content="dark"]) { color-scheme: dark; }
 }
 
-/* Night reading, designed on its own: lamp-black paper, softened ink to cut glare,
-   warmer gold so it carries without glowing. */
+/* Night reading: a lamp-lit desk. Ink stays warm and soft, the highlighter stays yellow,
+   the ballpoint turns a lighter blue so it reads on the dark page. */
 @media (prefers-color-scheme: dark) {
     :root:not(:has(> head > meta[name="color-scheme"][content="light"])) {
-        --paper: #18191c;
-        --paper-sunk: #202125;
-        --ink: #ece8de;
-        --ink-soft: #d3d0c7;
-        --ink-faint: #b3b0a7;
-        --rule: #3b3c42;
-        --rule-hard: #8c8d93;
-        --field: #75767c;
-        --binding: #0b0c0e;
-        --binding-ink: #ebe8de;
-        --binding-soft: #bdbab1;
-        --foil: #d6b463;
-        --foil-ink: #d6b463;
-        --mark: rgb(214 180 99 / 0.3);
-        --focus: #d6b463;
+        --paper: #17181c;
+        --paper-sunk: #212328;
+        --surface: #1d1f23;
+        --ink: #f1f0e8;
+        --ink-soft: #d6d5cc;
+        --ink-faint: #b4b3aa;
+        --rule: #3a3c42;
+        --rule-hard: #a9aaa3;
+        --field: #8b8c93;
+        --binding: #0d0e10;
+        --binding-ink: #f1f0e8;
+        --binding-soft: #c4c3ba;
+        --binding-line: #4a4c52;
+        --foil: #ffe53b;
+        --foil-ink: #a9c1ff;
+        --mark: #5b5212;
+        --focus: #a9c1ff;
+        --btn-bg: #ffe53b;
+        --btn-ink: #17181c;
+        --btn-hover: #fff07a;
     }
 }
 :root:has(> head > meta[name="color-scheme"][content="dark"]) {
-    --paper: #18191c;
-    --paper-sunk: #202125;
-    --ink: #ece8de;
-    --ink-soft: #d3d0c7;
-    --ink-faint: #b3b0a7;
-    --rule: #3b3c42;
-    --rule-hard: #8c8d93;
-    --field: #75767c;
-    --binding: #0b0c0e;
-    --binding-ink: #ebe8de;
-    --binding-soft: #bdbab1;
-    --foil: #d6b463;
-    --foil-ink: #d6b463;
-    --mark: rgb(214 180 99 / 0.3);
-    --focus: #d6b463;
+    --paper: #17181c;
+    --paper-sunk: #212328;
+    --surface: #1d1f23;
+    --ink: #f1f0e8;
+    --ink-soft: #d6d5cc;
+    --ink-faint: #b4b3aa;
+    --rule: #3a3c42;
+    --rule-hard: #a9aaa3;
+    --field: #8b8c93;
+    --binding: #0d0e10;
+    --binding-ink: #f1f0e8;
+    --binding-soft: #c4c3ba;
+    --binding-line: #4a4c52;
+    --foil: #ffe53b;
+    --foil-ink: #a9c1ff;
+    --mark: #5b5212;
+    --focus: #a9c1ff;
+    --btn-bg: #ffe53b;
+    --btn-ink: #17181c;
+    --btn-hover: #fff07a;
 }
 
 @theme inline {
     --color-paper: var(--paper);
     --color-paper-sunk: var(--paper-sunk);
+    --color-surface: var(--surface);
     --color-ink: var(--ink);
     --color-ink-soft: var(--ink-soft);
     --color-ink-faint: var(--ink-faint);
@@ -88,13 +106,17 @@
     --color-binding-soft: var(--binding-soft);
     --color-foil: var(--foil);
     --color-foil-ink: var(--foil-ink);
+    --color-mark: var(--mark);
 
-    /* Latin from Newsreader; Hebrew falls through to Frank Ruhl Libre. */
-    --font-serif: var(--font-newsreader), var(--font-frank-ruhl), Georgia, serif;
+    /* Literata for reading; Hebrew falls through to Frank Ruhl Libre. */
+    --font-serif: var(--font-literata), var(--font-frank-ruhl), Georgia, serif;
+    /* Suez One: titles, and every Hebrew daf numeral. One weight only, never synthesised bold. */
+    --font-display: var(--font-suez), var(--font-frank-ruhl), Georgia, serif;
+    --font-numeral: var(--font-suez), var(--font-frank-ruhl), serif;
     --font-hebrew: var(--font-frank-ruhl), Georgia, serif;
     --font-rashi: var(--font-rashi), var(--font-frank-ruhl), serif;
-    /* The printer's notes: running heads, dates, labels and buttons. */
-    --font-mono: var(--font-plex-mono), ui-monospace, "Cascadia Mono", monospace;
+    /* Labels, dates and buttons used a typewriter face; they now use the reading face. */
+    --font-mono: var(--font-literata), var(--font-frank-ruhl), Georgia, serif;
 }
 
 /* Type scale: perfect fourth from an 18px reading size. Nothing on the site is under 14px. */
@@ -143,7 +165,7 @@
         font-size: var(--text-body);
         line-height: 1.6;
         font-optical-sizing: auto;
-        font-variant-numeric: oldstyle-nums proportional-nums;
+        font-variant-numeric: lining-nums proportional-nums;
     }
 
     :lang(he) {
@@ -155,16 +177,18 @@
     :is(p, li, h1, h2, h3) > [lang="he"]:not(.numeral) { font-size: 1.12em; }
 
     h1, h2, h3, h4 { text-wrap: balance; }
+    /* Titles in Suez One. It has one weight, so a bold class never fakes a heavier one. */
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 400; font-synthesis: none; letter-spacing: -0.01em; }
     p { text-wrap: pretty; }
 
     a { color: inherit; text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
-    a:hover { text-decoration-thickness: 2px; }
+    a:hover { text-decoration-thickness: 2px; text-decoration-color: var(--foil-ink); }
 
-    ::selection { background: var(--foil); color: #1c1e23; }
+    ::selection { background: var(--foil); color: #17181c; }
 
-    :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
-    mark { background: var(--mark); color: inherit; padding-inline: 1px; }
+    mark { background: linear-gradient(transparent 45%, var(--mark) 45% 92%, transparent 92%); color: inherit; padding-inline: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 
     /* The search sheet has its own Close button */
     input[type="search"]::-webkit-search-cancel-button { appearance: none; }
@@ -200,19 +224,24 @@
         padding-bottom: 0.375rem; border-bottom: 1px solid var(--rule-hard);
         font-family: var(--font-mono); font-size: var(--text-small); color: var(--ink-soft);
     }
-    .runhead [lang="he"] { font-family: var(--font-hebrew); font-size: 1.25rem; font-weight: 500; color: var(--ink); }
+    .runhead [lang="he"] { font-family: var(--font-numeral); font-size: 1.25rem; font-weight: 400; color: var(--ink); }
 
     /* An article's picture, or when it has none, its daf stamped in gold on the binding */
     .plate {
         position: relative; display: grid; place-content: center; justify-items: center; gap: 0.25em;
         aspect-ratio: 3 / 2; width: 100%; overflow: hidden;
-        background: var(--binding); color: var(--foil);
+        background-color: var(--paper-sunk); color: var(--ink);
         container-type: inline-size;
     }
-    .plate-num { font-family: var(--font-hebrew); font-weight: 500; line-height: 0.9; font-size: clamp(1.75rem, 34cqi, 7rem); }
-    .plate-name { font-family: var(--font-hebrew); font-size: clamp(0.95rem, 9cqi, 1.375rem); color: var(--binding-ink); }
+    .plate-num { font-family: var(--font-numeral); font-weight: 400; line-height: 0.9; font-size: clamp(1.75rem, 34cqi, 7rem); }
+    .plate-name { font-family: var(--font-numeral); font-size: clamp(0.95rem, 9cqi, 1.375rem); color: var(--ink-soft); }
     @container (width < 7rem) { .plate-name { display: none; } }
-    .plate:not(:has(img))::after { content: ""; position: absolute; inset: 5cqi; border: 1px solid rgb(200 162 74 / 0.45); pointer-events: none; }
+    /* No photo: the daf on a primer of shapes (black quarter circle, yellow corner, blue square) */
+    .plate:not(:has(img)) {
+        border: 1px solid var(--rule-hard);
+        background-image: radial-gradient(circle at 0 0, var(--ink) 0 24%, transparent 24.3%), linear-gradient(to bottom left, var(--foil) 0 50%, transparent 50%), linear-gradient(var(--foil-ink), var(--foil-ink));
+        background-repeat: no-repeat; background-size: 100% 100%, 22% 44%, 13% 28%; background-position: 0 0, 100% 0, 100% 100%;
+    }
     /* Blurred copy of a photo behind it, filling the frame around a tall or wide picture */
     .photo-fill { object-fit: cover; filter: blur(24px) brightness(0.85); transform: scale(1.2); }
     @media (prefers-reduced-motion: no-preference) {
@@ -226,41 +255,46 @@
     .tap { display: inline-flex; align-items: center; min-height: 44px; }
 
     /* Primary action: a solid ink block. */
+    /* Primary action: black ink with highlighter-yellow letters. One per screen. */
     .btn {
         display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
         min-height: 48px; padding: 0 1.25rem;
-        background: var(--ink); color: var(--paper);
-        font-family: var(--font-mono); font-weight: 500; font-size: 0.9375rem;
+        background: var(--btn-bg); color: var(--btn-ink); border: 2px solid var(--btn-bg);
+        font-family: var(--font-serif); font-weight: 700; font-size: 1rem;
         border-radius: var(--radius-control); text-decoration: none;
-        transition: background-color 0.15s;
+        transition: background-color 0.15s, transform 0.1s;
     }
-    .btn:hover { background: var(--ink-soft); text-decoration: none; }
+    .btn:hover { background: var(--btn-hover); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; text-decoration-color: currentColor; }
+    .btn:active { transform: translateY(1px); }
     .btn:disabled, .btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
 
     /* Secondary action: outlined; fills on hover. */
     .btn-quiet {
         display: inline-flex; align-items: center; gap: 0.5rem;
         min-height: 44px; padding: 0 0.875rem;
-        border: 1px solid var(--field); border-radius: var(--radius-control);
-        background: var(--paper); color: var(--ink);
-        font-family: var(--font-mono); font-size: 0.9375rem; text-decoration: none; cursor: pointer;
+        border: 2px solid var(--ink); border-radius: var(--radius-control);
+        background: transparent; color: var(--ink);
+        font-family: var(--font-serif); font-weight: 600; font-size: 1rem; text-decoration: none; cursor: pointer;
         transition: background-color 0.15s;
     }
-    .btn-quiet:hover { background: var(--paper-sunk); text-decoration: none; }
+    .btn-quiet:hover { background: var(--mark); text-decoration: none; }
+    .btn-quiet:active { transform: translateY(1px); }
+    @media (width < 40rem) { .btn-quiet { padding-inline: 0.6rem; } }
     .on-binding .btn-quiet { background: transparent; color: var(--binding-ink); border-color: var(--binding-line); }
-    .on-binding .btn-quiet:hover { background: #2a2c32; }
+    .on-binding .btn-quiet:hover { background: #2c2e33; }
     .on-binding nav a { color: var(--binding-ink); }
 
     .chip {
         display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.875rem;
-        border: 1px solid var(--field); border-radius: var(--radius-control);
+        border: 1px solid var(--rule-hard); border-radius: var(--radius-control);
         font-size: var(--text-ui); text-decoration: none;
     }
-    .chip:hover { background: var(--paper-sunk); text-decoration: none; }
+    .chip:hover { background: var(--mark); text-decoration: none; }
+    .chip[aria-current], .chip[aria-pressed="true"] { background: var(--foil); color: #17181c; border-color: #17181c; font-weight: 600; }
 
     .field {
-        width: 100%; min-height: 48px; padding: 0.6875rem 0.75rem;
-        background: var(--paper); color: var(--ink);
+        width: 100%; min-height: 52px; padding: 0.75rem 1rem;
+        background: var(--surface); color: var(--ink);
         border: 1px solid var(--field); border-radius: var(--radius-control);
         font: inherit; font-size: 1.0625rem;
     }
@@ -277,17 +311,32 @@
     }
 
     /* Hebrew numerals used as folio marks. */
-    .numeral { font-family: var(--font-hebrew); font-weight: 500; line-height: 1; font-variant-numeric: normal; }
+    .numeral { font-family: var(--font-numeral); font-weight: 400; line-height: 1; font-variant-numeric: normal; font-synthesis: none; }
+    /* A daf numeral as a yellow sticker: the site's signature */
+    .sticker { display: inline-block; background: var(--foil); color: #17181c; border: 5px solid var(--surface); border-radius: 6px; padding: 0.08em 0.22em 0.02em; box-shadow: 0 2px 6px rgb(23 24 28 / 0.22); }
+    .sticker-tilt { transform: rotate(-3deg); }
+    /* Highlighter behind a title: the marker stroke sits under the lower half of the letters */
+    .hl { background: linear-gradient(transparent 52%, var(--mark) 52% 92%, transparent 92%); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding-inline: 0.06em; }
+    a.hl, .hl a { text-decoration: none; }
+    a.hl:hover, .hl a:hover { text-decoration: underline; text-decoration-color: var(--foil-ink); text-decoration-thickness: 3px; }
+    /* Small blue label above a title */
+    .kicker { font-size: var(--text-small); font-weight: 600; color: var(--foil-ink); }
+    /* An index card: something you can open on its own */
+    .index-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; box-shadow: 0 1px 3px rgb(23 24 28 / 0.08); }
 
     .rule-double { border-top: 3px double var(--rule); }
 
     /* A list row: one pattern for articles and stories everywhere. */
     .row {
         display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); column-gap: 0.875rem; row-gap: 0.25rem;
-        padding-block: 1rem; border-bottom: 1px solid var(--rule); align-items: baseline;
+        padding: 1rem 1.25rem; margin-bottom: 0.75rem; align-items: baseline;
+        background: var(--surface); border: 1px solid var(--rule); border-radius: 4px;
+        box-shadow: 0 1px 3px rgb(23 24 28 / 0.08);
     }
+    .row:hover { border-color: var(--foil-ink); }
     .row-num { font-size: 1.875rem; grid-row: span 3; }
-    .row-title { font-weight: 600; font-size: var(--text-h3); line-height: 1.2; }
+    .row-num.numeral { color: var(--foil-ink); }
+    .row-title { font-size: var(--text-h3); line-height: 1.2; }
     .row-title a { text-decoration: none; }
     .row-title a:hover { text-decoration: underline; }
     .row-title a::after { content: ""; position: absolute; inset: 0; } /* whole row is the link target */
@@ -342,7 +391,7 @@
 
     /* Picture-led article card for the home page */
     .card { position: relative; display: grid; gap: 0.5rem; align-content: start; }
-    .card-title { font-weight: 600; font-size: var(--text-h3); line-height: 1.18; letter-spacing: -0.01em; }
+    .card-title { font-size: var(--text-h3); line-height: 1.18; letter-spacing: -0.01em; }
     .card-title a { text-decoration: none; }
     .card-title a::after { content: ""; position: absolute; inset: 0; }
     .card:hover .card-title a { text-decoration: underline; }
@@ -358,16 +407,16 @@
     .luach-day:hover { background: var(--paper-sunk); text-decoration: none; }
     .luach-day:nth-child(6) { border-right: 3px double var(--rule-hard); }
     .luach-day:nth-child(7) { border-right: 0; }
-    .luach-day[aria-current="date"] { background: var(--foil); color: #1c1e23; --focus: var(--ink); }
-    .luach-day[aria-current="date"] :is(.luach-daf, .luach-sub, .luach-wd, .luach-label) { color: #1c1e23; }
+    .luach-day[aria-current="date"] { background: var(--foil); color: #17181c; --focus: #17181c; box-shadow: inset 0 0 0 2px #17181c; }
+    .luach-day[aria-current="date"] :is(.luach-daf, .luach-sub, .luach-wd, .luach-label) { color: #17181c; }
     .luach-wd { font-size: 1rem; color: var(--ink-soft); }
-    .luach-daf { font-family: var(--font-hebrew); font-weight: 500; font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.15; }
+    .luach-daf { font-family: var(--font-numeral); font-weight: 400; font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.15; }
     .luach-sub { font-size: 1rem; color: var(--ink-soft); line-height: 1.3; }
     .luach-label { font-size: 0.9375rem; font-weight: 600; line-height: 1.3; }
     .luach-span {
         grid-row: 2; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
         min-height: 32px; margin: 0; padding: 0.25rem 0.625rem;
-        background: var(--foil); color: #1c1e23; font-size: 1rem; font-weight: 600; text-decoration: none;
+        background: var(--foil); color: #17181c; font-size: 1rem; font-weight: 600; text-decoration: none;
     }
     .luach-span:hover { text-decoration: underline; }
 
@@ -375,16 +424,64 @@
     .on-binding .luach { border-block-color: var(--binding-line); }
     .on-binding .luach-day { border-right-color: #34363c; color: var(--binding-ink); }
     .on-binding .luach-day:nth-child(6) { border-right-color: var(--binding-line); }
-    .on-binding .luach-day:hover { background: #2a2c32; }
+    .on-binding .luach-day:hover { background: #2c2e33; }
     .on-binding .luach-wd, .on-binding .luach-sub { color: var(--binding-soft); }
     .on-binding .luach-day[aria-current="date"] { background: var(--foil); }
     .on-binding .luach-span { background: transparent; color: var(--binding-ink); border-top: 2px solid var(--foil); }
+
+
+    /* Main menu: the current page gets a highlighter stroke and a blue dot */
+    .nav-a {
+        display: inline-flex; align-items: center; min-height: 44px; padding-inline: 0.55rem;
+        font-size: 1.03rem; color: var(--ink); text-decoration: none; white-space: nowrap; cursor: pointer;
+    }
+    .nav-a:hover { text-decoration: underline; text-decoration-color: var(--foil-ink); text-decoration-thickness: 2px; text-underline-offset: 0.35em; }
+    .nav-a[aria-current="page"], .nav-a[data-current] { font-weight: 700; background: linear-gradient(transparent 56%, var(--mark) 56% 88%, transparent 88%); }
+    .nav-a[aria-current="page"]::before { content: "•"; color: var(--foil-ink); margin-right: 0.35em; }
+
+    /* Section heads: a highlighted title over a single rule */
+    .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; padding-bottom: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--rule-hard); }
+    .sec-title { font-size: clamp(1.6rem, 3vw, 2rem); line-height: 1.1; }
+
+    /* Today's daf panel on the home page: a yellow card with the week as plain rows */
+    .today-panel { display: grid; gap: 1rem; padding: 1.25rem; background: var(--foil); color: #17181c; border-radius: 4px; --focus: #17181c; }
+    .today-panel a:not(.btn) { color: #17181c; }
+    .today-panel .btn { background: #17181c; color: #ffe53b; border-color: #17181c; }
+    .today-panel .btn:hover { background: #2c2e33; }
+    .today-num { font-size: 3.4rem; border-color: #fdfdfa; }
+    .week-rows { display: grid; gap: 0.25rem; }
+    .week-row {
+        display: grid; grid-template-columns: 5.6rem 2.6rem minmax(0, 1fr) auto; align-items: center; gap: 0.5rem;
+        min-height: 44px; padding: 0.25rem 0.75rem; border-radius: 3px;
+        background: rgb(23 24 28 / 0.07); text-decoration: none; font-size: 0.98rem;
+    }
+    .week-row .numeral { font-size: 1.3rem; }
+    .week-row:hover { background: rgb(23 24 28 / 0.14); text-decoration: none; }
+    .week-row[aria-current="date"] { background: #17181c; color: #ffe53b !important; font-weight: 700; }
+    .week-tag { font-size: 0.8rem; font-weight: 700; }
+    .week-row[aria-current="date"] .week-tag { background: #ffe53b; color: #17181c; padding: 0 0.4rem; border-radius: 3px; }
+
+    /* A masechta as a bar as long as the masechta, read left to right */
+    .seder-bar {
+        display: flex; align-items: center; gap: 0.75rem; min-height: 44px; padding: 0.4rem 0.75rem;
+        border: 1px solid var(--rule); border-radius: 3px; text-decoration: none;
+        background: linear-gradient(to right, var(--mark) var(--len), var(--surface) 0);
+    }
+    .seder-bar .numeral { font-size: 1.1rem; }
+    .seder-bar:hover { border-color: var(--foil-ink); text-decoration: none; }
+    .seder-bar.is-now { border: 2px solid var(--ink); }
 
     /* Article text, set like the centre column of a daf. */
 
     .crumbs { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.5rem; font-family: var(--font-mono); font-size: var(--text-small); color: var(--ink-soft); }
     .crumbs a { min-height: 44px; display: inline-flex; align-items: center; }
 }
+
+/* The lead title is highlighted once, as if with a marker, when the home page opens. */
+@media (prefers-reduced-motion: no-preference) {
+    .lead-title .hl { animation: marker-swipe 0.6s ease-out 0.2s both; background-repeat: no-repeat; }
+}
+@keyframes marker-swipe { from { background-size: 0% 100%; } to { background-size: 100% 100%; } }
 
 /* The logo assembles once, on the home page. */
 @media (prefers-reduced-motion: no-preference) {

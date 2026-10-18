@@ -6,9 +6,9 @@ import { SITE_NAME, AUTHOR } from '@/app/lib/site'
 
 export const OG_SIZE = { width: 1200, height: 630 }
 
-const INK = '#1c1e23'
-const GOLD = '#c8a24a'
-const PAPER = '#f5f5f2'
+const INK = '#17181c'
+const GOLD = '#ffe53b'
+const PAPER = '#f6f7f3'
 
 function Mark() {
     return (

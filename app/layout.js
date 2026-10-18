@@ -1,5 +1,5 @@
 import './globals.css'
-import { Newsreader, Frank_Ruhl_Libre, Noto_Rashi_Hebrew, IBM_Plex_Mono } from 'next/font/google'
+import { Suez_One, Literata, Frank_Ruhl_Libre, Noto_Rashi_Hebrew } from 'next/font/google'
 import SiteHeader from './components/SiteHeader'
 import SiteFooter from './components/SiteFooter'
 import SubscribePopup from './components/SubscribePopup'
@@ -50,15 +50,15 @@ export const metadata = {
     },
 }
 
-// Newsreader carries Latin only, and no metric fallback: the fallback (Times) has Hebrew
-// glyphs and would win over Frank Ruhl for Hebrew text.
-const newsreader = Newsreader({ subsets: ['latin'], axes: ['opsz'], style: ['normal', 'italic'], variable: '--font-newsreader', adjustFontFallback: false, display: 'swap' })
+// Suez One sets titles and Hebrew daf numerals; Literata carries the reading. Literata has no
+// Hebrew and no metric fallback, so Hebrew text falls through to Frank Ruhl, not Times.
 const frankRuhl = Frank_Ruhl_Libre({ subsets: ['hebrew'], weight: ['400', '500', '700'], variable: '--font-frank-ruhl', adjustFontFallback: false, display: 'swap' })
 const rashi = Noto_Rashi_Hebrew({ subsets: ['hebrew'], weight: ['400', '500'], variable: '--font-rashi', adjustFontFallback: false, display: 'swap' })
-const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-plex-mono', display: 'swap' })
+const suez = Suez_One({ subsets: ['latin', 'hebrew'], weight: '400', variable: '--font-suez', adjustFontFallback: false, display: 'swap' })
+const literata = Literata({ subsets: ['latin'], axes: ['opsz'], style: ['normal', 'italic'], variable: '--font-literata', adjustFontFallback: false, display: 'swap' })
 
 export const viewport = {
-    themeColor: '#1c1e23',
+    themeColor: '#ffe53b',
 }
 
 // Applies a saved night/day choice before the first paint. It only updates the meta tag;
@@ -67,7 +67,7 @@ const THEME_SCRIPT = `try{var s=localStorage.getItem("color-scheme");if(s)docume
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en" className={`${newsreader.variable} ${frankRuhl.variable} ${rashi.variable} ${plexMono.variable}`} suppressHydrationWarning>
+        <html lang="en" className={`${suez.variable} ${literata.variable} ${frankRuhl.variable} ${rashi.variable}`} suppressHydrationWarning>
         <head>
             <meta name="color-scheme" content="light dark" suppressHydrationWarning />
             <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />

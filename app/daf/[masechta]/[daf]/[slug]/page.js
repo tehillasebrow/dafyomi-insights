@@ -169,14 +169,14 @@ export default async function ArticlePage({ params }) {
             </div>
 
             <article className="grid gap-4.5 md:grid-cols-[12rem_minmax(0,1fr)] md:gap-x-9">
-                <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.02] tracking-[-0.02em] md:col-start-2">{article.title}</h1>
+                <h1 className="text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.08] md:col-start-2"><span className="hl">{article.title}</span></h1>
                 {article.image_url && (
                     <div className="md:col-start-2"><ArticleImage src={article.image_url} credit={article.image_credit} alt="" priority className="max-w-[50rem]" sizes="(min-width: 768px) 800px, 100vw" /></div>
                 )}
 
                 {/* The margin: folio, details, where it was printed */}
                 <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3.5 gap-y-2 items-center py-2.5 border-y border-rule md:grid-cols-1 md:items-start md:content-start md:py-0 md:border-y-0 md:border-r md:pr-5 md:col-start-1 md:row-start-1 md:row-span-5 md:self-start md:sticky md:top-4">
-                    <span lang="he" className="numeral text-[3.25rem] md:text-[5rem] leading-[0.85] row-span-2 md:row-span-1" aria-label={`Daf ${dafLabel(article)}`}>
+                    <span lang="he" className="numeral sticker justify-self-start self-start text-[2.6rem] md:text-[4.2rem] row-span-2 md:row-span-1" aria-label={`Daf ${dafLabel(article)}`}>
                         {hebrewNumeral(article.daf)}{range && <span className="text-[0.45em] text-ink-soft">–{hebrewNumeral(end)}</span>}
                     </span>
                     <p className="meta leading-[1.7]">

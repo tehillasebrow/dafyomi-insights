@@ -106,7 +106,7 @@ export default async function MasechtaPage({ params }) {
                             return (
                                 <li key={d}>
                                     {a ? (
-                                        <Link href={articlePath(a)} className={`plain ${base} bg-foil text-[#1c1e23] font-semibold border border-foil-ink`} aria-label={`Daf ${d}: ${a.title}${isToday ? ' (today)' : ''}`}>{d}</Link>
+                                        <Link href={articlePath(a)} className={`plain ${base} bg-foil text-[#17181c] font-semibold border border-foil-ink`} aria-label={`Daf ${d}: ${a.title}${isToday ? ' (today)' : ''}`}>{d}</Link>
                                     ) : (
                                         <span className={`${base} bg-paper-sunk text-ink-soft`} aria-label={`Daf ${d}, no article yet${isToday ? ' (today)' : ''}`}>{d}</span>
                                     )}
