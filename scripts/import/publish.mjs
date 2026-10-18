@@ -16,6 +16,7 @@ import { parseArgs, writeClient, readClient, revalidateSite, validateDraft, save
 import { listStaged, writeJson, writeReviewCsv, slugify, seriousWarnings } from './lib/staging.mjs'
 import { loadTopics, cleanTags } from '../topics/lib.mjs'
 import { findMasechta } from '../../app/lib/shas.js'
+import { uploadPhoto } from '../photos/lib.mjs'
 
 const READY = new Set(['approved', 'fixed'])
 const topics = loadTopics()
@@ -152,10 +153,8 @@ export async function publish({ dryRun = false, clean = false, only = null, log 
         try {
             const photoFile = article.photo && path.join(dir, article.photo)
             if (photoFile && fs.existsSync(photoFile)) {
-                const key = `imports/${article.source}/${path.basename(dir)}.jpg`
-                const { error: upErr } = await db.storage.from('images').upload(key, fs.readFileSync(photoFile), { contentType: 'image/jpeg', upsert: true })
-                if (upErr) throw new Error(`photo upload: ${upErr.message}`)
-                row.image_url = db.storage.from('images').getPublicUrl(key).data.publicUrl
+                row.image_url = await uploadPhoto(db, `imports/${article.source}/${path.basename(dir)}`, photoFile)
+                if (article.photo_credit) row.image_credit = article.photo_credit // a free-license photo (scripts/photos/)
             }
             let { data, error: upsertErr } = await db.from('articles').upsert(row, { onConflict: 'source_url' }).select('id').single()
             for (let retry = 0; retry < 2 && upsertErr; retry++) {

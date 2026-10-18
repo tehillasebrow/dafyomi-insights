@@ -25,7 +25,16 @@
     "import:check-seo": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/check-seo.mjs",
     "import:reprints": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/reprints.mjs",
     "import:repeats": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/repeats.mjs",
-    "import:cards": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/title-cards.mjs"
+    "import:cards": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import/title-cards.mjs",
+    "photos:targets": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/photos/targets.mjs",
+    "photos:find": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/photos/find.mjs",
+    "photos:pick": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/photos/pick.mjs",
+    "photos:upscale": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/photos/upscale.mjs",
+    "photos:apply": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/photos/apply.mjs",
+    "photos:use": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/photos/use.mjs",
+    "photos:review": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/photos/review.mjs",
+    "photos:revert": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/photos/revert.mjs",
+    "photos:choose": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/photos/choose.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.83.0",

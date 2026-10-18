@@ -213,9 +213,11 @@
     .plate-name { font-family: var(--font-hebrew); font-size: clamp(0.95rem, 9cqi, 1.375rem); color: var(--binding-ink); }
     @container (width < 7rem) { .plate-name { display: none; } }
     .plate:not(:has(img))::after { content: ""; position: absolute; inset: 5cqi; border: 1px solid rgb(200 162 74 / 0.45); pointer-events: none; }
+    /* Blurred copy of a photo behind it, filling the frame around a tall or wide picture */
+    .photo-fill { object-fit: cover; filter: blur(24px) brightness(0.85); transform: scale(1.2); }
     @media (prefers-reduced-motion: no-preference) {
-        .plate img { transition: transform 0.4s ease; }
-        a:hover .plate img, .card:hover .plate img { transform: scale(1.025); }
+        .plate img:not(.photo-fill) { transition: transform 0.4s ease; }
+        a:hover .plate img:not(.photo-fill), .card:hover .plate img:not(.photo-fill) { transform: scale(1.025); }
     }
 
     .plain { text-decoration: none; }

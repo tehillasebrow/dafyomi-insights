@@ -46,3 +46,6 @@ next-env.d.ts
 /logs/
 # imported newspaper articles (staged for review; large)
 /data/import/
+
+# free-license photo candidates and hand-typed articles' photos (scripts/photos/)
+/data/photos/

@@ -4,7 +4,7 @@
 //   1. checks The Jewish Home's newest issues for Rabbi Sebrow's column
 //   2. Claude Code runs /review-import on it: text against the page, title, daf,
 //      topics and subtopics, stories, photo. Anything doubtful is set to "held".
-//   3. a title card for a column with no usable photo
+//   3. a free-license photo (chosen in step 2) or, failing that, a title card for a column with no photo
 //   4. publishes what Claude approved (the site refreshes and the admin gets the
 //      mailing-list preview email)
 //   5. opens a GitHub issue (which emails the owner) when something needs a person
@@ -125,6 +125,7 @@ try {
         runClaude(REVIEW_PROMPT([...stagedNow]), [
             'Skill', 'Read', 'Glob', 'Grep', 'Edit(data/import/**)', 'Edit(data/topics.json)',
             'Bash(npm run import:check-seo*)', 'Bash(npm run topics:check*)', 'Bash(npm run import:preview*)',
+            'Bash(npm run -s photos:find*)', 'Bash(npm run -s photos:pick*)', 'Bash(npm run photos:find*)', 'Bash(npm run photos:pick*)',
         ])
 
         if (!dryRun) shipTopics()
