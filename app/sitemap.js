@@ -1,18 +1,18 @@
 import { supabase } from '@/app/lib/supabase'
 import { SITE_URL } from '@/app/lib/site'
 import { masechtaHref } from '@/app/lib/shas'
-import { articlePath, articleDate, BEYOND_THE_DAF_PATH } from '@/app/lib/articles'
+import { articlePath, articleDate, dafPath, BEYOND_THE_DAF_PATH } from '@/app/lib/articles'
 import { storyPath, personPath } from '@/app/lib/stories'
 import { topicsFor, topicPath, subtopicsFor, subtopicPath } from '@/app/lib/topics'
 
 export const revalidate = 3600
 
 export default async function sitemap() {
-    const COLUMNS = 'id, slug, masechta, daf, tags, created_at, published_at'
+    const COLUMNS = 'id, slug, masechta, daf, daf_end, tags, created_at, published_at'
     let [{ data: articles, error }, { data: dailies }, { data: stories }] = await Promise.all([
         supabase.from('articles').select(`${COLUMNS}, refs`),
         supabase.from('daily_discussions').select('date'),
-        supabase.from('stories').select('slug, masechta, people, tags, updated_at'),
+        supabase.from('stories').select('slug, masechta, people, tags, updated_at, article_id'),
     ])
     // Before the article_refs migration there is no refs column
     if (error) ({ data: articles } = await supabase.from('articles').select(COLUMNS))
@@ -61,9 +61,12 @@ export default async function sitemap() {
         priority: path.startsWith('/daf/') || path === '/stories' ? 0.7 : path.startsWith('/people') ? 0.6 : 0.5,
     }))
 
+    // A story's date is its article's: the stories were all re-saved on one day, and a
+    // sitemap where hundreds of pages share one date teaches Google to ignore the dates
+    const articleDates = new Map((articles ?? []).map(a => [a.id, articleDate(a)]))
     const storyPages = (stories ?? []).map(s => ({
         url: `${SITE_URL}${storyPath(s)}`,
-        lastModified: new Date(s.updated_at),
+        lastModified: new Date(articleDates.get(s.article_id) ?? s.updated_at),
         changeFrequency: 'monthly',
         priority: 0.8,
     }))
@@ -75,6 +78,25 @@ export default async function sitemap() {
         priority: 0.8,
     }))
 
+    // A daf with two or more articles has its own list page (a daf with one redirects to the article)
+    const onDaf = new Map()
+    for (const a of articles ?? []) {
+        if (!a.masechta) continue
+        for (let d = a.daf; d <= (a.daf_end ?? a.daf); d++) {
+            const path = dafPath(a.masechta, d)
+            const entry = onDaf.get(path) ?? { count: 0, date: new Date(0) }
+            entry.count++
+            if (new Date(articleDate(a)) > entry.date) entry.date = new Date(articleDate(a))
+            onDaf.set(path, entry)
+        }
+    }
+    const dafPages = [...onDaf].filter(([, e]) => e.count > 1).map(([path, e]) => ({
+        url: `${SITE_URL}${path}`,
+        lastModified: e.date,
+        changeFrequency: 'monthly',
+        priority: 0.6,
+    }))
+
     const dailyPages = (dailies ?? []).map(d => ({
         url: `${SITE_URL}/daily/${d.date}`,
         lastModified: new Date(d.date),
@@ -82,5 +104,5 @@ export default async function sitemap() {
         priority: 0.4,
     }))
 
-    return [...staticPages, ...indexPages, ...articlePages, ...storyPages, ...dailyPages]
+    return [...staticPages, ...indexPages, ...articlePages, ...dafPages, ...storyPages, ...dailyPages]
 }

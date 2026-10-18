@@ -52,6 +52,20 @@ export const MASECHTOS = [
     ['Niddah', 'נדה', 'Taharos', 2, 73],
 ].map(([name, hebrew, seder, first, last]) => ({ name, hebrew, seder, first, last, dafim: last - first + 1 }))
 
+// The Sefaria/Koren spellings many people search with ("Menachot 66a"). Used only in
+// what search engines read (keywords, structured data), never shown on the page.
+const OTHER_SPELLINGS = {
+    Berachos: ['Berakhot', 'Brachot'], Shabbos: ['Shabbat'], Taanis: ['Taanit', "Ta'anit"],
+    Chagigah: ['Hagigah'], Yevamos: ['Yevamot'], Kesubos: ['Ketubot', 'Ketuvot'],
+    'Bava Basra': ['Bava Batra'], Makkos: ['Makkot'], Shevuos: ['Shevuot', 'Shevuot'],
+    Horayos: ['Horayot'], Menachos: ['Menachot', 'Menahot'], Chullin: ['Hullin'],
+    Bechoros: ['Bekhorot', 'Bechorot'], Arachin: ['Arakhin'], Kerisus: ['Keritot', 'Kritot'],
+    Middos: ['Middot'], Pesachim: ['Pesahim'], Zevachim: ['Zevahim'], Beitzah: ['Beitza', 'Beizah'],
+}
+export function otherSpellings(name) {
+    return [...new Set(OTHER_SPELLINGS[findMasechta(name)?.name] ?? [])]
+}
+
 export const CYCLE_LENGTH = MASECHTOS.reduce((sum, m) => sum + m.dafim, 0) // 2711
 const CYCLE_14_START = Date.UTC(2020, 0, 5) // Berachos 2
 

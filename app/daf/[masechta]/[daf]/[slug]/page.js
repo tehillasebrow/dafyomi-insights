@@ -2,7 +2,7 @@ import { cache } from 'react'
 import { supabase } from '@/app/lib/supabase'
 import { isAdmin } from '@/app/lib/adminAuth'
 import { articlePath, articleDate, formatArticleDate, dafLabel, dafPath, decodeParam, readingMinutes } from '@/app/lib/articles'
-import { masechtaHref, masechtaFromParam, masechtaSlug, findMasechta, hebrewNumeral } from '@/app/lib/shas'
+import { masechtaHref, masechtaFromParam, masechtaSlug, findMasechta, hebrewNumeral, otherSpellings } from '@/app/lib/shas'
 import { buildMetadata, clip, absoluteUrl, authorJsonLd, breadcrumbJsonLd, talmudSourceJsonLd, WEBSITE_ID } from '@/app/lib/seo'
 import { getStoriesForArticle, storyPath } from '@/app/lib/stories'
 import { topicsFor, topicPath, subtopicsFor, subtopicPath } from '@/app/lib/topics'
@@ -69,6 +69,7 @@ export async function generateMetadata({ params }) {
         keywords: [
             `${article.masechta} ${dafLabel(article)}`,
             `Daf Yomi ${article.masechta} ${dafLabel(article)}`,
+            ...otherSpellings(article.masechta).map(s => `${s} ${dafLabel(article)}`),
             ...stories.map(s => s.title),
             ...tags,
         ],
@@ -171,7 +172,7 @@ export default async function ArticlePage({ params }) {
             <article className="grid gap-4.5 md:grid-cols-[12rem_minmax(0,1fr)] md:gap-x-9">
                 <h1 className="text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.08] md:col-start-2"><span className="hl">{article.title}</span></h1>
                 {article.image_url && (
-                    <div className="md:col-start-2"><ArticleImage src={article.image_url} credit={article.image_credit} alt="" priority className="max-w-[50rem]" sizes="(min-width: 768px) 800px, 100vw" /></div>
+                    <div className="md:col-start-2"><ArticleImage src={article.image_url} credit={article.image_credit} alt={`${article.title}, ${article.masechta} ${dafLabel(article)}`} priority className="max-w-[50rem]" sizes="(min-width: 768px) 800px, 100vw" /></div>
                 )}
 
                 {/* The margin: folio, details, where it was printed */}

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { supabase } from '@/app/lib/supabase'
 import { ARTICLE_LIST_COLUMNS, articlePath, getArticlesReferencing } from '@/app/lib/articles'
-import { findMasechta, titleCase, masechtaHref, masechtaFromParam, masechtaSlug, todayInNewYork, dafYomiFor, siyumDate, dateOfDaf, formatDate } from '@/app/lib/shas'
+import { findMasechta, titleCase, masechtaHref, masechtaFromParam, masechtaSlug, otherSpellings, todayInNewYork, dafYomiFor, siyumDate, dateOfDaf, formatDate } from '@/app/lib/shas'
 import { buildMetadata, breadcrumbJsonLd, collectionJsonLd } from '@/app/lib/seo'
 import { getStoriesInMasechta } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
         title: `Maseches ${formattedName} – Daf Yomi Articles, Stories & Insights`,
         description: `Daf Yomi articles, Gemara stories and insights on every daf of Maseches ${formattedName}, by Rabbi Avrohom Sebrow.`,
         path: masechtaHref(masechta),
-        keywords: [`${formattedName} Daf Yomi`, `Maseches ${formattedName}`, `${formattedName} Gemara stories`, `Tractate ${formattedName}`],
+        keywords: [`${formattedName} Daf Yomi`, `Maseches ${formattedName}`, `${formattedName} Gemara stories`, `Tractate ${formattedName}`, ...otherSpellings(formattedName).flatMap(s => [s, `Tractate ${s}`])],
     })
 }
 
