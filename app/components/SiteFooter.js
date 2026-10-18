@@ -10,6 +10,7 @@ const COLUMNS = [
         ['/stories', 'Gemara stories'],
         ['/people', 'Stories by sage'],
         ['/daily', "Today's Daf"],
+        ['/calendar', 'Daf Yomi calendar'],
     ]],
     ['Find', [
         ['/masechtos', 'Masechtos'],

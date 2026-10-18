@@ -17,6 +17,7 @@ export const NAV = [
 export const MORE = [
     { href: '/stories', label: 'Gemara stories', match: ['/stories'] },
     { href: '/people', label: 'Stories by sage', match: ['/people'] },
+    { href: '/calendar', label: 'Daf Yomi calendar', match: ['/calendar'] },
     { href: '/daily/archive', label: 'Past discussions', match: ['/daily/archive'] },
 ]
 
