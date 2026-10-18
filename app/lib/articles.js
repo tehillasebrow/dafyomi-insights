@@ -36,10 +36,12 @@ export function articlePath(article) {
     return `${dafPath(article.masechta, article.daf)}/${encodeURIComponent(article.slug || article.id)}`
 }
 
+// "65", "65b", "63–67", "45–46a": the amud shows when the article names it (articles.amud / amud_end)
 export function dafLabel(article) {
+    const start = `${article.daf}${article.amud ?? ''}`
     return article.daf_end && article.daf_end !== article.daf
-        ? `${article.daf}–${article.daf_end}`
-        : `${article.daf}`
+        ? `${start}–${article.daf_end}${article.amud_end ?? ''}`
+        : start
 }
 
 // Where an article sits: "Berachos 12" or "Beyond the Daf"
@@ -63,7 +65,7 @@ export function formatArticleDate(article, options = { year: 'numeric', month: '
 }
 
 // Columns for article lists: everything a preview needs, without loading every full article twice
-export const ARTICLE_LIST_COLUMNS = 'id, slug, title, summary, content, masechta, daf, daf_end, tags, image_url, published_at, created_at'
+export const ARTICLE_LIST_COLUMNS = 'id, slug, title, summary, content, masechta, daf, daf_end, amud, amud_end, tags, image_url, published_at, created_at'
 
 // The first lines of the article, for previews. Readers prefer the real opening to the summary;
 // the summary is only a fallback for an article with no text.
