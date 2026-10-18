@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { notFound, redirect } from 'next/navigation'
+import { notFound, redirect, permanentRedirect } from 'next/navigation'
 import { supabase } from '@/app/lib/supabase'
-import { getArticlesForDaf, articlePath, dafLabel, decodeParam, ARTICLE_LIST_COLUMNS } from '@/app/lib/articles'
-import { findMasechta, titleCase, masechtaHref, hebrewNumeral } from '@/app/lib/shas'
+import { getArticlesForDaf, articlePath, dafLabel, ARTICLE_LIST_COLUMNS } from '@/app/lib/articles'
+import { findMasechta, titleCase, masechtaHref, masechtaFromParam, masechtaSlug, hebrewNumeral } from '@/app/lib/shas'
 import { buildMetadata } from '@/app/lib/seo'
 import ArticleRow from '@/app/components/ArticleRow'
 import EmptyDaf from '@/app/components/EmptyDaf'
@@ -11,8 +11,8 @@ export const revalidate = 300
 
 export async function generateMetadata({ params }) {
     const { masechta, daf } = await params
-    const name = findMasechta(decodeParam(masechta))?.name ?? titleCase(decodeParam(masechta))
-    const articles = Number.isInteger(Number(daf)) ? await getArticlesForDaf(decodeParam(masechta), Number(daf), 'id') : []
+    const name = titleCase(masechtaFromParam(masechta))
+    const articles = Number.isInteger(Number(daf)) ? await getArticlesForDaf(masechtaFromParam(masechta), Number(daf), 'id') : []
 
     return {
         ...buildMetadata({
@@ -40,12 +40,13 @@ async function nearestArticle(masechta, daf) {
 // which also keeps the old /daf/{masechta}/{daf} article URLs working.
 export default async function DafPage({ params }) {
     const { masechta: rawMasechta, daf: rawDaf } = await params
-    const masechta = decodeParam(rawMasechta)
+    const masechta = masechtaFromParam(rawMasechta)
     const daf = Number(rawDaf)
     if (!Number.isInteger(daf)) return notFound()
 
     const known = findMasechta(masechta)
     if (known && (daf < known.first || daf > known.last)) return notFound()
+    if (known && rawMasechta !== masechtaSlug(known.name)) permanentRedirect(`${masechtaHref(known.name)}/${daf}`)
 
     const articles = await getArticlesForDaf(masechta, daf, ARTICLE_LIST_COLUMNS)
     // Temporary redirect: a second article may be added to this daf later

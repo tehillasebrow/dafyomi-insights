@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { getSupabaseAdmin } from '@/app/lib/supabaseAdmin'
 import { checkPassword, createAdminSession, clearAdminSession, isAdmin } from '@/app/lib/adminAuth'
 import { slugify, articlePath } from '@/app/lib/articles'
-import { postingStatus } from '@/app/lib/shas'
+import { postingStatus, masechtaFromParam } from '@/app/lib/shas'
 import { logEvent } from '@/app/lib/events'
 import { queueArticleEmail } from '@/app/lib/newsletter'
 
@@ -149,7 +149,7 @@ async function articleFromUrl(supabase, url) {
     const match = url.match(/\/daf\/([^/]+)\/(\d+)\/([^/?#]+)/)
     if (!match) return null
     const [, rawMasechta, , rawSlug] = match
-    const masechta = decodeURIComponent(rawMasechta)
+    const masechta = masechtaFromParam(rawMasechta)
     const slug = decodeURIComponent(rawSlug)
     const { data: bySlug } = await supabase.from('articles').select(columns).ilike('masechta', masechta).eq('slug', slug).limit(1)
     if (bySlug?.[0]) return bySlug[0]

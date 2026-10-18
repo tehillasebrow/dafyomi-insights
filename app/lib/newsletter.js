@@ -6,7 +6,7 @@ import 'server-only'
 import { createHash, timingSafeEqual } from 'crypto'
 import { getSupabaseAdmin } from '@/app/lib/supabaseAdmin'
 import { articleOpening, articlePath, articlePlace } from '@/app/lib/articles'
-import { postingStatus } from '@/app/lib/shas'
+import { postingStatus, hebrewNumeral } from '@/app/lib/shas'
 import { SITE_URL, SITE_NAME, AUTHOR } from '@/app/lib/site'
 
 const RESEND_API = 'https://api.resend.com'
@@ -52,35 +52,66 @@ export function emailSubject(article) {
     return `${article.title} (${articlePlace(article)})`
 }
 
-// One article: picture, title, masechta/daf, the opening lines and a "Read more" button.
-// `banner` is extra HTML shown above it (the admin's preview uses it for the approve link).
+// The email follows the site's Highlighter Shiur look (DESIGN.md): paper, black ink, the
+// yellow highlighter, one ballpoint-blue accent and the daf numeral as a yellow sticker.
+// Email clients don't load the site's CSS or SVG, so colours are inline and the logo is a PNG.
+const C = {
+    paper: '#f6f7f3', surface: '#fdfdfa', ink: '#17181c', ink2: '#3d4048', ink3: '#565a63',
+    line: '#d6d8cf', yellow: '#ffe53b', marker: '#fff07a', blue: '#1e3fae',
+}
+const DISPLAY = `'Suez One',Georgia,'Times New Roman',serif`
+const READING = `Literata,Georgia,'Times New Roman',serif`
+export const EMAIL_LOGO = `${SITE_URL}/email-logo.png`
+
+// The masthead: a black band with the logo and the site's name (the owner's pick, 2026-10-18)
+function masthead() {
+    return `<tr><td style="background:${C.ink};padding:18px 24px;border-radius:6px;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td style="padding-right:12px;vertical-align:middle;"><a href="${SITE_URL}"><img src="${EMAIL_LOGO}" alt="" width="44" height="44" style="display:block;width:44px;height:44px;border:0;"></a></td>
+<td style="vertical-align:middle;">
+<a href="${SITE_URL}" style="font-family:${DISPLAY};font-size:24px;line-height:1.1;color:${C.surface};text-decoration:none;">${escapeHtml(SITE_NAME)}</a>
+<div style="font-family:${READING};font-size:14px;line-height:1.4;color:${C.yellow};margin-top:3px;">${escapeHtml(AUTHOR.name)} · ${escapeHtml(AUTHOR.column)}</div>
+</td></tr></table>
+</td></tr>`
+}
+
+// One article: picture, the daf as a yellow sticker, the title with a highlighter stroke,
+// the opening lines and a "Read more" button. `banner` is extra HTML shown above it
+// (the admin's preview uses it for the approve link).
 export function renderArticleEmail(article, { unsubscribe, banner = '', bannerText = '' } = {}) {
     const url = articleUrl(article)
     const opening = articleOpening(article, 420)
     const where = articlePlace(article)
+    const daf = article.masechta && article.daf ? hebrewNumeral(article.daf) : ''
 
     const html = `<!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escapeHtml(article.title)}</title></head>
-<body style="margin:0;padding:0;background:#f6f7f3;color:#17181c;font-family:Georgia,'Times New Roman',serif;">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${escapeHtml(article.title)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Suez+One&display=swap" rel="stylesheet"></head>
+<body style="margin:0;padding:0;background:${C.paper};color:${C.ink};font-family:${READING};">
 ${banner}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f7f3;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.paper};">
 <tr><td align="center" style="padding:24px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;">
-<tr><td style="background:#17181c;color:#fdfdfa;padding:16px 24px;font-size:20px;font-weight:bold;">
-<a href="${SITE_URL}" style="color:#fdfdfa;text-decoration:none;">${escapeHtml(SITE_NAME)}</a>
-<div style="font-family:'Courier New',monospace;font-size:13px;font-weight:normal;color:#c9c6bc;margin-top:4px;">${escapeHtml(AUTHOR.column)} · ${escapeHtml(AUTHOR.name)}</div>
+${masthead()}
+<tr><td style="height:24px;line-height:24px;font-size:0;">&nbsp;</td></tr>
+<tr><td style="background:${C.surface};border:1px solid ${C.line};border-radius:6px;overflow:hidden;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+${article.image_url ? `<tr><td><a href="${url}"><img src="${escapeHtml(article.image_url)}" alt="" width="598" style="display:block;width:100%;max-width:598px;height:auto;border:0;border-radius:6px 6px 0 0;"></a></td></tr>` : ''}
+<tr><td style="padding:24px 24px 28px;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+${daf ? `<td style="padding-right:12px;vertical-align:middle;"><div dir="rtl" lang="he" style="background:${C.yellow};color:${C.ink};font-family:${DISPLAY};font-size:24px;line-height:1;padding:8px 12px;border-radius:4px;">${daf}</div></td>` : ''}
+<td style="vertical-align:middle;font-family:${READING};font-size:15px;line-height:1.4;color:${C.blue};">${escapeHtml(where)}</td>
+</tr></table>
+<h1 style="margin:16px 0 18px;font-family:${DISPLAY};font-size:30px;line-height:1.2;font-weight:normal;"><a href="${url}" style="color:${C.ink};text-decoration:none;border-bottom:6px solid ${C.marker};">${escapeHtml(article.title)}</a></h1>
+<p style="margin:0 0 24px;font-family:${READING};font-size:18px;line-height:1.65;color:${C.ink2};">${escapeHtml(opening)}</p>
+<a href="${url}" style="display:inline-block;background:${C.ink};color:${C.yellow};font-family:${READING};font-size:17px;font-weight:600;padding:14px 24px;text-decoration:none;border-radius:4px;">Read the whole article →</a>
 </td></tr>
-${article.image_url ? `<tr><td><a href="${url}"><img src="${escapeHtml(article.image_url)}" alt="" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;"></a></td></tr>` : ''}
-<tr><td style="background:#ffffff;padding:24px;border:1px solid #bfbeb6;border-top:0;">
-<div style="font-family:'Courier New',monospace;font-size:13px;color:#1e3fae;letter-spacing:0.04em;text-transform:uppercase;">${escapeHtml(where)}</div>
-<h1 style="font-size:26px;line-height:1.25;margin:8px 0 16px;"><a href="${url}" style="color:#17181c;text-decoration:none;">${escapeHtml(article.title)}</a></h1>
-<p style="font-size:18px;line-height:1.6;margin:0 0 24px;color:#313339;">${escapeHtml(opening)}</p>
-<a href="${url}" style="display:inline-block;background:#17181c;color:#f6f7f3;font-family:'Courier New',monospace;font-size:16px;padding:14px 24px;text-decoration:none;border-radius:4px;">Read more →</a>
+</table>
 </td></tr>
-<tr><td style="padding:20px 24px;font-family:'Courier New',monospace;font-size:12px;line-height:1.6;color:#45474e;text-align:center;">
-You're getting this because you signed up at <a href="${SITE_URL}" style="color:#45474e;">dafyomiinsights.com</a>.<br>
-<a href="${unsubscribe}" style="color:#45474e;">Unsubscribe</a>
+<tr><td style="padding:24px;font-family:${READING};font-size:13px;line-height:1.6;color:${C.ink3};text-align:center;">
+You're getting this because you signed up at <a href="${SITE_URL}" style="color:${C.ink3};">dafyomiinsights.com</a>.<br>
+<a href="${unsubscribe}" style="color:${C.ink3};">Unsubscribe</a>
 </td></tr>
 </table>
 </td></tr>
@@ -110,10 +141,10 @@ function previewBanner(sendId, { reminder = false } = {}) {
     const heading = reminder ? 'Reminder: this email is still waiting for your OK' : 'Preview: only you got this'
     return {
         url: approveUrl,
-        html: `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffe53b;"><tr><td align="center" style="padding:16px;font-family:Arial,sans-serif;color:#17181c;">
+        html: `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffe53b;"><tr><td align="center" style="padding:16px;font-family:Literata,Georgia,serif;color:#17181c;">
 <strong style="font-size:16px;">${heading}</strong><br>
 <span style="font-size:14px;">Nothing goes to subscribers until you approve it.</span><br>
-<a href="${approveUrl}" style="display:inline-block;margin-top:10px;background:#17181c;color:#ffffff;padding:12px 22px;text-decoration:none;border-radius:4px;font-weight:bold;">Review &amp; approve</a>
+<a href="${approveUrl}" style="display:inline-block;margin-top:10px;background:#17181c;color:#ffe53b;padding:12px 22px;text-decoration:none;border-radius:4px;font-weight:bold;">Review &amp; approve</a>
 </td></tr></table>`,
         text: `${heading.toUpperCase()}\nNothing goes to subscribers until you approve it.\nReview & approve: ${approveUrl}\n\n----------------------------------------\n`,
     }
