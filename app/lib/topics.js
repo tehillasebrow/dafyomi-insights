@@ -7,6 +7,7 @@
 // Safe on client and server.
 import data from '@/data/topics.json'
 import intros from '@/data/topic-intros.json'
+import subIntros from '@/data/subtopic-intros.json'
 
 // "Hilchos Halva&#x27;ah" / "R’ Meir" / "Hakaras Hatov" all reduce to the same key
 function key(text) {
@@ -95,6 +96,11 @@ export function subtopicHeading(sub) {
 // intro is paragraphs separated by blank lines; [text](/path) makes a link.
 export function topicIntro(topic) {
     return intros[topic.slug] ?? null
+}
+
+// A subject page's short introduction (data/subtopic-intros.json, keyed "topic/subject"), or null
+export function subtopicIntro(sub) {
+    return subIntros[`${sub.topic.slug}/${sub.slug}`] ?? null
 }
 
 // Stored tags -> their topics, without duplicates, in the order given.

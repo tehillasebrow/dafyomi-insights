@@ -4,13 +4,21 @@ import { supabase } from '@/app/lib/supabase'
 import { ARTICLE_LIST_COLUMNS, orderByPublished, decodeParam, articlePath } from '@/app/lib/articles'
 import { findMasechta, masechtaHref } from '@/app/lib/shas'
 import { buildMetadata, breadcrumbJsonLd, collectionJsonLd } from '@/app/lib/seo'
-import { findTopic, findSubtopic, topicPath, subtopicPath, subtopicVariants, subtopicHeading, topicHeading } from '@/app/lib/topics'
+import { findTopic, findSubtopic, topicPath, subtopicPath, subtopicVariants, subtopicHeading, topicHeading, subtopicIntro } from '@/app/lib/topics'
 import { STORY_CARD_COLUMNS, storyPath } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
 import ArticleRow from '@/app/components/ArticleRow'
 import StoryRow from '@/app/components/StoryRow'
 
 export const revalidate = 3600
+
+// "...in [Don't Cry Over Spilled Wine](/daf/eruvin/65/...)" -> text with a link
+function withLinks(text) {
+    return text.split(/(\[[^\]]+\]\([^)\s]+\))/).map((part, i) => {
+        const m = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/)
+        return m ? <Link key={i} href={m[2]}>{m[1]}</Link> : part
+    })
+}
 
 // /topics/{topic}/{subtopic}: one narrow subject ("Presidential Autopen"), so a
 // search for exactly that lands on the articles about it
@@ -27,7 +35,7 @@ export async function generateMetadata({ params }) {
     const meta = buildMetadata({
         // "Are Pets Muktzeh? – Shabbos in the Gemara"; no second "in the Gemara" when the heading has one
         title: subtopicHeading(sub).endsWith(' in the Gemara') ? `${subtopicHeading(sub)} – ${sub.topic.name}` : `${subtopicHeading(sub)} – ${topicHeading(sub.topic)}`,
-        description: `${sub.description} Daf Yomi articles by Rabbi Avrohom Sebrow.`,
+        description: subtopicIntro(sub)?.description ?? `${sub.description} Daf Yomi articles by Rabbi Avrohom Sebrow.`,
         path: subtopicPath(sub),
         keywords: [sub.name, `${sub.name} halacha`, `${sub.name} Gemara`, sub.topic.name, ...(sub.aliases ?? []).slice(0, 4)],
     })
@@ -74,6 +82,7 @@ export default async function SubtopicPage({ params }) {
                 <p className="sc">{sub.topic.name}</p>
                 <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.25rem)] leading-[1.02] tracking-[-0.02em]">{subtopicHeading(sub)}</h1>
                 <p className="text-lede text-ink-soft max-w-[62ch]">{sub.description}</p>
+                {subtopicIntro(sub) && <p className="max-w-[62ch] pt-2">{withLinks(subtopicIntro(sub).intro)}</p>}
                 <p className="meta">
                     {articles.length} {articles.length === 1 ? 'article' : 'articles'}
                     {stories.length > 0 && `, ${stories.length} ${stories.length === 1 ? 'story' : 'stories'}`}
