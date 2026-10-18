@@ -1,0 +1,30 @@
+# One-time, last pass for the missing 2007–2013 5TJT columns: Flipdocs issue numbers the
+# Internet Archive saw, and column links on old copies of the 5tjt.com home and section pages.
+# See scripts/import/fivetowns-hunt.mjs. Result: artifact "5tjt-hunt".
+name: Hunt 5TJT 2007-2013
+
+on:
+  push:
+    branches: [import-5tjt]
+    paths: [scripts/import/fivetowns-hunt.mjs, .github/workflows/hunt-5tjt.yml]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/import/fivetowns-hunt.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 5tjt-hunt
+          path: data/import/5tjt/raw/
+          retention-days: 30
