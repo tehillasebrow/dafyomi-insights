@@ -90,7 +90,10 @@
         },
         {
           "name": "Crockpot on Shabbos",
-          "description": "The halachic debate over using a slow cooker for cholent on Shabbos, the opinions on both sides, and common ways people address the concern."
+          "description": "The halachic debate over using a slow cooker for cholent on Shabbos, the opinions on both sides, and common ways people address the concern.",
+          "aliases": [
+            "Using a Crockpot on Shabbos"
+          ]
         },
         {
           "name": "Cutting a Cake With Writing on Shabbos",
@@ -210,7 +213,10 @@
         },
         {
           "name": "Personally Preparing for Shabbos",
-          "description": "The obligation for even great scholars to take part personally in Shabbos preparations rather than leaving all the work to others."
+          "description": "The obligation for even great scholars to take part personally in Shabbos preparations rather than leaving all the work to others.",
+          "aliases": [
+            "Preparing for Shabbos Personally"
+          ]
         },
         {
           "name": "Pets and Electricity on Shabbos",
@@ -223,10 +229,6 @@
         {
           "name": "Playing Ball on Shabbos",
           "description": "The halachic problems with playing baseball and other ball games on Shabbos, including carrying, making holes in the ground and weekday activity."
-        },
-        {
-          "name": "Preparing for Shabbos Personally",
-          "description": "The practice of doing some Shabbos preparations yourself even when help is available, following the example of the Amoraim."
         },
         {
           "name": "Psik Reisha on Shabbos",
@@ -307,10 +309,6 @@
         {
           "name": "Unclogging a Toilet on Shabbos",
           "description": "Whether a plunger may be used on a clogged toilet or sink drain on Shabbos, and when a deviation or a non-Jew might be needed."
-        },
-        {
-          "name": "Using a Crockpot on Shabbos",
-          "description": "The halachic issues of leaving cholent in a slow cooker over Shabbos, including insulation and leaving food on a heat source."
         },
         {
           "name": "Wearing Special Clothes on Shabbos",
@@ -421,12 +419,11 @@
           "description": "The prohibition of preparing food on Yom Tov for use on a later weekday, and the Talmudic debate over whether it is biblical or rabbinic."
         },
         {
-          "name": "Cooking on Yom Tov for Shabbos",
-          "description": "Whether and how food may be prepared on Yom Tov for a Shabbos that follows, and how late in the day such cooking may be done."
-        },
-        {
           "name": "Eruv Tavshilin",
-          "description": "The practice of setting aside cooked and baked foods before Yom Tov so that cooking for Shabbos may continue on a Yom Tov that falls on Friday."
+          "description": "The practice of setting aside cooked and baked foods before Yom Tov so that cooking for Shabbos may continue on a Yom Tov that falls on Friday.",
+          "aliases": [
+            "Cooking on Yom Tov for Shabbos"
+          ]
         },
         {
           "name": "Fasting on Chol HaMoed",
@@ -844,11 +841,10 @@
         },
         {
           "name": "Kohen Gadol's Prayer on Yom Kippur",
-          "description": "The short prayer the Kohen Gadol said after leaving the Holy of Holies on Yom Kippur, and why part of it was in Aramaic."
-        },
-        {
-          "name": "Kohen Gadol's Yom Kippur Prayer",
-          "description": "The brief prayer the Kohen Gadol said after leaving the Holy of Holies, including requests about the year's weather and why it was kept short."
+          "description": "The short prayer the Kohen Gadol said after leaving the Holy of Holies on Yom Kippur, and why part of it was in Aramaic.",
+          "aliases": [
+            "Kohen Gadol's Yom Kippur Prayer"
+          ]
         },
         {
           "name": "Kol Nidrei",
@@ -1218,10 +1214,6 @@
           "description": "Whether a gift ordered or sent before Purim but arriving on Purim day counts, depending on the reasons given for the mitzvah."
         },
         {
-          "name": "Sending Mishloach Manos With a Child",
-          "description": "Whether mishloach manos may be delivered by a minor or even an animal, and whether a proper agent is required for the mitzvah."
-        },
-        {
           "name": "Themed Mishloach Manos",
           "description": "The popular practice of building mishloach manos around a theme, with examples and a suggested source in the royal reward given to Mordechai."
         },
@@ -1229,7 +1221,8 @@
           "name": "Using a Messenger for Mishloach Manos",
           "description": "Whether mishloach manos should be sent through a messenger rather than delivered in person, and whether the recipient must know who sent it.",
           "aliases": [
-            "Mishloach Manos by Delivery Service"
+            "Mishloach Manos by Delivery Service",
+            "Sending Mishloach Manos With a Child"
           ]
         },
         {
@@ -1683,12 +1676,9 @@
           "name": "Hefsek After a Berachah",
           "description": "When an action between a berachah and the mitzvah or food it was said for counts as an interruption that may make the berachah wasted.",
           "aliases": [
-            "When a Pause Requires a New Berachah"
+            "When a Pause Requires a New Berachah",
+            "Hefsek Between Beracha and Mitzvah"
           ]
-        },
-        {
-          "name": "Hefsek Between Beracha and Mitzvah",
-          "description": "How an unrelated action between reciting a blessing and doing the mitzvah may make the blessing ineffective."
         },
         {
           "name": "Order of Berachos on Foods",
@@ -1835,15 +1825,12 @@
           ]
         },
         {
-          "name": "Washing Hands for Wet Food",
-          "description": "The practice of washing hands before eating food dipped in one of seven liquids, and whether it still applies today.",
+          "name": "Washing Hands for Wet Foods",
+          "description": "Whether one must wash hands before eating food dipped in or wet with one of the seven liquids, such as pickles or wet fruit, and the customs.",
           "aliases": [
+            "Washing Hands for Wet Food",
             "Netilas Yadayim for Dipped Foods"
           ]
-        },
-        {
-          "name": "Washing Hands for Wet Foods",
-          "description": "Whether one must wash hands before eating food dipped in or wet with one of the seven liquids, such as pickles or wet fruit, and the customs."
         },
         {
           "name": "Where to Cut the Challah",
@@ -1936,7 +1923,10 @@
         },
         {
           "name": "Kiddush Cup Size",
-          "description": "How much a Kiddush cup must hold, the revi'is measurement in ounces, and whether a small shot glass is enough when using liquor."
+          "description": "How much a Kiddush cup must hold, the revi'is measurement in ounces, and whether a small shot glass is enough when using liquor.",
+          "aliases": [
+            "Size of the Kiddush Cup"
+          ]
         },
         {
           "name": "Kiddush on Liquor",
@@ -1971,10 +1961,6 @@
         {
           "name": "Plastic Cups for Kiddush",
           "description": "The debate over using disposable plastic cups or plastic shot glasses for Kiddush, and the common custom today."
-        },
-        {
-          "name": "Size of the Kiddush Cup",
-          "description": "How much a Kiddush cup must hold and how much must be drunk, including whether a one-ounce shot glass is enough for liquor."
         },
         {
           "name": "Spilling Wine at Havdalah",
@@ -2103,10 +2089,6 @@
         {
           "name": "Eating in Shul",
           "description": "Whether food and drink may be served in a synagogue, such as a kiddush, tikkun or seudah shelishis, and the conditions that may permit it."
-        },
-        {
-          "name": "Facing Away From the Aron Kodesh",
-          "description": "Why a rabbi may deliver a sermon or kohanim may bless facing away from the Aron, and the warning about speaking for the wrong reasons."
         },
         {
           "name": "Kedushah of a Shul's Airspace",
@@ -2370,7 +2352,10 @@
         },
         {
           "name": "Turning Your Back on a Sefer Torah",
-          "description": "The requirement not to turn one's back on a Torah scroll, how one leaves its presence, and when the rule does not apply."
+          "description": "The requirement not to turn one's back on a Torah scroll, how one leaves its presence, and when the rule does not apply.",
+          "aliases": [
+            "Facing Away From the Aron Kodesh"
+          ]
         },
         {
           "name": "Which Sefer Torah to Read From",
@@ -2503,10 +2488,6 @@
         {
           "name": "Searching for Reasons for Mitzvos",
           "description": "Whether one should seek explanations for the commandments, and whether a stated reason can ever limit when a mitzvah applies."
-        },
-        {
-          "name": "Selling the Reward for a Mitzvah",
-          "description": "Whether the reward earned for a mitzvah can be transferred to another person, and the view that such reward is a gift from Hashem."
         },
         {
           "name": "Sinning to Help Another Do a Mitzvah",
@@ -2844,19 +2825,21 @@
         },
         {
           "name": "Making a Siyum on a Masechta",
-          "description": "The source for a festive meal on finishing a tractate, what learning qualifies for a siyum, and related customs."
+          "description": "The source for a festive meal on finishing a tractate, what learning qualifies for a siyum, and related customs.",
+          "aliases": [
+            "Seudas Siyum"
+          ]
         },
         {
           "name": "Meaning of the Word Kivyachol",
           "description": "What the expression kivyachol means when statements are attributed to Hashem, and the different explanations given for the term."
         },
         {
-          "name": "Order of Masechtos in Daf Yomi",
-          "description": "Why the Daf Yomi cycle studies the tractates of Seder Moed in a different order from the one printed in the standard Vilna Shas."
-        },
-        {
           "name": "Order of the Masechtos in Daf Yomi",
-          "description": "Why the Daf Yomi cycle follows a particular order of tractates, such as learning Yoma right after Shekalim."
+          "description": "Why the Daf Yomi cycle follows a particular order of tractates, such as learning Yoma right after Shekalim.",
+          "aliases": [
+            "Order of Masechtos in Daf Yomi"
+          ]
         },
         {
           "name": "Reviewing Learning 101 Times",
@@ -2865,10 +2848,6 @@
         {
           "name": "Risking Your Life for Torah",
           "description": "When endangering oneself for Torah is praiseworthy, such as teaching publicly, versus reckless risk to answer a question."
-        },
-        {
-          "name": "Seudas Siyum",
-          "description": "The source and significance of making a celebratory meal on completing a masechta or sefer, and what learning qualifies for a siyum."
         },
         {
           "name": "Signatures of the Amoraim",
@@ -3093,15 +3072,12 @@
       "description": "The prohibition of needless destruction, from fruit trees to food.",
       "subtopics": [
         {
-          "name": "Cutting Branches From a Fruit Tree",
-          "description": "Whether pruning or cutting branches from a fruit tree for a mitzvah or other need violates the ban on destroying fruit trees."
-        },
-        {
           "name": "Cutting Down a Fruit Tree",
           "description": "The prohibition of destroying fruit-bearing trees, and whether cutting a branch for a mitzvah or trimming is allowed.",
           "aliases": [
             "Cutting Down Fruit Trees",
-            "Cutting a Fruit Tree for Construction"
+            "Cutting a Fruit Tree for Construction",
+            "Cutting Branches From a Fruit Tree"
           ]
         },
         {
@@ -3591,20 +3567,16 @@
       ],
       "subtopics": [
         {
-          "name": "Eating Chadash on the Sixteenth of Nissan",
-          "description": "Why new grain may not be eaten all day on the sixteenth of Nissan since the Temple's destruction."
-        },
-        {
           "name": "When New Grain Becomes Permitted",
-          "description": "The dispute over whether new grain becomes permitted on the morning of the sixteenth of Nissan or only after that entire day has passed."
+          "description": "The dispute over whether new grain becomes permitted on the morning of the sixteenth of Nissan or only after that entire day has passed.",
+          "aliases": [
+            "Eating Chadash on the Sixteenth of Nissan",
+            "Yom HaNef and New Grain"
+          ]
         },
         {
           "name": "Yashan Outside Eretz Yisrael",
           "description": "Whether the prohibition of eating new grain applies to crops grown outside Israel, and the reasons many in the Diaspora have been lenient."
-        },
-        {
-          "name": "Yom HaNef and New Grain",
-          "description": "The enactment that new grain may not be eaten for the whole day of the sixteenth of Nissan, in case the Beis HaMikdash is rebuilt."
         }
       ]
     },
@@ -3843,7 +3815,10 @@
         },
         {
           "name": "Bar Mitzvah in a Leap Year",
-          "description": "How a boy's bar mitzvah date is set when he was born in Adar and his thirteenth year has two months of Adar, or the reverse."
+          "description": "How a boy's bar mitzvah date is set when he was born in Adar and his thirteenth year has two months of Adar, or the reverse.",
+          "aliases": [
+            "Born on the Thirtieth of Adar Rishon"
+          ]
         },
         {
           "name": "Bar Mitzvah Speech in Shul",
@@ -3854,16 +3829,8 @@
           "description": "Whether children should be trained to say the blessing on blossoming trees, and whether a boy turning thirteen in Nissan should wait."
         },
         {
-          "name": "Born on the Thirtieth of Adar Rishon",
-          "description": "The unusual case of a child born on the last day of Adar Rishon, and when he becomes bar mitzvah in a regular year."
-        },
-        {
           "name": "Children Fasting Before Bar Mitzvah",
           "description": "Whether children should be trained to fast or endure discomfort for mitzvos, and how chinuch balances mitzvah training with a child's physical needs."
-        },
-        {
-          "name": "Competition Among Torah Teachers",
-          "description": "The Talmudic principle that rivalry among teachers increases wisdom, and its implications for how schools compete for students."
         },
         {
           "name": "Encouraging Students to Think",
@@ -4222,12 +4189,11 @@
           "description": "Whether a finder may record the value of an unclaimed item and then use or sell it, and which items owners want returned as they are."
         },
         {
-          "name": "Mixed-Up Laundry or Dry Cleaning",
-          "description": "Whether a customer given someone else's garment may use it or hold it until his own is found."
-        },
-        {
           "name": "Taking the Wrong Coat",
-          "description": "Whether someone whose coat was taken may use the one left behind, the leniencies discussed, and the suggestion of posting a sign in shul."
+          "description": "Whether someone whose coat was taken may use the one left behind, the leniencies discussed, and the suggestion of posting a sign in shul.",
+          "aliases": [
+            "Mixed-Up Laundry or Dry Cleaning"
+          ]
         }
       ]
     },
@@ -4263,7 +4229,10 @@
         },
         {
           "name": "Opening a Competing School",
-          "description": "Whether a new yeshiva or Torah teacher may open in a neighborhood that already has one, and why competition among teachers is encouraged."
+          "description": "Whether a new yeshiva or Torah teacher may open in a neighborhood that already has one, and why competition among teachers is encouraged.",
+          "aliases": [
+            "Competition Among Torah Teachers"
+          ]
         },
         {
           "name": "Rabbinic Copyright on Seforim",
@@ -4700,7 +4669,10 @@
         },
         {
           "name": "Humane Execution by Beis Din",
-          "description": "Why the Talmud requires courts to choose the least painful and least disfiguring method of execution, based on loving one's fellow."
+          "description": "Why the Talmud requires courts to choose the least painful and least disfiguring method of execution, based on loving one's fellow.",
+          "aliases": [
+            "Dignity for the Condemned"
+          ]
         },
         {
           "name": "Litigants Dressed Unequally in Court",
@@ -5170,27 +5142,12 @@
           "description": "How Kohanim walked around the Altar to the right even when the left was shorter, and the exceptions to that rule."
         },
         {
-          "name": "Lechem HaPanim Miracle",
-          "description": "The miracle that the showbread in the Beis HaMikdash stayed fresh and warm all week, and the dispute over when it was baked."
-        },
-        {
           "name": "Lottery for Removing the Altar Ashes",
           "description": "Why the kohanim drew lots for the early morning task of clearing the altar ashes, and what it shows about waking early."
         },
         {
-          "name": "Making a Seven-Branched Menorah",
-          "description": "The prohibition of fashioning a replica of the Temple menorah, and how it relates to the design of a Chanukah menorah.",
-          "aliases": [
-            "Seven Branch Menorah"
-          ]
-        },
-        {
           "name": "Mishkan in Shiloh",
           "description": "The period when the Mishkan stood in Shiloh, why it is called a resting place, and its role in conquering and settling the land."
-        },
-        {
-          "name": "Ner Maaravi Miracle",
-          "description": "The daily miracle of the western lamp of the Menorah burning longer than the others, and its link to the Chanukah question."
         },
         {
           "name": "Oil and Wicks for the Temple Menorah",
@@ -5198,7 +5155,11 @@
         },
         {
           "name": "Replicating Temple Vessels",
-          "description": "The rule against making copies of the Temple's courtyard, table and Menorah, and which household items it actually covers."
+          "description": "The rule against making copies of the Temple's courtyard, table and Menorah, and which household items it actually covers.",
+          "aliases": [
+            "Making a Seven-Branched Menorah",
+            "Seven Branch Menorah"
+          ]
         },
         {
           "name": "Shape of the Lechem HaPanim",
@@ -5267,7 +5228,10 @@
         },
         {
           "name": "Lechem HaPanim",
-          "description": "The twelve showbread loaves placed on the Shulchan each Shabbos, how long they stayed fresh, and when the kohanim were allowed to eat them."
+          "description": "The twelve showbread loaves placed on the Shulchan each Shabbos, how long they stayed fresh, and when the kohanim were allowed to eat them.",
+          "aliases": [
+            "Lechem HaPanim Miracle"
+          ]
         },
         {
           "name": "Maaser Beheimah",
@@ -5366,7 +5330,9 @@
           "name": "Kohen in a Non-Jewish Cemetery",
           "description": "Whether non-Jewish graves impart tumah to a kohen under a roof, and why many kohanim avoid such cemeteries.",
           "aliases": [
-            "Kohen Near a Non-Jewish Cemetery"
+            "Kohen Near a Non-Jewish Cemetery",
+            "Do Non-Jewish Graves Transmit Tumah",
+            "Non-Jewish Graves and Tumah"
           ]
         },
         {
@@ -5428,13 +5394,6 @@
         {
           "name": "Average Height of a Person in Halacha",
           "description": "The halachic measure of a person's height as three amos, whether it includes the head, and its use for mikveh size and privacy walls."
-        },
-        {
-          "name": "Do Non-Jewish Graves Transmit Tumah",
-          "description": "Whether a gentile's grave conveys tumah to what is above it, a dispute among Rishonim that matters for kohanim today.",
-          "aliases": [
-            "Non-Jewish Graves and Tumah"
-          ]
         },
         {
           "name": "Everyone Is Tamei Meis Today",
@@ -5990,10 +5949,6 @@
           "description": "How worry about what others think can weaken a person's convictions, and ways to stand firm against the crowd."
         },
         {
-          "name": "Hidden Motives Behind Our Choices",
-          "description": "Recognizing self-serving motives disguised as noble reasons, and examining whether a decision is truly right or just more comfortable."
-        },
-        {
           "name": "Inspiration From Everyday Events",
           "description": "Why ordinary experiences like illness may inspire more lasting change than witnessing an open miracle, which people assume will not recur."
         },
@@ -6003,7 +5958,10 @@
         },
         {
           "name": "Negios and Bias in Judgment",
-          "description": "How personal interests and hidden motives can cloud a person's judgment, even in halachic decisions, and how to guard against them."
+          "description": "How personal interests and hidden motives can cloud a person's judgment, even in halachic decisions, and how to guard against them.",
+          "aliases": [
+            "Hidden Motives Behind Our Choices"
+          ]
         },
         {
           "name": "Not Judging Those Who Give In",
@@ -6058,10 +6016,6 @@
         {
           "name": "Avoiding Suspicion",
           "description": "The obligation to stay clear of conduct that looks improper to onlookers, and why people in leadership roles are held to a higher standard."
-        },
-        {
-          "name": "Avoiding the Appearance of Idolatry",
-          "description": "Choosing to risk one's life rather than even seem to violate the Torah, as a sanctification of Hashem's name."
         },
         {
           "name": "Paying a Bill Promptly",
@@ -6134,10 +6088,6 @@
       "group": "Middos and Mussar",
       "description": "Loving one’s fellow Jew, “v’ahavta l’reiacha kamocha”.",
       "subtopics": [
-        {
-          "name": "Dignity for the Condemned",
-          "description": "The idea that love your neighbor requires choosing the most humane form of punishment, and giving the condemned a drink to dull the pain."
-        },
         {
           "name": "Kol Yisrael Areivim Zeh LaZeh",
           "description": "The concept that all Jews are responsible for one another, and how it motivates outreach to less observant Jews."
@@ -6297,7 +6247,10 @@
         },
         {
           "name": "Miracle of the Ner Maaravi",
-          "description": "The daily miracle in the Beis HaMikdash in which the western lamp of the menorah kept burning far longer than its oil should allow."
+          "description": "The daily miracle in the Beis HaMikdash in which the western lamp of the menorah kept burning far longer than its oil should allow.",
+          "aliases": [
+            "Ner Maaravi Miracle"
+          ]
         },
         {
           "name": "Miracles for Ordinary People",
@@ -6356,7 +6309,10 @@
         },
         {
           "name": "Selling Your Share in Olam Haba",
-          "description": "Whether a person can sell or give away his portion in the World to Come, and why such a sale may be void or even harmful."
+          "description": "Whether a person can sell or give away his portion in the World to Come, and why such a sale may be void or even harmful.",
+          "aliases": [
+            "Selling the Reward for a Mitzvah"
+          ]
         }
       ]
     },
@@ -6556,11 +6512,18 @@
       "subtopics": [
         {
           "name": "Aharon and the Golden Calf",
-          "description": "Explanations of why Aharon helped make the Golden Calf, including the view that he hoped to prevent a worse sin, and whether this was right."
+          "description": "Explanations of why Aharon helped make the Golden Calf, including the view that he hoped to prevent a worse sin, and whether this was right.",
+          "aliases": [
+            "Sin of the Golden Calf",
+            "Punishments for the Golden Calf"
+          ]
         },
         {
           "name": "Bowing to an Official Wearing Idols",
-          "description": "Whether a Jew may bow to a ruler who wears idolatrous images or claims divinity, and why Mordechai refused to bow to Haman."
+          "description": "Whether a Jew may bow to a ruler who wears idolatrous images or claims divinity, and why Mordechai refused to bow to Haman.",
+          "aliases": [
+            "Avoiding the Appearance of Idolatry"
+          ]
         },
         {
           "name": "Church Bells and Church Clocks",
@@ -6597,13 +6560,6 @@
         {
           "name": "Roman Emperors' Birthdays as Festivals",
           "description": "The Gemara's listing of rulers' birthdays among idolatrous festivals, and the restrictions on doing business around those days."
-        },
-        {
-          "name": "Sin of the Golden Calf",
-          "description": "Why Aharon took part in making the Golden Calf after Chur was killed, and the reasoning about preventing an even worse sin.",
-          "aliases": [
-            "Punishments for the Golden Calf"
-          ]
         },
         {
           "name": "Worshipped Water Sources",
@@ -6719,15 +6675,14 @@
         },
         {
           "name": "Telling Someone a Relative Died",
-          "description": "Whether one must inform a person that a close relative passed away, and how bad news should be shared."
+          "description": "Whether one must inform a person that a close relative passed away, and how bad news should be shared.",
+          "aliases": [
+            "Withholding News of a Death"
+          ]
         },
         {
           "name": "Waiting for the Mourner to Speak First",
           "description": "The rule that visitors at a shivah house should not speak until the mourner begins, and how it fits with common practice."
-        },
-        {
-          "name": "Withholding News of a Death",
-          "description": "Cases where news of a death was delayed to protect someone's Torah study or health, and the reasoning behind them."
         },
         {
           "name": "Yahrzeit in a Leap Year",
@@ -6910,16 +6865,13 @@
           "name": "Converts From Amalek",
           "description": "Whether a descendant of Amalek may convert to Judaism, the sources for and against, and how Haman's descendants came to teach Torah.",
           "aliases": [
-            "Accepting Converts From Amalek"
+            "Accepting Converts From Amalek",
+            "Descendants of Haman Learning Torah"
           ]
         },
         {
           "name": "Converts in Positions of Leadership",
           "description": "The rule that converts are not normally appointed to positions of authority, and how great converted sages could still lead."
-        },
-        {
-          "name": "Descendants of Haman Learning Torah",
-          "description": "The Talmudic statement that descendants of Haman, Sisera and Sancheriv became Torah scholars, and who those descendants were."
         },
         {
           "name": "Ger Toshav Before Conversion",
