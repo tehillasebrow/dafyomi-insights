@@ -43,6 +43,13 @@ const getArticle = cache(async (rawMasechta, rawDaf, rawSlug) => {
         candidates = byId || []
     }
 
+    // An article moved to another daf keeps its slug: its old address finds it here
+    // (when the slug is unique) and the page redirects to the new one
+    if (candidates.length === 0) {
+        const { data: moved } = await supabase.from('articles').select('*').eq('slug', slug).not('masechta', 'is', null).limit(2)
+        if (moved?.length === 1) return moved[0]
+    }
+
     return candidates.find(a => a.daf === daf)
         || candidates.find(a => a.daf <= daf && (a.daf_end ?? a.daf) >= daf)
         || null
