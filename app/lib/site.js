@@ -13,8 +13,7 @@ export const AUTHOR = {
     hebrewInitials: 'א״ס',
     email: 'asebrow@gmail.com',
     column: 'Delving into the Daf',
-    // Drop a portrait into /public and set its path here, e.g. '/rabbi-sebrow.jpg'.
-    // Until then a printed monogram plate is shown in its place.
-    photo: null,
+    // The portrait in /public; without one a printed monogram plate is shown
+    photo: '/rabbi-sebrow.jpg',
     bio: 'Rebbe at Yeshiva Ateres Shimon in Far Rockaway. He leads the Daf Yomi chaburah at Eitz Chayim of Dogwood Park in West Hempstead, and writes “Delving into the Daf” each week for The Jewish Home.',
 }
