@@ -52,7 +52,8 @@ const getArticle = cache(async (rawMasechta, rawDaf, rawSlug) => {
 
     return candidates.find(a => a.daf === daf)
         || candidates.find(a => a.daf <= daf && (a.daf_end ?? a.daf) >= daf)
-        || null
+        // Moved to another daf in the same masechta: the page redirects to its new address
+        || (candidates.length === 1 ? candidates[0] : null)
 })
 
 export async function generateMetadata({ params }) {
