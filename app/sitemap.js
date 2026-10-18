@@ -49,6 +49,7 @@ export default async function sitemap() {
         { url: `${SITE_URL}/daily`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
         { url: `${SITE_URL}/articles`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
         { url: `${SITE_URL}/daily/archive`, lastModified: now, changeFrequency: 'daily', priority: 0.6 },
+        { url: `${SITE_URL}/calendar`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
         { url: `${SITE_URL}/masechtos`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
         { url: `${SITE_URL}/topics`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
         { url: `${SITE_URL}/contact`, changeFrequency: 'yearly', priority: 0.5 },
