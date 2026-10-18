@@ -3341,6 +3341,10 @@
           "description": "Which breeds of chicken are accepted as kosher, and when a breed differs enough from the standard chicken to need its own tradition."
         },
         {
+          "name": "Kosher Substitutes for Forbidden Foods",
+          "description": "The teaching that for every forbidden food Hashem provided a permitted counterpart with a similar taste, and modern attempts to find kosher foods that taste like pork."
+        },
+        {
           "name": "Milk From Treif Cows",
           "description": "The concern that older dairy cows have high rates of treifos, and what that might mean for the kashrus of the milk they produce."
         },
@@ -4876,6 +4880,10 @@
           "description": "Whether kosher plants may rely on morning sample checks or must inspect every bird once tendon damage passes the significant-minority threshold."
         },
         {
+          "name": "Doubts Eliyahu Will Resolve",
+          "description": "Halachic questions the Gemara leaves undecided until Eliyahu HaNavi comes, such as the status of a pig-like animal found nursing from a sheep."
+        },
+        {
           "name": "Majority and Fixed Location in Doubts",
           "description": "When a doubt is decided by following the majority, and why something in a fixed place, such as a grave, may be treated differently."
         },
@@ -6386,6 +6394,10 @@
         {
           "name": "Valley of Dry Bones",
           "description": "Yechezkel's vision of dry bones coming to life, and the tradition that they were members of Ephraim who left Egypt too early."
+        },
+        {
+          "name": "Will Pork Be Permitted When Moshiach Comes",
+          "description": "The Midrash linking the word chazir to a future return, and whether it means pigs will become kosher, partly kosher or only better understood in the Messianic era."
         }
       ]
     },
