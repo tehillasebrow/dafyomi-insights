@@ -6,6 +6,7 @@
 // stored as tags too, with their own page at /topics/{topic}/{subtopic}.
 // Safe on client and server.
 import data from '@/data/topics.json'
+import intros from '@/data/topic-intros.json'
 
 // "Hilchos Halva&#x27;ah" / "R’ Meir" / "Hakaras Hatov" all reduce to the same key
 function key(text) {
@@ -64,6 +65,20 @@ export function topicPath(topic) {
 
 export function subtopicPath(sub) {
     return `/topics/${sub.topic.slug}/${sub.slug}`
+}
+
+// The topic's page heading, worded the way people search: "Anger in the Gemara",
+// or the fuller one written with its introduction
+const PLAIN_HEADINGS = new Set(['daf-quiz'])
+export function topicHeading(topic) {
+    if (intros[topic.slug]?.heading) return intros[topic.slug].heading
+    return PLAIN_HEADINGS.has(topic.slug) ? topic.name : `${topic.name} in the Gemara`
+}
+
+// The written introduction for a topic page (data/topic-intros.json), or null.
+// intro is paragraphs separated by blank lines; [text](/path) makes a link.
+export function topicIntro(topic) {
+    return intros[topic.slug] ?? null
 }
 
 // Stored tags -> their topics, without duplicates, in the order given.

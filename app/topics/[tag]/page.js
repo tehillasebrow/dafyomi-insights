@@ -4,7 +4,7 @@ import { supabase } from '@/app/lib/supabase'
 import { ARTICLE_LIST_COLUMNS, orderByPublished, decodeParam, articlePath } from '@/app/lib/articles'
 import { findMasechta, masechtaHref } from '@/app/lib/shas'
 import { buildMetadata, breadcrumbJsonLd, collectionJsonLd } from '@/app/lib/seo'
-import { findTopic, isRetiredTag, topicPath, tagVariants, TOPICS, subtopicsFor, subtopicPath } from '@/app/lib/topics'
+import { findTopic, isRetiredTag, topicPath, tagVariants, TOPICS, subtopicsFor, subtopicPath, topicHeading, topicIntro } from '@/app/lib/topics'
 import { STORY_CARD_COLUMNS, storyPath } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
 import ArticleRow from '@/app/components/ArticleRow'
@@ -12,14 +12,22 @@ import StoryRow from '@/app/components/StoryRow'
 
 export const revalidate = 3600
 
+// "Rabbi Sebrow explores [the manna](/daf/yoma/76/...)" -> text with a link
+function withLinks(text) {
+    return text.split(/(\[[^\]]+\]\([^)\s]+\))/).map((part, i) => {
+        const m = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/)
+        return m ? <Link key={i} href={m[2]}>{m[1]}</Link> : part
+    })
+}
+
 export async function generateMetadata({ params }) {
     const topic = findTopic(decodeParam((await params).tag))
     if (!topic) return {}
     // A topic with nothing filed under it yet stays out of Google until it has content
     const { count } = await supabase.from('articles').select('id', { count: 'exact', head: true }).overlaps('tags', tagVariants(topic))
     const meta = buildMetadata({
-        title: `${topic.name} in the Gemara – Daf Yomi Articles & Stories`,
-        description: `${topic.description} Daf Yomi articles and Gemara stories by Rabbi Avrohom Sebrow.`,
+        title: `${topicHeading(topic)} – Daf Yomi Articles & Stories`,
+        description: topicIntro(topic)?.description ?? `${topic.description} Daf Yomi articles and Gemara stories by Rabbi Avrohom Sebrow.`,
         path: topicPath(topic),
         keywords: [topic.name, `${topic.name} Gemara`, `${topic.name} Talmud`, `${topic.name} Daf Yomi`, ...(topic.aliases ?? []).filter(a => a.split(' ').length <= 3).slice(0, 6)],
     })
@@ -50,12 +58,13 @@ export default async function SingleTopicPage({ params }) {
     }
     const subtopics = [...subCounts].sort((a, b) => b[1] - a[1] || a[0].name.localeCompare(b[0].name))
     const path = topicPath(topic)
+    const intro = topicIntro(topic)
 
     return (
         <div className="folio py-6 md:py-8">
             <JsonLd data={breadcrumbJsonLd([{ name: 'Topics', path: '/topics' }, { name: topic.name, path }])} />
             <JsonLd data={collectionJsonLd({
-                name: `${topic.name} in the Gemara`,
+                name: topicHeading(topic),
                 description: topic.description,
                 path,
                 items: [
@@ -67,8 +76,13 @@ export default async function SingleTopicPage({ params }) {
 
             <header className="grid gap-1.5 pb-4 border-b border-rule-hard">
                 <p className="sc">{topic.group}</p>
-                <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.25rem)] leading-[1.02] tracking-[-0.02em]">{topic.name}</h1>
+                <h1 className="font-semibold text-[clamp(2.1rem,5vw,3.25rem)] leading-[1.02] tracking-[-0.02em]">{topicHeading(topic)}</h1>
                 <p className="text-lede text-ink-soft max-w-[62ch]">{topic.description}</p>
+                {intro && (
+                    <div className="grid gap-3 max-w-[62ch] pt-2">
+                        {intro.intro.split(/\n\s*\n/).map((para, i) => <p key={i}>{withLinks(para)}</p>)}
+                    </div>
+                )}
                 <p className="meta">
                     {articles.length} {articles.length === 1 ? 'article' : 'articles'}
                     {stories.length > 0 && `, ${stories.length} ${stories.length === 1 ? 'story' : 'stories'}`}
