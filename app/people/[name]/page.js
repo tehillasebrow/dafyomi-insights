@@ -4,7 +4,7 @@ import { supabase } from '@/app/lib/supabase'
 import { decodeParam, articlePath, articlePlace } from '@/app/lib/articles'
 import { MASECHTOS, findMasechta, masechtaHref, hebrewNumeral } from '@/app/lib/shas'
 import { buildMetadata, collectionJsonLd, breadcrumbJsonLd } from '@/app/lib/seo'
-import { findPersonBySlug, getStoriesAbout, storyPath, personPath, STORY_CARD_COLUMNS } from '@/app/lib/stories'
+import { findPersonBySlug, getStoriesAbout, storyPath, personPath, STORY_CARD_COLUMNS, MIN_STORIES_FOR_GOOGLE } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
 import StoryRow from '@/app/components/StoryRow'
 
@@ -18,12 +18,13 @@ export async function generateMetadata({ params }) {
     const person = await findPersonBySlug(decodeParam((await params).name))
     if (!person) return {}
 
-    return buildMetadata({
+    const meta = buildMetadata({
         title: `Stories about ${person.name} in the Gemara`,
         description: describe(person),
         path: personPath(person.name),
         keywords: [`${person.name} stories`, `${person.name} Gemara`, `${person.name} Talmud`, person.name],
     })
+    return person.count >= MIN_STORIES_FOR_GOOGLE ? meta : { ...meta, robots: { index: false, follow: true } }
 }
 
 const ORDER = new Map(MASECHTOS.map((m, i) => [m.name, i]))

@@ -31,7 +31,11 @@ function resolve(params) {
 export async function generateMetadata({ params }) {
     const { sub } = resolve(await params)
     if (!sub) return {}
-    const { count } = await supabase.from('articles').select('id', { count: 'exact', head: true }).overlaps('tags', subtopicVariants(sub))
+    const variants = subtopicVariants(sub)
+    // Articles or stories: a subject with only stories so far still has something to show
+    const [{ count: articleCount }, { count: storyCount }] = await Promise.all(['articles', 'stories'].map(table =>
+        supabase.from(table).select('id', { count: 'exact', head: true }).overlaps('tags', variants)))
+    const count = (articleCount ?? 0) + (storyCount ?? 0)
     const meta = buildMetadata({
         // "Are Pets Muktzeh? – Shabbos in the Gemara"; no second "in the Gemara" when the heading has one
         title: subtopicHeading(sub).endsWith(' in the Gemara') ? `${subtopicHeading(sub)} – ${sub.topic.name}` : `${subtopicHeading(sub)} – ${topicHeading(sub.topic)}`,

@@ -4,6 +4,7 @@
 // stories migration has been applied.
 import { supabase } from '@/app/lib/supabase'
 import { slugify, BEYOND_THE_DAF } from '@/app/lib/articles'
+import { quoteTag } from '@/app/lib/topics'
 
 export const STORY_CARD_COLUMNS = 'id, slug, title, summary, masechta, daf, people, tags'
 
@@ -66,7 +67,7 @@ export async function getStoriesWithTag(tag) {
     const { data } = await supabase
         .from('stories')
         .select(STORY_CARD_COLUMNS)
-        .contains('tags', [tag])
+        .contains('tags', [quoteTag(tag)])
         .order('masechta')
         .order('daf')
     return data ?? []
@@ -81,6 +82,10 @@ export async function getAllStories(columns = STORY_CARD_COLUMNS) {
         .order('position')
     return data ?? []
 }
+
+// A sage with a single story has a near-empty page: readers can still open it,
+// but it stays out of Google (sitemap + noindex) until a second story arrives
+export const MIN_STORIES_FOR_GOOGLE = 2
 
 // Every sage who appears in a story, with how many stories they're in
 export async function getAllPeople() {

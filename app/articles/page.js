@@ -3,7 +3,7 @@ import { supabase } from '@/app/lib/supabase'
 import { ARTICLE_LIST_COLUMNS, articleDate, onDaf, orderByPublished } from '@/app/lib/articles'
 import { MASECHTOS, findMasechta } from '@/app/lib/shas'
 import { buildMetadata } from '@/app/lib/seo'
-import { findTopic, tagVariants, topicsFor } from '@/app/lib/topics'
+import { findTopic, tagVariants, topicsFor, quoteTag } from '@/app/lib/topics'
 import ArticleRow from '@/app/components/ArticleRow'
 
 export const revalidate = 300
@@ -38,7 +38,7 @@ export default async function ArticlesPage({ searchParams }) {
     if (masechta) query = query.ilike('masechta', masechta)
     // ?topic= takes a topic name or slug; old spellings of it are matched too
     const topicMatch = topic ? findTopic(topic) : null
-    if (topic) query = topicMatch ? query.overlaps('tags', tagVariants(topicMatch)) : query.contains('tags', [topic])
+    if (topic) query = topicMatch ? query.overlaps('tags', tagVariants(topicMatch)) : query.contains('tags', [quoteTag(topic)])
 
     const [{ data, error }, { data: index }] = await Promise.all([
         orderByPublished(query),

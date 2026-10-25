@@ -132,8 +132,14 @@ export function subtopicsFor(tags = []) {
     return out
 }
 
+// supabase-js joins array filters with bare commas, so a tag like
+// "Death of the 24,000 Students" would split in two; quoting keeps it whole
+export function quoteTag(tag) {
+    return `"${tag.replace(/["\\]/g, '\\$&')}"`
+}
+
 function variants(names) {
-    return [...new Set(names.flatMap(n => [n, n.replace(/'/g, '&#x27;')]))]
+    return [...new Set(names.flatMap(n => [n, n.replace(/'/g, '&#x27;')]))].map(quoteTag)
 }
 
 // Every stored spelling of a topic (and of its subtopics), for database queries (.overlaps('tags', ...))
