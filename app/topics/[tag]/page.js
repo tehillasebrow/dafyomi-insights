@@ -24,7 +24,11 @@ export async function generateMetadata({ params }) {
     const topic = findTopic(decodeParam((await params).tag))
     if (!topic) return {}
     // A topic with nothing filed under it yet stays out of Google until it has content
-    const { count } = await supabase.from('articles').select('id', { count: 'exact', head: true }).overlaps('tags', tagVariants(topic))
+    const variants = tagVariants(topic)
+    // Articles or stories: a subject with only stories so far still has something to show
+    const [{ count: articleCount }, { count: storyCount }] = await Promise.all(['articles', 'stories'].map(table =>
+        supabase.from(table).select('id', { count: 'exact', head: true }).overlaps('tags', variants)))
+    const count = (articleCount ?? 0) + (storyCount ?? 0)
     const meta = buildMetadata({
         title: `${topicHeading(topic)} – Daf Yomi Articles & Stories`,
         description: topicIntro(topic)?.description ?? `${topic.description} Daf Yomi articles and Gemara stories by Rabbi Avrohom Sebrow.`,

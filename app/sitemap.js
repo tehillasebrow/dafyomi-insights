@@ -2,7 +2,7 @@ import { supabase } from '@/app/lib/supabase'
 import { SITE_URL } from '@/app/lib/site'
 import { masechtaHref } from '@/app/lib/shas'
 import { articlePath, articleDate, dafPath, BEYOND_THE_DAF_PATH } from '@/app/lib/articles'
-import { storyPath, personPath } from '@/app/lib/stories'
+import { storyPath, personPath, MIN_STORIES_FOR_GOOGLE } from '@/app/lib/stories'
 import { topicsFor, topicPath, subtopicsFor, subtopicPath } from '@/app/lib/topics'
 
 export const revalidate = 3600
@@ -33,12 +33,16 @@ export default async function sitemap() {
         for (const t of topicsFor(a.tags)) touch(topicPath(t), articleDate(a))
         for (const s of subtopicsFor(a.tags)) touch(subtopicPath(s), articleDate(a))
     }
+    const storiesPerPerson = new Map()
+    for (const s of stories ?? []) for (const name of s.people ?? []) {
+        if (name?.trim()) storiesPerPerson.set(name.trim(), (storiesPerPerson.get(name.trim()) ?? 0) + 1)
+    }
     for (const s of stories ?? []) {
         if (s.masechta) touch(masechtaHref(s.masechta), s.updated_at)
         touch('/stories', s.updated_at)
         touch('/people', s.updated_at)
         for (const name of s.people ?? []) {
-            if (name?.trim()) touch(personPath(name.trim()), s.updated_at)
+            if (storiesPerPerson.get(name?.trim()) >= MIN_STORIES_FOR_GOOGLE) touch(personPath(name.trim()), s.updated_at)
         }
         for (const t of topicsFor(s.tags)) touch(topicPath(t), s.updated_at)
         for (const sub of subtopicsFor(s.tags)) touch(subtopicPath(sub), s.updated_at)
