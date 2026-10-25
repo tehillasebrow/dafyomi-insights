@@ -4,7 +4,7 @@ import { MASECHTOS, findMasechta, todayInNewYork, weekOfDafim } from '@/app/lib/
 import { buildMetadata, collectionJsonLd } from '@/app/lib/seo'
 import { getAllStories, storyPath, storyPlace } from '@/app/lib/stories'
 import JsonLd from '@/app/components/JsonLd'
-import StoryRow from '@/app/components/StoryRow'
+import StoryTile from '@/app/components/StoryTile'
 import StoryGroupSwitch from '@/app/components/StoryGroupSwitch'
 
 export const revalidate = 3600
@@ -48,14 +48,13 @@ export default async function StoriesPage() {
 
             <header className="grid gap-2 pb-4 border-b border-rule-hard">
                 <h1 className="font-semibold text-[clamp(2.25rem,6vw,3.75rem)] leading-none tracking-[-0.02em]">Gemara stories</h1>
-                <p className="text-lede text-ink-soft max-w-[58ch]">The aggadah of the Daf, story by story, from Rabbi Sebrow’s articles. {stories.length > 0 && `${stories.length} stories so far.`}</p>
             </header>
 
             <div className="flex flex-wrap items-center gap-2 py-3.5 border-b border-rule">
                 <StoryGroupSwitch current="masechta" />
                 {masechtos.length > 1 && (
-                    <nav aria-label="Jump to masechta" className="flex flex-wrap gap-1.5">
-                        {masechtos.map(m => <a key={m} href={`#${slugify(m)}`} className="chip">{m}</a>)}
+                    <nav aria-label="Jump to masechta" className="flex flex-wrap gap-1.5 max-sm:flex-nowrap max-sm:overflow-x-auto max-sm:whitespace-nowrap max-sm:w-full">
+                        {masechtos.map(m => <a key={m} href={`#${slugify(m)}`} className="chip bg-surface hover:bg-mark">{m}</a>)}
                     </nav>
                 )}
             </div>
@@ -66,15 +65,19 @@ export default async function StoriesPage() {
 
             {thisWeek.length > 0 && (
                 <section aria-labelledby="week-h" className="pt-6">
-                    <h2 id="week-h" className="sc">On this week’s dafim</h2>
-                    {thisWeek.map(s => <StoryRow key={s.id} story={s} />)}
+                    <h2 id="week-h" className="font-semibold text-h2 tracking-[-0.02em] border-b border-rule-hard pb-2"><span className="hl">On this week’s dafim</span></h2>
+                    <div className="grid gap-3.5 pt-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {thisWeek.map(s => <StoryTile key={s.id} story={s} />)}
+                    </div>
                 </section>
             )}
 
             {masechtos.map(m => (
                 <section key={m} id={slugify(m)} aria-labelledby={`${slugify(m)}-h`} className="pt-6 scroll-mt-4">
                     <h2 id={`${slugify(m)}-h`} className="font-semibold text-h2 tracking-[-0.02em] border-b border-rule-hard pb-2">{m}</h2>
-                    {groups.get(m).map(s => <StoryRow key={s.id} story={s} showMasechta={false} />)}
+                    <div className="grid gap-3.5 pt-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {groups.get(m).map(s => <StoryTile key={s.id} story={s} showMasechta={false} />)}
+                    </div>
                 </section>
             ))}
         </div>

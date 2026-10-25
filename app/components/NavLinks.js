@@ -16,7 +16,7 @@ export const NAV = [
 
 export const MORE = [
     { href: '/stories', label: 'Gemara stories', match: ['/stories'] },
-    { href: '/people', label: 'Stories by sage', match: ['/people'] },
+    { href: '/people', label: 'Stories by person', match: ['/people'] },
     { href: '/calendar', label: 'Daf Yomi calendar', match: ['/calendar'] },
     { href: '/daily/archive', label: 'Past discussions', match: ['/daily/archive'] },
 ]
@@ -69,7 +69,7 @@ export default function NavLinks() {
                     <svg aria-hidden="true" viewBox="0 0 12 12" className={`w-3 h-3 ml-1 fill-none stroke-current stroke-[1.8] transition-transform ${open ? 'rotate-180' : ''}`}><path d="M2 4l4 4 4-4" /></svg>
                 </button>
                 {open && (
-                    <ul id="more-menu" className="absolute right-0 top-full z-40 mt-1 min-w-[14rem] index-card py-1">
+                    <ul id="more-menu" className="absolute right-0 top-full z-40 mt-1 min-w-[14rem] index-card text-ink py-1">
                         {more.map(item => (
                             <li key={item.href}>
                                 <Link

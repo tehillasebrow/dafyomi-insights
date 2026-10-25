@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { supabase } from '@/app/lib/supabase'
 import { getArticlesForDaf, articlePath, dafLabel, dafPath, readingMinutes, ARTICLE_LIST_COLUMNS } from '@/app/lib/articles'
 import { STORY_CARD_COLUMNS, storyPath } from '@/app/lib/stories'
-import { findMasechta, dafYomiFor, hebrewNumeral, hebrewDate, dayLabel, yomTovName, siyumDate, siyumHaShasDate, formatDate, todayInNewYork } from '@/app/lib/shas'
+import { findMasechta, dafYomiFor, hebrewNumeral, hebrewDate, dayLabel, siyumDate, siyumHaShasDate, formatDate, todayInNewYork } from '@/app/lib/shas'
 import DailyDiscussion from './DailyDiscussion'
 import Luach from './Luach'
 import DafPicker from './DafPicker'
@@ -20,7 +20,6 @@ export default async function DailyView({ date, daily, admin = false }) {
     const masechta = findMasechta(daily?.masechta) ?? computed.masechta
     const daf = daily?.daf ?? computed.daf
     const label = dayLabel(date)
-    const holy = date.getUTCDay() === 6 || Boolean(yomTovName(date))
     const isToday = date.getTime() === today.getTime()
 
     const [articles, { data: stories }, { data: prev }, { data: next }, { data: recent }] = await Promise.all([
@@ -110,11 +109,6 @@ export default async function DailyView({ date, daily, admin = false }) {
                     <div>
                         {daily ? (
                             <DailyDiscussion dailyId={daily.id} isAdmin={admin} title={isToday ? "Today's daf discussion" : 'Discussion'} />
-                        ) : holy ? (
-                            <div className="border border-rule-hard p-4 grid gap-1">
-                                <b className="font-semibold text-[1.25rem]">{yomTovName(date) ?? 'Shabbos Kodesh'}</b>
-                                <p className="meta">There is no discussion on {yomTovName(date) ? 'Yom Tov' : 'Shabbos'}. It reopens afterwards.</p>
-                            </div>
                         ) : (
                             <section aria-labelledby="recent-d">
                                 <h2 id="recent-d" className="font-semibold text-h2 tracking-[-0.02em] border-b border-rule-hard pb-2">Recent discussions</h2>

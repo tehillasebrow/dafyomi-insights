@@ -32,7 +32,7 @@ export default async function TopicsPage() {
     const subjectsOf = t => t.subtopics
         .filter(s => subCounts.has(s))
         .sort((a, b) => subCounts.get(b) - subCounts.get(a) || a.name.localeCompare(b.name))
-    const SHOWN = 6
+    const SHOWN = 4
 
     // Only topics with something filed under them, grouped like data/topics.json
     const groups = TOPIC_GROUPS
@@ -61,32 +61,33 @@ export default async function TopicsPage() {
 
             <header className="grid gap-2 pb-4 border-b border-rule-hard">
                 <h1 className="font-semibold text-[clamp(2.25rem,6vw,3.75rem)] leading-none tracking-[-0.02em]">Topics</h1>
-                <p className="text-lede text-ink-soft max-w-[58ch]">Every subject the articles and stories touch on, filed by area.</p>
             </header>
 
             {groups.length === 0 ? (
                 <p className="text-ink-soft py-4">Topics appear here as articles are tagged.</p>
             ) : (
                 <>
-                    <nav aria-label="Topic areas" className="flex flex-wrap gap-x-4 gap-y-1 py-3.5 border-b border-rule">
-                        {groups.map(g => <a key={g.group} href={`#${slugify(g.group)}`} className="tap">{g.group}</a>)}
+                    <nav aria-label="Topic areas" className="flex flex-wrap gap-2 py-4 border-b border-rule max-sm:flex-nowrap max-sm:overflow-x-auto max-sm:whitespace-nowrap">
+                        {groups.map(g => <a key={g.group} href={`#${slugify(g.group)}`} className="chip bg-surface hover:bg-mark">{g.group}</a>)}
                     </nav>
                     {groups.map(g => (
                         <section key={g.group} id={slugify(g.group)} aria-labelledby={`${slugify(g.group)}-h`} className="pt-7 scroll-mt-24">
                             <h2 id={`${slugify(g.group)}-h`} className="font-semibold text-h2 tracking-[-0.02em] border-b border-rule-hard pb-2">{g.group}</h2>
-                            <ul className="grid md:grid-cols-2 md:gap-x-8">
+                            <ul className="grid gap-3.5 pt-4 sm:grid-cols-2 lg:grid-cols-3">
                                 {g.topics.map(t => {
                                     const subjects = subjectsOf(t)
                                     return (
-                                        <li key={t.slug} className="border-b border-rule py-2.5">
-                                            <Link href={topicPath(t)} className="font-semibold">{t.name}</Link>
-                                            <span className="meta block">{t.note}</span>
+                                        <li key={t.slug} className="index-card p-5 grid gap-2.5 content-start min-w-0">
+                                            <div className="grid gap-0.5">
+                                                <Link href={topicPath(t)} className="topic-name">{t.name}</Link>
+                                                <span className="meta">{t.note}</span>
+                                            </div>
                                             {subjects.length > 0 && (
-                                                <p className="text-sm text-ink-soft pt-1 leading-relaxed">
-                                                    {subjects.slice(0, SHOWN).map((s, i) => <span key={s.slug}>{i > 0 && ' · '}<Link href={subtopicPath(s)}>{s.name}</Link></span>)}
-                                                    {subjects.length > SHOWN && <> · <Link href={topicPath(t)}>{subjects.length - SHOWN} more</Link></>}
-                                                </p>
+                                                <ul className="topic-subs">
+                                                    {subjects.slice(0, SHOWN).map(s => <li key={s.slug}><Link href={subtopicPath(s)}>{s.name}</Link></li>)}
+                                                </ul>
                                             )}
+                                            {subjects.length > SHOWN && <Link href={topicPath(t)} className="kicker no-underline hover:underline">All {subjects.length} subjects →</Link>}
                                         </li>
                                     )
                                 })}

@@ -77,7 +77,7 @@ export default function SubscribePopup() {
             <div className="grid gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:p-5">
                 <div className="flex items-start justify-between gap-3">
                     <div className="grid gap-1">
-                        <span className="sc">Free · Weekly</span>
+                        <span className="sc">Weekly</span>
                         <h2 id="subscribe-popup-title" className="text-[1.25rem] font-semibold leading-snug">Get each new article by email</h2>
                     </div>
                     <button type="button" onClick={close} className="btn-quiet shrink-0 -mr-1 -mt-1" aria-label="Close">✕</button>

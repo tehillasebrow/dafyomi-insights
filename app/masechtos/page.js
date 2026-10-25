@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { supabase } from '@/app/lib/supabase'
-import { MASECHTOS, SEDARIM, findMasechta, masechtaHref, todayInNewYork, dafYomiFor, siyumDate, dateOfDaf, formatDate, CYCLE_LENGTH } from '@/app/lib/shas'
+import { MASECHTOS, SEDARIM, findMasechta, masechtaHref, todayInNewYork, dafYomiFor, siyumDate, dateOfDaf, formatDate } from '@/app/lib/shas'
 import { buildMetadata } from '@/app/lib/seo'
 
 export const revalidate = 3600
@@ -47,10 +47,6 @@ export default async function MasechtosPage() {
         <div className="folio py-6 md:py-8">
             <header className="grid gap-2 pb-4 border-b border-rule-hard">
                 <h1 className="font-semibold text-[clamp(2.25rem,6vw,3.75rem)] leading-none tracking-[-0.02em]">Masechtos</h1>
-                <p className="text-lede text-ink-soft max-w-[62ch]">
-                    The Daf Yomi cycle: Talmud Bavli, with Shekalim from the Yerushalmi and the Mishnayos of Kinnim and Middos.
-                    Today is daf {todays.position.toLocaleString('en-US')} of {CYCLE_LENGTH.toLocaleString('en-US')}.
-                </p>
             </header>
 
             <Link href={masechtaHref(current.name)} className="on-binding plain grid gap-1 p-4 mt-5 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-x-6">

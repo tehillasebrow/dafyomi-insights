@@ -8,7 +8,7 @@ const COLUMNS = [
         ['/articles', 'All articles'],
         ['/beyond-the-daf', 'Beyond the Daf'],
         ['/stories', 'Gemara stories'],
-        ['/people', 'Stories by sage'],
+        ['/people', 'Stories by person'],
         ['/daily', "Today's Daf"],
         ['/calendar', 'Daf Yomi calendar'],
     ]],
@@ -40,7 +40,7 @@ export default function SiteFooter() {
                 <section aria-labelledby="footer-subscribe" className="grid gap-2 md:col-span-3 border-t border-[var(--binding-line)] pt-6 md:grid-cols-[1.3fr_2fr] md:gap-6 md:items-center">
                     <div className="grid gap-1">
                         <b id="footer-subscribe" className="text-[1.125rem]">Get each new article by email</b>
-                        <p className="note">Free, once a week when the column comes out. Unsubscribe anytime.</p>
+                        <p className="note">Once a week, when the column comes out. Unsubscribe anytime.</p>
                     </div>
                     <SubscribeForm source="footer" onBinding />
                 </section>
