@@ -76,7 +76,7 @@ export async function buildLlmsTxt() {
     }
 
     if (people.length) {
-        lines.push('## Stories by sage', '')
+        lines.push('## Stories by person', '')
         for (const p of people) lines.push(`- [${p.name}](${url(personPath(p.name))}): ${p.count} ${p.count === 1 ? 'story' : 'stories'}`)
         lines.push('')
     }

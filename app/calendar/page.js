@@ -42,7 +42,6 @@ export default async function CalendarPage() {
             <JsonLd data={breadcrumbJsonLd([{ name: 'Daf Yomi Calendar', path: '/calendar' }])} />
             <header className="grid gap-2">
                 <h1 className="text-[clamp(2.1rem,5vw,3.25rem)] leading-[1.05]"><span className="hl">Daf Yomi Calendar</span></h1>
-                <p className="text-lede text-ink-soft max-w-[62ch]">Which daf is learned on each day, week by week. Choose how many weeks to show, print them for the fridge or the shul, or look up the date of any daf.</p>
             </header>
 
             <section aria-label="Today's daf" className="bg-foil text-[#17181c] rounded-md px-5 py-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-5 gap-y-1 items-center max-sm:grid-cols-1">

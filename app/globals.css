@@ -430,6 +430,26 @@
     .on-binding .luach-span { background: transparent; color: var(--binding-ink); border-top: 2px solid var(--foil); }
 
 
+    /* The menu bar is black. Only the bar's own pieces change colour: the More list,
+       the phone menu and the search sheet open on paper and keep the normal colours. */
+    .masthead { background: var(--binding); color: var(--binding-ink); }
+    .masthead .nav-a { color: var(--binding-ink); }
+    .masthead .nav-a:hover { text-decoration-color: var(--foil); }
+    .masthead .nav-a[aria-current="page"], .masthead .nav-a[data-current] { color: var(--foil); background: linear-gradient(transparent 86%, var(--foil) 86%); }
+    .masthead .nav-a[aria-current="page"]::before { color: var(--foil); }
+    .masthead .nav-a:focus-visible, .masthead-actions > .btn-quiet:focus-visible { outline-color: var(--foil); }
+    .masthead-actions > .btn-quiet { color: var(--binding-ink); border-color: var(--binding-ink); }
+    .masthead-actions > .btn-quiet:hover { background: var(--foil); color: #17181c; border-color: var(--foil); }
+
+    /* Topics page: one index card per topic, its top subjects one per line */
+    .topic-name { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.15; text-decoration: none; }
+    .topic-name:hover { background: linear-gradient(transparent 55%, var(--mark) 55% 95%, transparent 95%); }
+    .topic-subs { display: grid; gap: 0.3rem; }
+    .topic-subs li { position: relative; padding-left: 0.9rem; font-size: var(--text-ui); line-height: 1.45; }
+    .topic-subs li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 6px; height: 6px; background: var(--foil); outline: 1px solid var(--ink-faint); }
+    .topic-subs a { text-decoration: none; border-bottom: 1px solid var(--rule); }
+    .topic-subs a:hover { border-bottom-color: var(--ink); }
+
     /* Main menu: the current page gets a highlighter stroke and a blue dot */
     .nav-a {
         display: inline-flex; align-items: center; min-height: 44px; padding-inline: 0.55rem;

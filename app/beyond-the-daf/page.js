@@ -34,7 +34,6 @@ export default async function BeyondTheDafPage() {
 
             <header className="grid gap-2 pb-4 border-b border-rule-hard">
                 <h1 className="font-semibold text-[clamp(2.25rem,6vw,3.75rem)] leading-none tracking-[-0.02em]">{BEYOND_THE_DAF}</h1>
-                <p className="text-lede text-ink-soft max-w-[58ch]">{DESCRIPTION}</p>
             </header>
 
             <p className="meta pt-3" aria-live="polite">

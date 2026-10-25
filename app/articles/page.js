@@ -85,7 +85,6 @@ export default async function ArticlesPage({ searchParams }) {
         <div className="folio py-6 md:py-8">
             <header className="grid gap-2 pb-4 border-b border-rule-hard">
                 <h1 className="font-semibold text-[clamp(2.25rem,6vw,3.75rem)] leading-none tracking-[-0.02em]">Articles</h1>
-                <p className="text-lede text-ink-soft max-w-[58ch]">Every “Delving into the Daf” article, {sort === 'shas' ? 'in the order of Shas' : 'newest first'}.</p>
                 <p className="meta">Tributes, interviews and other writings are in <Link href="/beyond-the-daf">Beyond the Daf</Link>.</p>
             </header>
 

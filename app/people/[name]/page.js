@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
     if (!person) return {}
 
     const meta = buildMetadata({
-        title: `Stories about ${person.name} in the Gemara`,
+        title: `Stories about ${person.name}`,
         description: describe(person),
         path: personPath(person.name),
         keywords: [`${person.name} stories`, `${person.name} Gemara`, `${person.name} Talmud`, person.name],
@@ -74,14 +74,14 @@ export default async function PersonPage({ params }) {
                 items: stories.map(s => ({ name: s.title, path: storyPath(s) })),
             })} />
             <JsonLd data={breadcrumbJsonLd([
-                { name: 'Sages', path: '/people' },
+                { name: 'People', path: '/people' },
                 { name: person.name, path },
             ])} />
 
             <nav aria-label="Breadcrumb" className="crumbs">
                 <Link href="/stories">Stories</Link>
                 <span aria-hidden="true">›</span>
-                <Link href="/people">Sages</Link>
+                <Link href="/people">People</Link>
             </nav>
 
             <header className="grid gap-1.5 pb-4 border-b border-rule-hard">
