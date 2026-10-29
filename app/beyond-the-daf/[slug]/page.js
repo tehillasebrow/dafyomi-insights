@@ -1,6 +1,5 @@
 import { cache } from 'react'
 import { supabase } from '@/app/lib/supabase'
-import { isAdmin } from '@/app/lib/adminAuth'
 import { BEYOND_THE_DAF, BEYOND_THE_DAF_PATH, articlePath, articleDate, formatArticleDate, decodeParam, isStandalone, readingMinutes } from '@/app/lib/articles'
 import { buildMetadata, clip, absoluteUrl, authorJsonLd, breadcrumbJsonLd, WEBSITE_ID } from '@/app/lib/seo'
 import { getStoriesForArticle, storyPath } from '@/app/lib/stories'
@@ -15,7 +14,9 @@ import JsonLd from '@/app/components/JsonLd'
 import ArticleBody from '@/app/components/ArticleBody'
 import RelatedStories from '@/app/components/RelatedStories'
 
-export const revalidate = 0
+// Cached for an hour (saving an article in the admin refreshes it at once). The owner's
+// comment delete buttons are checked in the browser, so the page needn't be rebuilt per visit.
+export const revalidate = 3600
 
 // A standalone article (tribute, Q&A, magazine piece): one with no masechta/daf.
 // Shared by generateMetadata and the page, so the DB is only hit once.
@@ -81,10 +82,7 @@ export default async function BeyondTheDafArticlePage({ params }) {
         permanentRedirect(canonical)
     }
 
-    const [admin, stories] = await Promise.all([
-        isAdmin(),
-        getStoriesForArticle(article.id),
-    ])
+    const stories = await getStoriesForArticle(article.id)
 
     // Google Schema
     const url = absoluteUrl(canonical)
@@ -188,7 +186,7 @@ export default async function BeyondTheDafArticlePage({ params }) {
 
                     <RelatedStories masechta={null} stories={stories} folded />
 
-                    <Comments articleId={article.id} isAdmin={admin} />
+                    <Comments articleId={article.id} />
 
                     <AuthorStrip />
                 </div>

@@ -30,6 +30,11 @@ export async function logout() {
     revalidatePath('/admin')
 }
 
+// Lets cached public pages show the owner's comment controls
+export async function amIAdmin() {
+    return isAdmin()
+}
+
 // --- Helpers ---
 
 function text(formData, key) {
