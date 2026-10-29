@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useId, useSyncExternalStore } from 'react'
 import { supabase } from '@/app/lib/supabase'
-import { deleteComment, postComment } from '@/app/admin/actions'
+import { deleteComment, postComment, amIAdmin } from '@/app/admin/actions'
 import { postingStatus } from '@/app/lib/shas'
 
 const noSubscription = () => () => {}
@@ -19,7 +19,7 @@ function when(value) {
 
 // A discussion thread with its form. Shared by articles ("Questions on this article")
 // and the daily page ("Today's daf discussion"). Posting closes on Shabbos and Yom Tov.
-export default function CommentThread({ kind, parentId, isAdmin = false, title, id = 'discussion', prompt = 'Your question or comment' }) {
+export default function CommentThread({ kind, parentId, title, id = 'discussion', prompt = 'Your question or comment' }) {
     const [comments, setComments] = useState([])
     const [loaded, setLoaded] = useState(false)
     const [loadError, setLoadError] = useState(false)
@@ -29,6 +29,13 @@ export default function CommentThread({ kind, parentId, isAdmin = false, title, 
     const [error, setError] = useState('')
     const [notice, setNotice] = useState('')
     const formId = useId()
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    // Pages are cached, so the owner's delete buttons are switched on here. Only someone
+    // with the login hint cookie asks the server, which checks the real session.
+    useEffect(() => {
+        if (/(?:^|; )admin_hint=/.test(document.cookie)) amIAdmin().then(setIsAdmin, () => {})
+    }, [])
 
     // Shabbos/Yom Tov depends on the reader's clock, so it's read in the browser only.
     // The snapshot is a string so React can compare it between renders.

@@ -14,7 +14,7 @@ const LONG = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 
 // One day of the Daf: the daf, the article that covers it, and that day's discussion.
 // date: UTC midnight of the civil day. daily: the daily_discussions row, if one was set up.
-export default async function DailyView({ date, daily, admin = false }) {
+export default async function DailyView({ date, daily }) {
     const today = todayInNewYork()
     const computed = dafYomiFor(date)
     const masechta = findMasechta(daily?.masechta) ?? computed.masechta
@@ -108,7 +108,7 @@ export default async function DailyView({ date, daily, admin = false }) {
                 <div className="grid gap-8 pt-6 lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:gap-x-9">
                     <div>
                         {daily ? (
-                            <DailyDiscussion dailyId={daily.id} isAdmin={admin} title={isToday ? "Today's daf discussion" : 'Discussion'} />
+                            <DailyDiscussion dailyId={daily.id} title={isToday ? "Today's daf discussion" : 'Discussion'} />
                         ) : (
                             <section aria-labelledby="recent-d">
                                 <h2 id="recent-d" className="font-semibold text-h2 tracking-[-0.02em] border-b border-rule-hard pb-2">Recent discussions</h2>

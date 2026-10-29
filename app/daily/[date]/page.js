@@ -1,11 +1,10 @@
 import { supabase } from '@/app/lib/supabase'
-import { isAdmin } from '@/app/lib/adminAuth'
 import { notFound } from 'next/navigation'
 import DailyView from '@/app/components/DailyView'
 import { formatDate } from '@/app/lib/shas'
 import { buildMetadata } from '@/app/lib/seo'
 
-export const revalidate = 0
+export const revalidate = 3600
 
 // Dates are stored as YYYY-MM-DD, so format them in UTC to avoid showing the day before
 const LONG_DATE = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
@@ -37,11 +36,8 @@ export default async function SingleDailyPage({ params }) {
     const { date } = await params
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return notFound()
 
-    const [{ data: daily }, admin] = await Promise.all([
-        supabase.from('daily_discussions').select('*').eq('date', date).maybeSingle(),
-        isAdmin(),
-    ])
+    const { data: daily } = await supabase.from('daily_discussions').select('*').eq('date', date).maybeSingle()
     if (!daily) return notFound()
 
-    return <DailyView date={new Date(`${date}T00:00:00Z`)} daily={daily} admin={admin} />
+    return <DailyView date={new Date(`${date}T00:00:00Z`)} daily={daily} />
 }

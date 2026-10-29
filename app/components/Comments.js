@@ -2,6 +2,6 @@
 
 import CommentThread from './CommentThread'
 
-export default function Comments({ articleId, isAdmin = false }) {
-    return <CommentThread kind="article" parentId={articleId} isAdmin={isAdmin} title="Questions on this article" />
+export default function Comments({ articleId }) {
+    return <CommentThread kind="article" parentId={articleId} title="Questions on this article" />
 }

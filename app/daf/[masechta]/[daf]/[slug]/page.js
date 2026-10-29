@@ -1,6 +1,5 @@
 import { cache } from 'react'
 import { supabase } from '@/app/lib/supabase'
-import { isAdmin } from '@/app/lib/adminAuth'
 import { articlePath, articleDate, formatArticleDate, dafLabel, dafPath, decodeParam, readingMinutes } from '@/app/lib/articles'
 import { masechtaHref, masechtaFromParam, masechtaSlug, findMasechta, hebrewNumeral, otherSpellings } from '@/app/lib/shas'
 import { buildMetadata, clip, absoluteUrl, authorJsonLd, breadcrumbJsonLd, talmudSourceJsonLd, WEBSITE_ID } from '@/app/lib/seo'
@@ -16,7 +15,9 @@ import JsonLd from '@/app/components/JsonLd'
 import ArticleBody from '@/app/components/ArticleBody'
 import RelatedStories from '@/app/components/RelatedStories'
 
-export const revalidate = 0
+// Cached for an hour (saving an article in the admin refreshes it at once). The owner's
+// comment delete buttons are checked in the browser, so the page needn't be rebuilt per visit.
+export const revalidate = 3600
 
 // Shared by generateMetadata and the page, so the DB is only hit once
 const getArticle = cache(async (rawMasechta, rawDaf, rawSlug) => {
@@ -108,8 +109,7 @@ export default async function ArticlePage({ params }) {
         .limit(1)
         .maybeSingle()
 
-    const [admin, stories, { data: prev }, { data: next }] = await Promise.all([
-        isAdmin(),
+    const [stories, { data: prev }, { data: next }] = await Promise.all([
         getStoriesForArticle(article.id),
         neighbour('lt', false),
         neighbour('gt', true),
@@ -262,7 +262,7 @@ export default async function ArticlePage({ params }) {
 
                     <RelatedStories masechta={article.masechta} stories={stories} folded />
 
-                    <Comments articleId={article.id} isAdmin={admin} />
+                    <Comments articleId={article.id} />
 
                     <AuthorStrip />
                 </div>

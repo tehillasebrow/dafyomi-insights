@@ -6,6 +6,9 @@ import { cookies } from 'next/headers'
 import { createHmac, timingSafeEqual } from 'crypto'
 
 export const ADMIN_COOKIE = 'admin_session'
+// Readable by the browser, so public pages (which are cached) only ask the server
+// "am I the admin?" for someone who has logged in. It proves nothing by itself.
+export const ADMIN_HINT_COOKIE = 'admin_hint'
 const SESSION_SECONDS = 60 * 60 * 24 * 7 // 7 days
 
 function getSecret() {
@@ -42,11 +45,13 @@ export async function createAdminSession() {
         path: '/',
         maxAge: SESSION_SECONDS,
     })
+    store.set(ADMIN_HINT_COOKIE, '1', { sameSite: 'lax', path: '/', maxAge: SESSION_SECONDS })
 }
 
 export async function clearAdminSession() {
     const store = await cookies()
     store.delete(ADMIN_COOKIE)
+    store.delete(ADMIN_HINT_COOKIE)
 }
 
 export async function isAdmin() {
