@@ -6,6 +6,12 @@ import { buildMetadata } from '@/app/lib/seo'
 
 export const revalidate = 3600
 
+// Build each page on its first visit, then cache it for `revalidate` seconds.
+// Without this (even empty) list, Next.js rebuilds the page on every visit.
+export function generateStaticParams() {
+    return []
+}
+
 // Dates are stored as YYYY-MM-DD, so format them in UTC to avoid showing the day before
 const LONG_DATE = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 

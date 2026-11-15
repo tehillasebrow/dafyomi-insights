@@ -10,6 +10,12 @@ import StoryRow from '@/app/components/StoryRow'
 
 export const revalidate = 3600
 
+// Build each page on its first visit, then cache it for `revalidate` seconds.
+// Without this (even empty) list, Next.js rebuilds the page on every visit.
+export function generateStaticParams() {
+    return []
+}
+
 function describe(person) {
     return `${person.count} Gemara ${person.count === 1 ? 'story' : 'stories'} about ${person.name} from the Daf Yomi, with the masechta and daf of each, explained by Rabbi Avrohom Sebrow.`
 }

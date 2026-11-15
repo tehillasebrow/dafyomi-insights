@@ -18,6 +18,12 @@ import RelatedStories from '@/app/components/RelatedStories'
 // comment delete buttons are checked in the browser, so the page needn't be rebuilt per visit.
 export const revalidate = 3600
 
+// Build each page on its first visit, then cache it for `revalidate` seconds.
+// Without this (even empty) list, Next.js rebuilds the page on every visit.
+export function generateStaticParams() {
+    return []
+}
+
 // A standalone article (tribute, Q&A, magazine piece): one with no masechta/daf.
 // Shared by generateMetadata and the page, so the DB is only hit once.
 const getArticle = cache(async rawSlug => {
