@@ -13,6 +13,12 @@ import ArticleBody, { locate, paragraphs } from '@/app/components/ArticleBody'
 
 export const revalidate = 3600
 
+// Build each page on its first visit, then cache it for `revalidate` seconds.
+// Without this (even empty) list, Next.js rebuilds the page on every visit.
+export function generateStaticParams() {
+    return []
+}
+
 // Shared by generateMetadata and the page, so the DB is only hit once
 const getStoryWithArticle = cache(async (rawSlug) => {
     const story = await getStoryBySlug(decodeParam(rawSlug))

@@ -12,6 +12,12 @@ import StoryRow from '@/app/components/StoryRow'
 
 export const revalidate = 3600
 
+// Build each page on its first visit, then cache it for `revalidate` seconds.
+// Without this (even empty) list, Next.js rebuilds the page on every visit.
+export function generateStaticParams() {
+    return []
+}
+
 // "...in [Don't Cry Over Spilled Wine](/daf/eruvin/65/...)" -> text with a link
 function withLinks(text) {
     return text.split(/(\[[^\]]+\]\([^)\s]+\))/).map((part, i) => {

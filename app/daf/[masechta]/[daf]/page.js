@@ -9,6 +9,12 @@ import EmptyDaf from '@/app/components/EmptyDaf'
 
 export const revalidate = 300
 
+// Build each page on its first visit, then cache it for `revalidate` seconds.
+// Without this (even empty) list, Next.js rebuilds the page on every visit.
+export function generateStaticParams() {
+    return []
+}
+
 export async function generateMetadata({ params }) {
     const { masechta, daf } = await params
     const name = titleCase(masechtaFromParam(masechta))
